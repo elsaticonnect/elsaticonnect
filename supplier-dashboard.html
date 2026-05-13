@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supplier Dashboard | Elsati Connect</title>
+  <meta name="description" content="Supplier dashboard for Elsati Connect.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="site-shell auth-shell">
+    <header class="topbar auth-topbar">
+      <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home"><img src="elsati.png" alt="Elsati Connect logo"></a>
+      <div class="topbar-actions"><a class="button button-secondary" href="monitor.html">Background Monitor</a><button class="button button-secondary" id="logout-button" type="button">Log out</button></div>
+    </header>
+
+    <main class="dashboard-page reveal">
+      <section class="dashboard-intro">
+        <p class="eyebrow">Supplier dashboard</p>
+        <h1>Welcome, <span id="dashboard-user-name">Supplier user</span>.</h1>
+        <p class="auth-copy">Your supplier profile <strong id="dashboard-company-name">Company</strong> can review live RFQs, submit quotations, and track award status in one interface.</p>
+      </section>
+
+      <section class="app-grid supplier-app-grid">
+        <section class="app-panel app-panel-list">
+          <div class="panel-head">
+            <h2>Client RFQs</h2>
+            <span>Open procurement requests waiting for quotations</span>
+          </div>
+          <div class="request-list" id="supplier-rfq-list"></div>
+        </section>
+
+        <section class="app-panel app-panel-form">
+          <div class="panel-head">
+            <h2>Submit quotation</h2>
+            <span id="supplier-form-title">Select an RFQ to submit your quote</span>
+          </div>
+          <form class="contact-form compact-form" id="supplier-quote-form">
+            <label>Selected RFQ<input type="text" id="supplier-selected-rfq" placeholder="Choose from the RFQ list" readonly></label>
+            <label>Quoted price<input type="number" name="price" placeholder="240" required></label>
+            <label>Delivery period<input type="text" name="delivery" placeholder="3 days" required></label>
+            <label>Notes<textarea name="notes" rows="4" placeholder="Value add, compliance notes, and fulfillment detail" required></textarea></label>
+            <button class="button button-primary" type="submit">Submit Quote</button>
+          </form>
+          <p class="form-feedback" id="supplier-quote-feedback"></p>
+        </section>
+      </section>
+
+      <section class="app-grid supplier-app-grid">
+        <section class="app-panel app-panel-table">
+          <div class="panel-head">
+            <h2>My submitted quotes</h2>
+            <span>Track pricing and award progress</span>
+          </div>
+          <div class="comparison-table" id="supplier-quote-list"></div>
+        </section>
+
+        <section class="app-panel app-panel-report">
+          <div class="panel-head">
+            <h2>Status tracker</h2>
+            <span>Buyer review and order updates</span>
+          </div>
+          <div class="report-summary" id="supplier-status-summary"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js"></script>
+  <script src="auth.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
+
+
+
+

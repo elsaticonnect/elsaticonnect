@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supplier Sign In | Elsati Connect</title>
+  <meta name="description" content="Supplier sign in for Elsati Connect vendors and quotation responders.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="site-shell auth-shell">
+    <header class="topbar auth-topbar">
+      <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home"><img src="elsati.png" alt="Elsati Connect logo"></a>
+      <div class="topbar-actions topbar-actions-compact"><a class="login-icon-link" href="signin.html" aria-label="Log in"><span class="login-icon"></span></a></div>
+    </header>
+
+    <main class="auth-layout supplier-auth reveal">
+      <section class="auth-panel">
+        <p class="eyebrow">Supplier Sign In</p>
+        <h1>Respond to requests with confidence.</h1>
+        <p class="auth-copy">Track invitations, submit quotations, and see award progress in your supplier workspace.</p>
+
+        <form class="contact-form auth-form" id="supplier-signin-form">
+          <label>
+            Supplier email
+            <input type="email" name="email" placeholder="supplier@company.com" required>
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" placeholder="Enter password" required>
+          </label>
+          <div class="auth-options">
+            <label class="checkbox-row"><input type="checkbox"> Remember this device</label>
+            <a href="register-supplier.html">Need an account?</a>
+          </div>
+          <button class="button button-primary" type="submit">Sign in as Supplier</button>
+        </form>
+        <p class="form-feedback" id="supplier-signin-feedback"></p>
+        <p class="demo-note">Demo login: <strong>supplier@elsati.demo</strong> / <strong>demo1234</strong></p>
+        <p class="auth-note">Need access? <a href="register-supplier.html">Register as a supplier</a></p>
+      </section>
+
+      <section class="dashboard-preview supplier-preview">
+        <div class="preview-topbar">
+          <span class="preview-brand">Elsati Connect</span>
+          <nav>
+            <span>Dashboard</span>
+            <span>Open Bids</span>
+            <span>My Quotes</span>
+            <span>Awards</span>
+          </nav>
+          <button class="mini-cta">Submit Quote</button>
+        </div>
+        <div class="preview-body">
+          <aside class="preview-sidebar">
+            <span>Dashboard</span>
+            <span class="active">Open Bids</span>
+            <span>My Quotes</span>
+            <span>Orders</span>
+            <span>Capacity</span>
+            <span>Messages</span>
+            <span>Settings</span>
+          </aside>
+          <div class="preview-main">
+            <div class="preview-stat-row supplier-stats">
+              <article><small>Open Invitations</small><strong>8</strong></article>
+              <article><small>Submitted Quotes</small><strong>12</strong></article>
+              <article><small>Won Orders</small><strong>5</strong></article>
+              <article><small>Response Rate</small><strong>93%</strong></article>
+            </div>
+            <div class="preview-grid supplier-grid">
+              <section class="quotes-card wide-card">
+                <div class="list-head"><span>Active RFQs</span><button>Filter</button></div>
+                <div class="quote-line"><strong>Office Chair Supply</strong><span>K 240</span><em>Due today</em></div>
+                <div class="quote-line"><strong>Printing Toners</strong><span>K 255</span><em>2 days</em></div>
+                <div class="quote-line"><strong>Safety Boots</strong><span>K 248</span><em>4 days</em></div>
+                <div class="quote-line"><strong>Stationery Mix</strong><span>K 199</span><em>5 days</em></div>
+              </section>
+              <section class="list-card">
+                <div class="list-head"><span>Win Rate</span><button>Monthly</button></div>
+                <div class="bar-chart compact-chart"><i style="--h: 65%"></i><i style="--h: 55%"></i><i style="--h: 72%"></i><i style="--h: 78%"></i><i style="--h: 68%"></i></div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>
+
+
+
+
