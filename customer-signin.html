@@ -10,11 +10,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <div class="site-shell auth-shell">
     <header class="topbar auth-topbar">
-      <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home"><img src="elsati.png" alt="Elsati Connect logo"></a>
-      <div class="topbar-actions topbar-actions-compact"><a class="login-icon-link" href="signin.html" aria-label="Log in"><span class="login-icon"></span></a></div>
+      <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home">
+        <img src="elsati.png" alt="Elsati Connect logo">
+      </a>
+      <div class="topbar-actions topbar-actions-compact">
+        <a class="login-icon-link" href="signin.html" aria-label="Log in">
+          <span class="login-icon"></span>
+        </a>
+      </div>
     </header>
 
     <main class="auth-layout customer-auth reveal">
@@ -28,18 +35,25 @@
             Work email
             <input type="email" name="email" placeholder="name@company.com" required>
           </label>
+
           <label>
             Password
             <input type="password" name="password" placeholder="Enter password" required>
           </label>
+
           <div class="auth-options">
-            <label class="checkbox-row"><input type="checkbox"> Keep me signed in</label>
+            <label class="checkbox-row">
+              <input type="checkbox"> Keep me signed in
+            </label>
             <a href="register-business.html">Need an account?</a>
           </div>
-          <button class="button button-primary" type="submit">Sign in as Customer</button>
+
+          <button class="button button-primary" type="submit">
+            Sign in as Customer
+          </button>
         </form>
+
         <p class="form-feedback" id="business-signin-feedback"></p>
-        <p class="demo-note">Demo login: <strong>buyer@elsati.demo</strong> / <strong>demo1234</strong></p>
         <p class="auth-note">Need an account? <a href="register-business.html">Register your business team</a></p>
       </section>
 
@@ -54,6 +68,7 @@
           </nav>
           <button class="mini-cta">New Request</button>
         </div>
+
         <div class="preview-body">
           <aside class="preview-sidebar">
             <span>Dashboard</span>
@@ -64,6 +79,7 @@
             <span>Reports</span>
             <span>Settings</span>
           </aside>
+
           <div class="preview-main">
             <div class="preview-stat-row">
               <article><small>Open Requests</small><strong>4</strong></article>
@@ -71,81 +87,64 @@
               <article><small>Approved Orders</small><strong>3</strong></article>
               <article><small>Monthly Procurement</small><strong>K321,500</strong></article>
             </div>
-            <div class="preview-grid">
-              <section class="chart-card">
-                <div class="chart-head">
-                  <span>Procurement Spend</span>
-                  <strong>K321,501</strong>
-                </div>
-                <div class="bar-chart">
-                  <i style="--h: 46%"></i><i style="--h: 44%"></i><i style="--h: 61%"></i><i style="--h: 53%"></i><i style="--h: 70%"></i><i style="--h: 58%"></i><i style="--h: 49%"></i><i style="--h: 74%"></i>
-                </div>
-              </section>
-              <section class="list-card">
-                <div class="list-head"><span>Top Suppliers</span><button>Name</button></div>
-                <div class="list-row"><strong>Lorem Ipsum Business</strong><span>K72,000</span></div>
-                <div class="list-row"><strong>Zambezi Enterprises</strong><span>K63,700</span></div>
-                <div class="list-row"><strong>ABC Supplies</strong><span>K50,000</span></div>
-              </section>
-              <section class="quotes-card">
-                <div class="list-head"><span>Quotation Requests</span><button>View Quote</button></div>
-                <div class="quote-line"><strong>Alex Ltd</strong><span>K 240</span><em>3 days</em></div>
-                <div class="quote-line"><strong>Zambezi Enterprises</strong><span>K 255</span><em>5 days</em></div>
-                <div class="quote-line"><strong>ABC Supplies</strong><span>K 248</span><em>4 days</em></div>
-              </section>
-            </div>
           </div>
         </div>
       </section>
     </main>
   </div>
 
+  <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
-  <script src="script.js"></script>
-  <script src="auth.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
+
   <script>
-const supabaseClient = supabase.createClient(
-  window.ELSATI_SUPABASE.url,
-  window.ELSATI_SUPABASE.publishableKey
-);
+    const supabaseClient = supabase.createClient(
+      window.ELSATI_SUPABASE.url,
+      window.ELSATI_SUPABASE.publishableKey
+    );
 
-document.querySelector("form").addEventListener("submit", async function(event) {
-  event.preventDefault();
+    const form = document.getElementById("business-signin-form");
+    const feedback = document.getElementById("business-signin-feedback");
 
-  const email = document.querySelector('input[type="email"]').value;
-  const password = document.querySelector('input[type="password"]').value;
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
 
-  const { data, error } = await supabaseClient.auth.signInWithPassword({
-    email: email,
-    password: password
-  });
+      const email = document.querySelector('input[name="email"]').value;
+      const password = document.querySelector('input[name="password"]').value;
 
-  if (error) {
-    alert(error.message);
-    return;
-  }
+      feedback.textContent = "Signing in...";
 
-  const { data: profile } = await supabaseClient
-    .from("profiles")
-    .select("role")
-    .eq("id", data.user.id)
-    .single();
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
 
-  if (!profile || profile.role !== "business") {
-    alert("This login is for business accounts only.");
-    await supabaseClient.auth.signOut();
-    return;
-  }
+      if (error) {
+        feedback.textContent = error.message;
+        return;
+      }
 
-  window.location.href = "business-dashboard.html";
-});
-</script>
+      const { data: profile, error: profileError } = await supabaseClient
+        .from("profiles")
+        .select("role")
+        .eq("id", data.user.id)
+        .single();
+
+      if (profileError || !profile) {
+        feedback.textContent = "Profile not found. Please register again.";
+        await supabaseClient.auth.signOut();
+        return;
+      }
+
+      if (profile.role !== "business") {
+        feedback.textContent = "This account is not registered as a business.";
+        await supabaseClient.auth.signOut();
+        return;
+      }
+
+      feedback.textContent = "Login successful. Opening dashboard...";
+      window.location.href = "business-dashboard.html";
+    });
+  </script>
 </body>
 </html>
-
-
-
-
