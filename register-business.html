@@ -10,12 +10,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <div class="site-shell auth-shell">
     <header class="topbar auth-topbar">
-      <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home"><img src="elsati.png" alt="Elsati Connect logo"></a>
+      <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home">
+        <img src="elsati.png" alt="Elsati Connect logo">
+      </a>
       <div class="topbar-actions topbar-actions-compact">
-        <a class="login-icon-link" href="signin.html" aria-label="Log in"><span class="login-icon"></span></a>
+        <a class="login-icon-link" href="signin.html" aria-label="Log in">
+          <span class="login-icon"></span>
+        </a>
       </div>
     </header>
 
@@ -24,22 +29,38 @@
         <p class="eyebrow">Business registration</p>
         <h1>Create your buyer workspace.</h1>
         <p class="auth-copy">Register your organization to discover verified suppliers, create RFQs, and compare quotations digitally.</p>
+
         <form class="contact-form auth-form" id="business-register-form">
-          <label>Business name<input type="text" name="company" placeholder="Elsati Trading Ltd" required></label>
-          <label>Contact person<input type="text" name="name" placeholder="Full name" required></label>
-          <label>Work email<input type="email" name="email" placeholder="name@company.com" required></label>
-          <label>Password<input type="password" name="password" placeholder="Create password" required></label>
+          <label>Business name
+            <input type="text" name="company" placeholder="Elsati Trading Ltd" required>
+          </label>
+
+          <label>Contact person
+            <input type="text" name="name" placeholder="Full name" required>
+          </label>
+
+          <label>Work email
+            <input type="email" name="email" placeholder="name@company.com" required>
+          </label>
+
+          <label>Password
+            <input type="password" name="password" placeholder="Create password" required>
+          </label>
+
           <button class="button button-primary" type="submit">Register Business</button>
         </form>
+
         <p class="form-feedback" id="business-register-feedback"></p>
         <p class="auth-note">Already registered? <a href="customer-signin.html">Sign in as business</a></p>
       </section>
+
       <section class="dashboard-preview customer-preview register-preview">
         <div class="preview-topbar">
           <span class="preview-brand">Elsati Connect</span>
           <nav><span>Verified suppliers</span><span>RFQ creation</span><span>Reports</span></nav>
           <button class="mini-cta">Start sourcing</button>
         </div>
+
         <div class="preview-body register-body">
           <div class="register-highlight-grid">
             <article><strong>Verified Supplier Network</strong><p>Physical visits, PACRA, ZRA, and bank validation.</p></article>
@@ -51,52 +72,59 @@
       </section>
     </main>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
-  <script src="script.js"></script>
-  <script src="auth.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
+
   <script>
-const supabaseClient = supabase.createClient(
-  window.ELSATI_SUPABASE.url,
-  window.ELSATI_SUPABASE.publishableKey
-);
+    const supabaseClient = supabase.createClient(
+      window.ELSATI_SUPABASE.url,
+      window.ELSATI_SUPABASE.publishableKey
+    );
 
-document.querySelector("form").addEventListener("submit", async function(event) {
-  event.preventDefault();
+    document.getElementById("business-register-form").addEventListener("submit", async function(event) {
+      event.preventDefault();
 
-  const email = document.querySelector('input[type="email"]').value;
-  const password = document.querySelector('input[type="password"]').value;
-  const companyName = document.querySelector('input[name="company_name"], input[name="companyName"], input[placeholder*="Company"]').value;
-  const phoneInput = document.querySelector('input[type="tel"], input[name="phone"]');
-  const phone = phoneInput ? phoneInput.value : "";
+      const companyName = document.querySelector('input[name="company"]').value;
+      const email = document.querySelector('input[name="email"]').value;
+      const password = document.querySelector('input[name="password"]').value;
+      const feedback = document.getElementById("business-register-feedback");
 
-  const { data, error } = await supabaseClient.auth.signUp({
-    email: email,
-    password: password
-  });
+      feedback.textContent = "Creating business account...";
 
-  if (error) {
-    alert(error.message);
-    return;
-  }
+      const { data, error } = await supabaseClient.auth.signUp({
+        email: email,
+        password: password
+      });
 
-  await supabaseClient.from("profiles").insert({
-    id: data.user.id,
-    email: email,
-    role: "business",
-    company_name: companyName,
-    phone: phone
-  });
+      if (error) {
+        feedback.textContent = "Signup error: " + error.message;
+        return;
+      }
 
-  alert("Business account created successfully. Please log in.");
-  window.location.href = "customer-signin.html";
-});
-</script>
+      if (!data.user) {
+        feedback.textContent = "User was not created.";
+        return;
+      }
+
+      const { error: profileError } = await supabaseClient
+        .from("profiles")
+        .insert({
+          id: data.user.id,
+          email: email,
+          role: "business",
+          company_name: companyName,
+          phone: ""
+        });
+
+      if (profileError) {
+        feedback.textContent = "Profile error: " + profileError.message;
+        return;
+      }
+
+      alert("Business account created successfully. Please log in.");
+      window.location.href = "customer-signin.html";
+    });
+  </script>
 </body>
 </html>
-
-
-
-
