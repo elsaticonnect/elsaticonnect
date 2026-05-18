@@ -7,22 +7,22 @@ const observer = new IntersectionObserver(
       }
     });
   },
-  { threshold: 0.18 }
+  { threshold: 0.16 }
 );
 
-document.querySelectorAll(".reveal").forEach(node => observer.observe(node));
+document.querySelectorAll(".reveal, .stagger-item").forEach(node => observer.observe(node));
 
 const metrics = document.querySelectorAll(".metric");
+
 const numberObserver = new IntersectionObserver(
   entries => {
     entries.forEach(entry => {
-      if (!entry.isIntersecting) {
-        return;
-      }
+      if (!entry.isIntersecting) return;
 
       const element = entry.target;
       const target = Number(element.dataset.target || 0);
-      const duration = 1200;
+      const suffix = element.dataset.suffix || "+";
+      const duration = 1400;
       const startTime = performance.now();
 
       const tick = now => {
@@ -33,7 +33,7 @@ const numberObserver = new IntersectionObserver(
         if (progress < 1) {
           requestAnimationFrame(tick);
         } else {
-          element.textContent = `${target}${target === 96 ? "%" : "+"}`;
+          element.textContent = `${target}${suffix}`;
         }
       };
 
@@ -45,3 +45,14 @@ const numberObserver = new IntersectionObserver(
 );
 
 metrics.forEach(metric => numberObserver.observe(metric));
+
+const activityItems = document.querySelectorAll(".activity-ticker li");
+let activeActivity = 0;
+
+if (activityItems.length) {
+  setInterval(() => {
+    activityItems.forEach(item => item.classList.remove("active"));
+    activityItems[activeActivity].classList.add("active");
+    activeActivity = (activeActivity + 1) % activityItems.length;
+  }, 2200);
+}
