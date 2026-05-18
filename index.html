@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <div class="site-shell">
     <header class="topbar">
@@ -25,12 +26,16 @@
       </nav>
 
       <div class="topbar-actions topbar-actions-compact">
-        <a class="login-icon-link" href="signin.html" aria-label="Log in"><span class="login-icon"></span></a>
+        <a class="login-icon-link" href="signin.html" aria-label="Log in">
+          <span class="login-icon"></span>
+        </a>
       </div>
     </header>
 
     <main>
       <section class="journey-section hero-journey" id="home">
+        <div class="glow-orb"></div>
+
         <div class="journey-copy reveal">
           <p class="eyebrow">Business registration</p>
           <h1>Digital B2B procurement built for businesses that need trusted suppliers and faster sourcing.</h1>
@@ -38,10 +43,12 @@
             Elsati Connect helps buyers discover verified suppliers, manage procurement digitally, compare quotations side by side,
             and make better sourcing decisions with less manual effort.
           </p>
+
           <div class="hero-actions">
             <a class="button button-primary" href="register-business.html">Register Business</a>
             <a class="button button-secondary" href="how-it-works.html#business-flow">Learn More</a>
           </div>
+
           <ul class="hero-points">
             <li>Supplier discovery</li>
             <li>Procurement management</li>
@@ -78,7 +85,8 @@
                 <article><small>Approved Orders</small><strong>3</strong></article>
               </div>
               <div class="surface-chart bars-eight">
-                <i style="--h:42%"></i><i style="--h:56%"></i><i style="--h:64%"></i><i style="--h:50%"></i><i style="--h:72%"></i><i style="--h:58%"></i><i style="--h:47%"></i><i style="--h:79%"></i>
+                <i style="--h:42%"></i><i style="--h:56%"></i><i style="--h:64%"></i><i style="--h:50%"></i>
+                <i style="--h:72%"></i><i style="--h:58%"></i><i style="--h:47%"></i><i style="--h:79%"></i>
               </div>
             </div>
           </div>
@@ -93,11 +101,25 @@
                 <strong>Supplier quote comparison</strong>
                 <span>RFQ-024</span>
               </div>
-              <div class="report-row"><b>Alex Ltd</b><span>N$ 240</span><em>3 days</em></div>
-              <div class="report-row"><b>Zambezi Enterprises</b><span>N$ 255</span><em>5 days</em></div>
-              <div class="report-row"><b>ABC Supplies</b><span>N$ 248</span><em>4 days</em></div>
+              <div class="report-row"><b>Alex Ltd</b><span>K240</span><em>3 days</em></div>
+              <div class="report-row"><b>Zambezi Enterprises</b><span>K255</span><em>5 days</em></div>
+              <div class="report-row"><b>ABC Supplies</b><span>K248</span><em>4 days</em></div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="trust-strip reveal">
+        <div class="proof-intro">
+          <p class="eyebrow">Built on verification</p>
+          <h2>Procurement confidence starts with trusted supplier records.</h2>
+        </div>
+
+        <div class="trust-grid">
+          <article class="trust-badge stagger-item">PACRA Checks<span>Company registration review</span></article>
+          <article class="trust-badge stagger-item">ZRA Clearance<span>Tax compliance visibility</span></article>
+          <article class="trust-badge stagger-item">Bank Validation<span>Business account confirmation</span></article>
+          <article class="trust-badge stagger-item">Site Visits<span>Physical supplier verification</span></article>
         </div>
       </section>
 
@@ -151,10 +173,12 @@
             Elsati Connect helps suppliers respond to client RFQs more confidently, track live quotation status,
             and work inside a platform where buyer expectations, timelines, and comparison standards are clearly defined.
           </p>
+
           <div class="hero-actions">
             <a class="button button-primary" href="register-supplier.html">Register Supplier</a>
             <a class="button button-secondary" href="how-it-works.html#supplier-flow">Learn More</a>
           </div>
+
           <ul class="hero-points">
             <li>Access client RFQs</li>
             <li>Submit quotations digitally</li>
@@ -163,30 +187,66 @@
         </div>
       </section>
 
+      <section class="workflow-strip reveal">
+        <p class="eyebrow">Procurement workflow</p>
+        <h2>From request to award in one clear digital flow.</h2>
+
+        <div class="workflow-steps">
+          <article class="workflow-step stagger-item">
+            <strong>1. Create RFQ</strong>
+            <span>Businesses submit procurement requests.</span>
+          </article>
+
+          <article class="workflow-step stagger-item">
+            <strong>2. Notify Suppliers</strong>
+            <span>Verified suppliers receive opportunities.</span>
+          </article>
+
+          <article class="workflow-step stagger-item">
+            <strong>3. Submit Quotes</strong>
+            <span>Suppliers respond digitally.</span>
+          </article>
+
+          <article class="workflow-step stagger-item">
+            <strong>4. Compare Offers</strong>
+            <span>Prices, timelines, and ratings are reviewed.</span>
+          </article>
+
+          <article class="workflow-step stagger-item">
+            <strong>5. Award Supplier</strong>
+            <span>The best supplier is selected transparently.</span>
+          </article>
+        </div>
+      </section>
+
       <section class="proof reveal">
         <div class="proof-intro">
           <p class="eyebrow">Why Choose Elsati</p>
           <h2>One platform that works for both businesses and suppliers.</h2>
         </div>
+
         <div class="proof-grid proof-grid-four">
           <article class="proof-card">
             <span class="proof-icon icon-briefcase"><i></i></span>
-            <strong class="metric" data-target="5">0</strong>
+            <strong class="metric" data-target="5" data-suffix="+">0</strong>
             <span>Businesses currently highlighted on the platform</span>
           </article>
+
           <article class="proof-card">
             <span class="proof-icon icon-chart"><i></i></span>
-            <strong class="metric" data-target="5">0</strong>
+            <strong class="metric" data-target="5" data-suffix="+">0</strong>
             <span>Customer teams supported through cleaner procurement workflows</span>
           </article>
+
           <article class="proof-card">
             <span class="proof-icon icon-shield"><i></i></span>
-            <strong class="metric" data-target="10">0</strong>
+            <strong class="metric" data-target="10" data-suffix="+">0</strong>
             <span>Suppliers positioned for active sourcing opportunities</span>
           </article>
+
           <article class="proof-card">
             <span class="proof-icon icon-network"><i></i></span>
-            <strong class="metric" data-target="10">0</strong>
+            <strong class="metric" data-target="10" data-suffix="+">0</strong>
             <span>Verified suppliers ready for buyer discovery</span>
           </article>
         </div>
@@ -201,27 +261,51 @@
             to trade more confidently and operate with greater transparency.
           </p>
         </div>
+
         <div class="capability-grid reveal">
           <article class="capability-card">
             <p class="eyebrow">Verified Supplier Network</p>
             <h3>A stronger trust layer for the market.</h3>
             <p>Physical site visits, PACRA, ZRA, and bank validation create a standardized verification model accepted across buyers.</p>
           </article>
+
           <article class="capability-card">
             <p class="eyebrow">Digital Procurement Engine</p>
             <h3>Modern sourcing without manual inefficiencies.</h3>
             <p>Create and manage RFQs, receive quotations digitally, and compare supplier submissions side by side in one environment.</p>
           </article>
+
           <article class="capability-card">
             <p class="eyebrow">Cost Reduction Engine</p>
             <h3>Transparent pricing that protects value.</h3>
             <p>Competitive bidding, clearer price visibility, and reduced procurement leakage help businesses buy with more control.</p>
           </article>
+
           <article class="capability-card">
             <p class="eyebrow">Analytics & Insights</p>
             <h3>Better decisions through live procurement intelligence.</h3>
             <p>Track procurement activity, measure supplier performance, and understand spend trends before costs drift.</p>
           </article>
+        </div>
+      </section>
+
+      <section class="live-activity-section reveal">
+        <div class="live-activity-box">
+          <div>
+            <p class="eyebrow">Live platform activity</p>
+            <h2>A procurement network that feels active.</h2>
+            <p class="hero-text">
+              Buyers and suppliers can track sourcing activity, quote submissions, verification updates,
+              and award progress from one shared platform.
+            </p>
+          </div>
+
+          <ul class="activity-ticker">
+            <li class="active">ABC Supplies submitted a quote for Office Furniture Supply.</li>
+            <li>Zambezi Enterprises updated delivery terms for Printing Toners.</li>
+            <li>New supplier uploaded PACRA and ZRA verification documents.</li>
+            <li>Business buyer created a new RFQ for Safety Boots.</li>
+          </ul>
         </div>
       </section>
 
@@ -241,6 +325,7 @@
         </a>
         <p>Procurement software for transparent business and supplier collaboration.</p>
       </div>
+
       <div class="footer-links">
         <a href="about.html">About</a>
         <a href="how-it-works.html">How It Works</a>
@@ -253,7 +338,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
