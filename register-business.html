@@ -17,6 +17,7 @@
       <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home">
         <img src="elsati.png" alt="Elsati Connect logo">
       </a>
+
       <div class="topbar-actions topbar-actions-compact">
         <a class="login-icon-link" href="signin.html" aria-label="Log in">
           <span class="login-icon"></span>
@@ -31,19 +32,23 @@
         <p class="auth-copy">Register your organization to discover verified suppliers, create RFQs, and compare quotations digitally.</p>
 
         <form class="contact-form auth-form" id="business-register-form">
-          <label>Business name
+          <label>
+            Business name
             <input type="text" name="company" placeholder="Elsati Trading Ltd" required>
           </label>
 
-          <label>Contact person
+          <label>
+            Contact person
             <input type="text" name="name" placeholder="Full name" required>
           </label>
 
-          <label>Work email
+          <label>
+            Work email
             <input type="email" name="email" placeholder="name@company.com" required>
           </label>
 
-          <label>Password
+          <label>
+            Password
             <input type="password" name="password" placeholder="Create password" required>
           </label>
 
@@ -57,16 +62,35 @@
       <section class="dashboard-preview customer-preview register-preview">
         <div class="preview-topbar">
           <span class="preview-brand">Elsati Connect</span>
-          <nav><span>Verified suppliers</span><span>RFQ creation</span><span>Reports</span></nav>
+          <nav>
+            <span>Verified suppliers</span>
+            <span>RFQ creation</span>
+            <span>Reports</span>
+          </nav>
           <button class="mini-cta">Start sourcing</button>
         </div>
 
         <div class="preview-body register-body">
           <div class="register-highlight-grid">
-            <article><strong>Verified Supplier Network</strong><p>Physical visits, PACRA, ZRA, and bank validation.</p></article>
-            <article><strong>Digital Procurement</strong><p>Create RFQs and compare quotations in one workspace.</p></article>
-            <article><strong>Cost Reduction</strong><p>Transparent pricing and competitive bidding reduce leakage.</p></article>
-            <article><strong>Analytics</strong><p>Spend and supplier performance insight for stronger decisions.</p></article>
+            <article>
+              <strong>Verified Supplier Network</strong>
+              <p>Physical visits, PACRA, ZRA, and bank validation.</p>
+            </article>
+
+            <article>
+              <strong>Digital Procurement</strong>
+              <p>Create RFQs and compare quotations in one workspace.</p>
+            </article>
+
+            <article>
+              <strong>Cost Reduction</strong>
+              <p>Transparent pricing and competitive bidding reduce leakage.</p>
+            </article>
+
+            <article>
+              <strong>Analytics</strong>
+              <p>Spend and supplier performance insight for stronger decisions.</p>
+            </article>
           </div>
         </div>
       </section>
@@ -82,13 +106,16 @@
       window.ELSATI_SUPABASE.publishableKey
     );
 
-    document.getElementById("business-register-form").addEventListener("submit", async function(event) {
+    const form = document.getElementById("business-register-form");
+    const feedback = document.getElementById("business-register-feedback");
+
+    form.addEventListener("submit", async function(event) {
       event.preventDefault();
 
       const companyName = document.querySelector('input[name="company"]').value;
+      const contactName = document.querySelector('input[name="name"]').value;
       const email = document.querySelector('input[name="email"]').value;
       const password = document.querySelector('input[name="password"]').value;
-      const feedback = document.getElementById("business-register-feedback");
 
       feedback.textContent = "Creating business account...";
 
@@ -103,7 +130,7 @@
       }
 
       if (!data.user) {
-        feedback.textContent = "User was not created.";
+        feedback.textContent = "User was not created. Please try again.";
         return;
       }
 
@@ -114,7 +141,7 @@
           email: email,
           role: "business",
           company_name: companyName,
-          phone: ""
+          phone: contactName
         });
 
       if (profileError) {
