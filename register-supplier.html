@@ -57,6 +57,43 @@
   <script src="auth.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
+  <script>
+const supabaseClient = supabase.createClient(
+  window.ELSATI_SUPABASE.url,
+  window.ELSATI_SUPABASE.publishableKey
+);
+
+document.querySelector("form").addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const email = document.querySelector('input[type="email"]').value;
+  const password = document.querySelector('input[type="password"]').value;
+  const companyName = document.querySelector('input[name="company_name"], input[name="companyName"], input[placeholder*="Company"]').value;
+  const phoneInput = document.querySelector('input[type="tel"], input[name="phone"]');
+  const phone = phoneInput ? phoneInput.value : "";
+
+  const { data, error } = await supabaseClient.auth.signUp({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  await supabaseClient.from("profiles").insert({
+    id: data.user.id,
+    email: email,
+    role: "supplier",
+    company_name: companyName,
+    phone: phone
+  });
+
+  alert("Supplier account created successfully. Please log in.");
+  window.location.href = "supplier-signin.html";
+});
+</script>
 </body>
 </html>
 
