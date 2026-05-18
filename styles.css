@@ -2013,3 +2013,288 @@ h3 {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   HOMEPAGE VISUAL + MOTION UPGRADES
+   Added for Elsati Connect homepage improvements
+   ========================================================= */
+
+.trust-strip,
+.workflow-strip,
+.live-activity-section {
+  margin-top: 54px;
+  padding: 28px;
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 18px 50px rgba(22, 40, 62, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.trust-badge {
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(248, 250, 252, 0.94);
+  font-weight: 800;
+  color: var(--navy);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  border: 1px solid rgba(16, 32, 49, 0.06);
+}
+
+.trust-badge:hover,
+.proof-card:hover,
+.capability-card:hover,
+.floating-screen:hover,
+.workflow-step:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 70px rgba(22, 40, 62, 0.14);
+  border-color: rgba(60, 163, 93, 0.22);
+}
+
+.trust-badge span {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.workflow-strip h2,
+.live-activity-section h2 {
+  max-width: 880px;
+}
+
+.workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.workflow-step {
+  position: relative;
+  padding: 20px;
+  border-radius: 20px;
+  background: rgba(248, 250, 252, 0.94);
+  border: 1px solid rgba(16, 32, 49, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.workflow-step strong {
+  display: block;
+  margin-bottom: 8px;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  color: var(--ink);
+}
+
+.workflow-step span {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.live-activity-box {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.activity-ticker {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.activity-ticker li {
+  opacity: 0.45;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(248, 250, 252, 0.95);
+  color: var(--muted);
+  font-weight: 700;
+  transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(16, 32, 49, 0.05);
+}
+
+.activity-ticker li.active {
+  opacity: 1;
+  transform: translateX(8px);
+  color: var(--ink);
+  box-shadow: 0 14px 35px rgba(22, 40, 62, 0.08);
+  border-color: rgba(60, 163, 93, 0.2);
+}
+
+.hero-journey {
+  position: relative;
+}
+
+.glow-orb {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(60, 163, 93, 0.22), transparent 65%);
+  filter: blur(10px);
+  pointer-events: none;
+  animation: pulseOrb 6s ease-in-out infinite;
+  z-index: -1;
+}
+
+.hero-journey .glow-orb {
+  right: 5%;
+  top: 18%;
+}
+
+@keyframes pulseOrb {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: scale(1.14);
+    opacity: 1;
+  }
+}
+
+.stagger-item {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.stagger-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stagger-item:nth-child(2) {
+  transition-delay: 0.08s;
+}
+
+.stagger-item:nth-child(3) {
+  transition-delay: 0.16s;
+}
+
+.stagger-item:nth-child(4) {
+  transition-delay: 0.24s;
+}
+
+.stagger-item:nth-child(5) {
+  transition-delay: 0.32s;
+}
+
+/* Extra homepage polish */
+.proof-card,
+.capability-card,
+.tagline-link,
+.floating-screen,
+.button,
+.login-icon-link,
+.trust-badge,
+.workflow-step {
+  will-change: transform;
+}
+
+.login-icon-link,
+.notification-btn,
+.mini-cta,
+.list-head button {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.login-icon-link:hover,
+.notification-btn:hover,
+.mini-cta:hover,
+.list-head button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(22, 40, 62, 0.12);
+}
+
+.surface-chart i,
+.bar-chart i {
+  transform-origin: bottom;
+  animation: growBar 1.1s ease both;
+}
+
+.surface-chart i:nth-child(2),
+.bar-chart i:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.surface-chart i:nth-child(3),
+.bar-chart i:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+.surface-chart i:nth-child(4),
+.bar-chart i:nth-child(4) {
+  animation-delay: 0.24s;
+}
+
+.surface-chart i:nth-child(5),
+.bar-chart i:nth-child(5) {
+  animation-delay: 0.32s;
+}
+
+.surface-chart i:nth-child(6),
+.bar-chart i:nth-child(6) {
+  animation-delay: 0.4s;
+}
+
+.surface-chart i:nth-child(7),
+.bar-chart i:nth-child(7) {
+  animation-delay: 0.48s;
+}
+
+.surface-chart i:nth-child(8),
+.bar-chart i:nth-child(8) {
+  animation-delay: 0.56s;
+}
+
+@keyframes growBar {
+  from {
+    transform: scaleY(0.18);
+    opacity: 0.55;
+  }
+
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .trust-grid,
+  .workflow-steps,
+  .live-activity-box {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-ticker li.active {
+    transform: translateY(-2px);
+  }
+}
+
+@media (max-width: 640px) {
+  .trust-strip,
+  .workflow-strip,
+  .live-activity-section {
+    padding: 22px;
+    border-radius: 24px;
+  }
+
+  .glow-orb {
+    display: none;
+  }
+}
