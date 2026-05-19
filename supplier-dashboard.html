@@ -162,18 +162,18 @@
         </div>
 
         <div id="verification-warning" class="verification-warning">
-          Your supplier account is pending verification. Upload your PACRA and ZRA documents before you can submit quotations.
+          Your supplier account is pending verification. Upload your PACRA and ZRA documents as PDF files before you can submit quotations.
         </div>
 
         <form class="contact-form compact-form" id="verification-form">
           <label>
-            PACRA Certificate
-            <input type="file" id="pacra-file" accept=".pdf,.png,.jpg,.jpeg" required>
+            PACRA Certificate PDF
+            <input type="file" id="pacra-file" accept=".pdf,application/pdf" required>
           </label>
 
           <label>
-            ZRA Tax Clearance
-            <input type="file" id="zra-file" accept=".pdf,.png,.jpg,.jpeg" required>
+            ZRA Tax Clearance PDF
+            <input type="file" id="zra-file" accept=".pdf,application/pdf" required>
           </label>
 
           <button class="button button-primary" type="submit">
@@ -184,7 +184,7 @@
         <p class="form-feedback" id="verification-feedback"></p>
 
         <p class="verification-note">
-          After uploading, ELSATI will review your documents. You will only be able to submit quotations once your supplier account is approved.
+          Only PDF documents are accepted. After uploading, ELSATI will review your documents. You will only be able to submit quotations once your supplier account is approved.
         </p>
       </section>
 
@@ -391,7 +391,7 @@
       }
 
       if (profile.verification_status === "submitted") {
-        warning.textContent = "Your documents have been submitted and are awaiting ELSATI review.";
+        warning.textContent = "Your PDF documents have been submitted and are awaiting ELSATI review.";
         warning.style.background = "#fef3c7";
         warning.style.color = "#92400e";
 
@@ -405,7 +405,7 @@
         return;
       }
 
-      warning.textContent = "Your supplier account is pending verification. Upload your PACRA and ZRA documents before you can submit quotations.";
+      warning.textContent = "Your supplier account is pending verification. Upload your PACRA and ZRA documents as PDF files before you can submit quotations.";
       warning.style.background = "#fee2e2";
       warning.style.color = "#991b1b";
 
@@ -428,6 +428,16 @@
         return;
       }
 
+      if (pacraFile.type !== "application/pdf") {
+        feedback.textContent = "PACRA document must be uploaded as a PDF.";
+        return;
+      }
+
+      if (zraFile.type !== "application/pdf") {
+        feedback.textContent = "ZRA Tax Clearance must be uploaded as a PDF.";
+        return;
+      }
+
       const { data: userData } = await supabaseClient.auth.getUser();
 
       if (!userData.user) {
@@ -437,7 +447,7 @@
 
       const userId = userData.user.id;
 
-      feedback.textContent = "Uploading documents...";
+      feedback.textContent = "Uploading PDF documents...";
 
       const pacraPath = `${userId}/pacra-${Date.now()}-${pacraFile.name}`;
       const zraPath = `${userId}/zra-${Date.now()}-${zraFile.name}`;
@@ -446,7 +456,8 @@
         .from("supplier-documents")
         .upload(pacraPath, pacraFile, {
           cacheControl: "3600",
-          upsert: true
+          upsert: true,
+          contentType: "application/pdf"
         });
 
       if (pacraError) {
@@ -458,7 +469,8 @@
         .from("supplier-documents")
         .upload(zraPath, zraFile, {
           cacheControl: "3600",
-          upsert: true
+          upsert: true,
+          contentType: "application/pdf"
         });
 
       if (zraError) {
@@ -481,7 +493,7 @@
         return;
       }
 
-      feedback.textContent = "Documents uploaded successfully. Awaiting ELSATI review.";
+      feedback.textContent = "PDF documents uploaded successfully. Awaiting ELSATI review.";
 
       await loadSupplierProfile();
     }
