@@ -136,14 +136,15 @@
       const { error } = await supabaseClient
         .from("rfqs")
         .insert({
-          business_id: user.id,
-          business_name: profile.company_name || profile.email,
-          title: title,
-          quantity: Number(quantity),
-          deadline: deadline,
-          notes: notes,
-          status: "open"
-        });
+  code: "RFQ-" + Date.now(),
+  business_id: user.id,
+  business_name: profile.company_name || profile.email,
+  title: title,
+  quantity: Number(quantity),
+  deadline: deadline,
+  notes: notes,
+  status: "open"
+});
 
       if (error) {
         feedback.textContent = error.message;
