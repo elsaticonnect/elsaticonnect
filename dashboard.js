@@ -17,9 +17,7 @@
   async function getCurrentUserAndProfile() {
     const { data: userData, error: userError } = await supabaseClient.auth.getUser();
 
-    if (userError || !userData.user) {
-      return { user: null, profile: null };
-    }
+    if (userError || !userData.user) return { user: null, profile: null };
 
     const { data: profile, error: profileError } = await supabaseClient
       .from("profiles")
@@ -27,9 +25,7 @@
       .eq("id", userData.user.id)
       .single();
 
-    if (profileError || !profile) {
-      return { user: userData.user, profile: null };
-    }
+    if (profileError || !profile) return { user: userData.user, profile: null };
 
     return { user: userData.user, profile };
   }
@@ -100,19 +96,19 @@
         </div>
         ${quotes.map(quote => `
           <div class="comparison-row">
-            <span><strong>${quote.supplier_name || "Supplier"}</strong><br><small>${quote.notes || ""}</small></span>
-            <span>${formatCurrency(quote.quoted_price)}</span>
-            <span>${quote.delivery_period || "-"}</span>
+            <span><strong>${quote.supplier_name || quote.supplier_company || "Supplier"}</strong><br><small>${quote.notes || ""}</small></span>
+            <span>${formatCurrency(quote.quoted_price || quote.price)}</span>
+            <span>${quote.delivery_period || quote.delivery || "-"}</span>
             <span>${quote.status || "submitted"}</span>
           </div>
         `).join("")}
       `;
 
-      const prices = quotes.map(q => Number(q.quoted_price || 0));
+      const prices = quotes.map(q => Number(q.quoted_price || q.price || 0));
       const lowest = Math.min(...prices);
       const highest = Math.max(...prices);
       const average = Math.round(prices.reduce((sum, p) => sum + p, 0) / prices.length);
-      const bestQuote = quotes.find(q => Number(q.quoted_price) === lowest);
+      const bestQuote = quotes.find(q => Number(q.quoted_price || q.price) === lowest);
 
       reportNode.innerHTML = `
         <article>
@@ -123,7 +119,7 @@
         </article>
         <article>
           <h3>Recommended supplier</h3>
-          <p><strong>${bestQuote?.supplier_name || "Supplier"}</strong> currently has the lowest submitted price.</p>
+          <p><strong>${bestQuote?.supplier_name || bestQuote?.supplier_company || "Supplier"}</strong> currently has the lowest submitted price.</p>
         </article>
       `;
     }
@@ -140,13 +136,10 @@
         return;
       }
 
-      activeCount && (activeCount.textContent = rfqs ? rfqs.length : 0);
+      if (activeCount) activeCount.textContent = rfqs ? rfqs.length : 0;
 
-      const { data: allQuotes } = await supabaseClient
-        .from("quotes")
-        .select("*");
-
-      quoteCount && (quoteCount.textContent = allQuotes ? allQuotes.length : 0);
+      const { data: allQuotes } = await supabaseClient.from("quotes").select("*");
+      if (quoteCount) quoteCount.textContent = allQuotes ? allQuotes.length : 0;
 
       if (!rfqs || rfqs.length === 0) {
         listNode.innerHTML = `<p class="empty-state">No RFQs created yet. Create your first procurement request.</p>`;
@@ -156,16 +149,14 @@
         return;
       }
 
-      listNode.innerHTML = rfqs
-        .map((rfq, index) => `
-          <button class="request-card" data-rfq-id="${rfq.id}" type="button">
-            <strong>${shortRfqCode(rfq, index)}</strong>
-            <span>${rfq.title}</span>
-            <small>${rfq.quantity || 0} units · ${rfq.deadline || "No deadline"}</small>
-            <small>Status: ${rfq.status || "open"}</small>
-          </button>
-        `)
-        .join("");
+      listNode.innerHTML = rfqs.map((rfq, index) => `
+        <button class="request-card" data-rfq-id="${rfq.id}" type="button">
+          <strong>${shortRfqCode(rfq, index)}</strong>
+          <span>${rfq.title}</span>
+          <small>${rfq.quantity || 0} units · ${rfq.deadline || "No deadline"}</small>
+          <small>Status: ${rfq.status || "open"}</small>
+        </button>
+      `).join("");
 
       listNode.querySelectorAll("[data-rfq-id]").forEach(button => {
         button.addEventListener("click", function () {
@@ -236,7 +227,6 @@
     if (!listNode || !form) return;
 
     const { user, profile } = await getCurrentUserAndProfile();
-
     if (!user || !profile || profile.role !== "supplier") return;
 
     const { data: rfqs, error } = await supabaseClient
@@ -250,23 +240,21 @@
       return;
     }
 
-    openCount && (openCount.textContent = rfqs ? rfqs.length : 0);
+    if (openCount) openCount.textContent = rfqs ? rfqs.length : 0;
 
     if (!rfqs || rfqs.length === 0) {
       listNode.innerHTML = `<p class="empty-state">No live RFQs available yet.</p>`;
       return;
     }
 
-    listNode.innerHTML = rfqs
-      .map((rfq, index) => `
-        <article class="request-card" data-rfq-id="${rfq.id}">
-          <strong>${shortRfqCode(rfq, index)}</strong>
-          <p>${rfq.title}</p>
-          <small>${rfq.quantity || 0} units · ${rfq.deadline || "No deadline"}</small><br>
-          <span class="supplier-status-badge">OPEN</span>
-        </article>
-      `)
-      .join("");
+    listNode.innerHTML = rfqs.map((rfq, index) => `
+      <article class="request-card" data-rfq-id="${rfq.id}">
+        <strong>${shortRfqCode(rfq, index)}</strong>
+        <p>${rfq.title}</p>
+        <small>${rfq.quantity || 0} units · ${rfq.deadline || "No deadline"}</small><br>
+        <span class="supplier-status-badge">OPEN</span>
+      </article>
+    `).join("");
 
     document.querySelectorAll("#supplier-rfq-list .request-card").forEach(card => {
       card.addEventListener("click", function () {
@@ -288,7 +276,7 @@
       const { data: myQuotes, error: quotesError } = await supabaseClient
         .from("quotes")
         .select("*")
-        .eq("supplier_id", user.id)
+        .eq("supplier_user_id", user.id)
         .order("created_at", { ascending: false });
 
       if (!quoteList) return;
@@ -313,8 +301,8 @@
         ${myQuotes.map(quote => `
           <div class="comparison-row">
             <span>${quote.rfq_id}</span>
-            <span>${formatCurrency(quote.quoted_price)}</span>
-            <span>${quote.delivery_period}</span>
+            <span>${formatCurrency(quote.quoted_price || quote.price)}</span>
+            <span>${quote.delivery_period || quote.delivery}</span>
             <span>${quote.status}</span>
           </div>
         `).join("")}
@@ -340,12 +328,18 @@
       const delivery = form.querySelector('input[name="delivery"]').value;
       const notes = form.querySelector('textarea[name="notes"]').value;
 
+      const supplierDisplayName = profile.company_name || profile.email || "Supplier";
+
       const { error: quoteError } = await supabaseClient.from("quotes").insert({
         rfq_id: selectedSupplierRfqId,
         supplier_id: user.id,
-        supplier_name: profile.company_name || profile.email,
+        supplier_user_id: user.id,
+        supplier_name: supplierDisplayName,
+        supplier_company: supplierDisplayName,
         quoted_price: Number(price),
+        price: Number(price),
         delivery_period: delivery,
+        delivery: delivery,
         notes,
         status: "submitted"
       });
@@ -360,7 +354,7 @@
       feedback.className = "form-feedback ok";
 
       form.reset();
-      selectedField.value = "";
+      if (selectedField) selectedField.value = "";
       selectedSupplierRfqId = null;
 
       await loadMyQuotes();
