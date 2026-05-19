@@ -139,6 +139,8 @@
   code: "RFQ-" + Date.now(),
   business_id: user.id,
   business_name: profile.company_name || profile.email,
+  created_by: user.id,
+  created_by_company: profile.company_name || profile.email,
   title: title,
   quantity: Number(quantity),
   deadline: deadline,
