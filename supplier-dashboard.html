@@ -138,6 +138,36 @@
         </article>
       </section>
 
+      <section class="verification-panel">
+  <div class="panel-head">
+    <h2>Supplier Verification</h2>
+    <span>Upload compliance documents to activate your supplier account</span>
+  </div>
+
+  <div id="verification-warning" class="verification-warning">
+    Your supplier account is pending verification. Upload your PACRA and ZRA documents before you can submit quotations.
+  </div>
+
+  <form class="contact-form compact-form" id="verification-form">
+    
+    <label>
+      PACRA Certificate
+      <input type="file" id="pacra-file" accept=".pdf,.png,.jpg,.jpeg" required>
+    </label>
+
+    <label>
+      ZRA Tax Clearance
+      <input type="file" id="zra-file" accept=".pdf,.png,.jpg,.jpeg" required>
+    </label>
+
+    <button class="button button-primary" type="submit">
+      Upload Documents
+    </button>
+
+  </form>
+
+  <p class="form-feedback" id="verification-feedback"></p>
+</section>
       <section class="app-grid supplier-app-grid">
         <section class="app-panel app-panel-list">
           <div class="panel-head">
