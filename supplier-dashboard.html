@@ -8,7 +8,6 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
@@ -21,7 +20,8 @@
       margin: 28px 0;
     }
 
-    .supplier-kpi-card {
+    .supplier-kpi-card,
+    .verification-panel {
       background: #ffffff;
       border-radius: 24px;
       padding: 22px;
@@ -68,6 +68,23 @@
       font-weight: 800;
     }
 
+    .verification-warning {
+      margin-bottom: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: #fee2e2;
+      color: #991b1b;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    .verification-note {
+      margin-top: 12px;
+      color: #64748b;
+      font-size: 0.94rem;
+      line-height: 1.6;
+    }
+
     @media (max-width: 900px) {
       .supplier-kpi-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -112,7 +129,7 @@
         <p class="auth-copy">
           Your supplier profile
           <strong id="dashboard-company-name">Company</strong>
-          can review live RFQs, submit quotations, and track award status in one interface.
+          can review RFQs, submit quotations, and track award status once verified.
         </p>
       </section>
 
@@ -139,35 +156,38 @@
       </section>
 
       <section class="verification-panel">
-  <div class="panel-head">
-    <h2>Supplier Verification</h2>
-    <span>Upload compliance documents to activate your supplier account</span>
-  </div>
+        <div class="panel-head">
+          <h2>Supplier Verification</h2>
+          <span>Upload compliance documents to activate your supplier account</span>
+        </div>
 
-  <div id="verification-warning" class="verification-warning">
-    Your supplier account is pending verification. Upload your PACRA and ZRA documents before you can submit quotations.
-  </div>
+        <div id="verification-warning" class="verification-warning">
+          Your supplier account is pending verification. Upload your PACRA and ZRA documents before you can submit quotations.
+        </div>
 
-  <form class="contact-form compact-form" id="verification-form">
-    
-    <label>
-      PACRA Certificate
-      <input type="file" id="pacra-file" accept=".pdf,.png,.jpg,.jpeg" required>
-    </label>
+        <form class="contact-form compact-form" id="verification-form">
+          <label>
+            PACRA Certificate
+            <input type="file" id="pacra-file" accept=".pdf,.png,.jpg,.jpeg" required>
+          </label>
 
-    <label>
-      ZRA Tax Clearance
-      <input type="file" id="zra-file" accept=".pdf,.png,.jpg,.jpeg" required>
-    </label>
+          <label>
+            ZRA Tax Clearance
+            <input type="file" id="zra-file" accept=".pdf,.png,.jpg,.jpeg" required>
+          </label>
 
-    <button class="button button-primary" type="submit">
-      Upload Documents
-    </button>
+          <button class="button button-primary" type="submit">
+            Upload Documents
+          </button>
+        </form>
 
-  </form>
+        <p class="form-feedback" id="verification-feedback"></p>
 
-  <p class="form-feedback" id="verification-feedback"></p>
-</section>
+        <p class="verification-note">
+          After uploading, ELSATI will review your documents. You will only be able to submit quotations once your supplier account is approved.
+        </p>
+      </section>
+
       <section class="app-grid supplier-app-grid">
         <section class="app-panel app-panel-list">
           <div class="panel-head">
@@ -279,9 +299,9 @@
 
             <article>
               <h3>Verification status</h3>
-              <p>PACRA verification: Pending</p>
-              <p>ZRA verification: Pending</p>
-              <p>Bank confirmation: Pending</p>
+              <p id="pacra-status">PACRA verification: Pending</p>
+              <p id="zra-status">ZRA verification: Pending</p>
+              <p id="account-status">Account status: Pending</p>
             </article>
           </div>
         </section>
@@ -290,7 +310,6 @@
   </div>
 
   <script src="script.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
 
@@ -299,6 +318,8 @@
       window.ELSATI_SUPABASE.url,
       window.ELSATI_SUPABASE.publishableKey
     );
+
+    let currentSupplierProfile = null;
 
     async function loadSupplierProfile() {
       const { data: userData, error: userError } = await supabaseClient.auth.getUser();
@@ -310,7 +331,7 @@
 
       const { data: profile, error: profileError } = await supabaseClient
         .from("profiles")
-        .select("company_name, email, role")
+        .select("*")
         .eq("id", userData.user.id)
         .single();
 
@@ -326,10 +347,143 @@
         return;
       }
 
+      currentSupplierProfile = profile;
+
       const displayName = profile.company_name || profile.email || "Supplier user";
 
       document.getElementById("dashboard-user-name").textContent = displayName;
       document.getElementById("dashboard-company-name").textContent = displayName;
+
+      updateVerificationUI(profile);
+    }
+
+    function updateVerificationUI(profile) {
+      const warning = document.getElementById("verification-warning");
+      const form = document.getElementById("verification-form");
+      const feedback = document.getElementById("verification-feedback");
+      const quoteForm = document.getElementById("supplier-quote-form");
+
+      const pacraStatus = document.getElementById("pacra-status");
+      const zraStatus = document.getElementById("zra-status");
+      const accountStatus = document.getElementById("account-status");
+
+      if (profile.pacra_url) {
+        pacraStatus.textContent = "PACRA verification: Uploaded";
+      }
+
+      if (profile.zra_url) {
+        zraStatus.textContent = "ZRA verification: Uploaded";
+      }
+
+      if (profile.verified === true || profile.verification_status === "approved") {
+        warning.textContent = "Your supplier account is verified. You can now submit quotations.";
+        warning.style.background = "#dcfce7";
+        warning.style.color = "#166534";
+
+        form.style.display = "none";
+
+        quoteForm.style.opacity = "1";
+        quoteForm.style.pointerEvents = "auto";
+
+        accountStatus.textContent = "Account status: Verified";
+        feedback.textContent = "";
+        return;
+      }
+
+      if (profile.verification_status === "submitted") {
+        warning.textContent = "Your documents have been submitted and are awaiting ELSATI review.";
+        warning.style.background = "#fef3c7";
+        warning.style.color = "#92400e";
+
+        form.style.display = "none";
+
+        quoteForm.style.opacity = "0.45";
+        quoteForm.style.pointerEvents = "none";
+
+        accountStatus.textContent = "Account status: Awaiting review";
+        feedback.textContent = "You will be able to submit quotations once ELSATI approves your documents.";
+        return;
+      }
+
+      warning.textContent = "Your supplier account is pending verification. Upload your PACRA and ZRA documents before you can submit quotations.";
+      warning.style.background = "#fee2e2";
+      warning.style.color = "#991b1b";
+
+      quoteForm.style.opacity = "0.45";
+      quoteForm.style.pointerEvents = "none";
+
+      accountStatus.textContent = "Account status: Pending documents";
+      feedback.textContent = "";
+    }
+
+    async function uploadSupplierDocuments(event) {
+      event.preventDefault();
+
+      const feedback = document.getElementById("verification-feedback");
+      const pacraFile = document.getElementById("pacra-file").files[0];
+      const zraFile = document.getElementById("zra-file").files[0];
+
+      if (!pacraFile || !zraFile) {
+        feedback.textContent = "Please upload both PACRA and ZRA documents.";
+        return;
+      }
+
+      const { data: userData } = await supabaseClient.auth.getUser();
+
+      if (!userData.user) {
+        window.location.href = "supplier-signin.html";
+        return;
+      }
+
+      const userId = userData.user.id;
+
+      feedback.textContent = "Uploading documents...";
+
+      const pacraPath = `${userId}/pacra-${Date.now()}-${pacraFile.name}`;
+      const zraPath = `${userId}/zra-${Date.now()}-${zraFile.name}`;
+
+      const { error: pacraError } = await supabaseClient.storage
+        .from("supplier-documents")
+        .upload(pacraPath, pacraFile, {
+          cacheControl: "3600",
+          upsert: true
+        });
+
+      if (pacraError) {
+        feedback.textContent = "PACRA upload failed: " + pacraError.message;
+        return;
+      }
+
+      const { error: zraError } = await supabaseClient.storage
+        .from("supplier-documents")
+        .upload(zraPath, zraFile, {
+          cacheControl: "3600",
+          upsert: true
+        });
+
+      if (zraError) {
+        feedback.textContent = "ZRA upload failed: " + zraError.message;
+        return;
+      }
+
+      const { error: updateError } = await supabaseClient
+        .from("profiles")
+        .update({
+          pacra_url: pacraPath,
+          zra_url: zraPath,
+          verification_status: "submitted",
+          verified: false
+        })
+        .eq("id", userId);
+
+      if (updateError) {
+        feedback.textContent = "Profile update failed: " + updateError.message;
+        return;
+      }
+
+      feedback.textContent = "Documents uploaded successfully. Awaiting ELSATI review.";
+
+      await loadSupplierProfile();
     }
 
     async function logoutUser() {
@@ -338,6 +492,7 @@
     }
 
     document.getElementById("logout-button").addEventListener("click", logoutUser);
+    document.getElementById("verification-form").addEventListener("submit", uploadSupplierDocuments);
 
     document.querySelectorAll("#supplier-rfq-list .request-card").forEach((card) => {
       card.addEventListener("click", function() {
@@ -359,6 +514,11 @@
 
       const selectedRfq = document.getElementById("supplier-selected-rfq").value;
       const feedback = document.getElementById("supplier-quote-feedback");
+
+      if (!currentSupplierProfile || currentSupplierProfile.verified !== true) {
+        feedback.textContent = "Your supplier account must be verified before submitting quotations.";
+        return;
+      }
 
       if (!selectedRfq) {
         feedback.textContent = "Please select an RFQ first.";
