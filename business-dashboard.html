@@ -56,49 +56,6 @@
       color: #102033;
     }
 
-    .status-badge {
-      display: inline-flex;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      margin-top: 10px;
-    }
-
-    .status-open {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .status-review {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .status-awarded {
-      background: #dbeafe;
-      color: #1d4ed8;
-    }
-
-    .activity-list {
-      display: grid;
-      gap: 14px;
-      margin-top: 12px;
-    }
-
-    .activity-item {
-      background: #ffffff;
-      border-radius: 18px;
-      padding: 16px;
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      color: #475569;
-      font-weight: 700;
-    }
-
-    .activity-item strong {
-      color: #102033;
-    }
-
     @media (max-width: 900px) {
       .kpi-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -127,7 +84,7 @@
       </a>
 
       <div class="topbar-actions dashboard-actions">
-        <button class="notification-btn" type="button">🔔 3</button>
+        <button class="notification-btn" type="button">🔔</button>
         <a class="button button-secondary" href="monitor.html">Background Monitor</a>
         <button class="button button-secondary" id="logout-button" type="button">Log out</button>
       </div>
@@ -152,22 +109,22 @@
       <section class="kpi-grid">
         <article class="kpi-card">
           <span>Active RFQs</span>
-          <strong>6</strong>
+          <strong id="active-rfq-count">0</strong>
         </article>
 
         <article class="kpi-card">
           <span>Quotes Received</span>
-          <strong>18</strong>
+          <strong id="quotes-received-count">0</strong>
         </article>
 
         <article class="kpi-card">
           <span>Approved Suppliers</span>
-          <strong>42</strong>
+          <strong>0</strong>
         </article>
 
         <article class="kpi-card">
           <span>Estimated Savings</span>
-          <strong>K24,500</strong>
+          <strong>K0</strong>
         </article>
       </section>
 
@@ -212,26 +169,7 @@
           </div>
 
           <div class="request-list" id="business-rfq-list">
-            <article class="request-card active">
-              <strong>RFQ-024</strong>
-              <p>Office Furniture Supply</p>
-              <small>180 units • 5 days</small><br>
-              <span class="status-badge status-open">OPEN</span>
-            </article>
-
-            <article class="request-card">
-              <strong>RFQ-031</strong>
-              <p>Printing Toners</p>
-              <small>60 units • 2 days</small><br>
-              <span class="status-badge status-review">UNDER REVIEW</span>
-            </article>
-
-            <article class="request-card">
-              <strong>RFQ-037</strong>
-              <p>Safety Boots</p>
-              <small>120 pairs • 7 days</small><br>
-              <span class="status-badge status-awarded">AWARDED</span>
-            </article>
+            <p class="empty-state">Loading RFQs...</p>
           </div>
         </section>
       </section>
@@ -240,41 +178,11 @@
         <section class="app-panel app-panel-table">
           <div class="panel-head">
             <h2>Quote comparison</h2>
-            <span id="comparison-title">RFQ-024 • Office Furniture Supply</span>
+            <span id="comparison-title">Select an RFQ to compare supplier quotes</span>
           </div>
 
           <div class="comparison-table" id="business-comparison-table">
-            <div class="comparison-row comparison-head">
-              <strong>Supplier</strong>
-              <strong>Price</strong>
-              <strong>Rating</strong>
-              <strong>Delivery</strong>
-              <strong>Decision</strong>
-            </div>
-
-            <div class="comparison-row">
-              <span><strong>Alex Ltd</strong><br><small>PACRA verified</small></span>
-              <span>K240</span>
-              <span>★ 4.7</span>
-              <span>3 days</span>
-              <button class="button button-secondary">Award Supplier</button>
-            </div>
-
-            <div class="comparison-row">
-              <span><strong>Zambezi Enterprises</strong><br><small>ZRA verified</small></span>
-              <span>K255</span>
-              <span>★ 4.5</span>
-              <span>5 days</span>
-              <button class="button button-secondary">Award Supplier</button>
-            </div>
-
-            <div class="comparison-row">
-              <span><strong>ABC Supplies</strong><br><small>Bank confirmed</small></span>
-              <span>K248</span>
-              <span>★ 4.8</span>
-              <span>4 days</span>
-              <button class="button button-secondary">Award Supplier</button>
-            </div>
+            <p class="empty-state">Supplier quotes will appear here once received.</p>
           </div>
         </section>
 
@@ -285,17 +193,7 @@
           </div>
 
           <div class="report-summary" id="procurement-report">
-            <article>
-              <h3>Price comparison</h3>
-              <p>Lowest quote: K240</p>
-              <p>Highest quote: K255</p>
-              <p>Average quote: K248</p>
-            </article>
-
-            <article>
-              <h3>Recommended supplier</h3>
-              <p><strong>ABC Supplies</strong> has the strongest balance of price, rating, and delivery reliability.</p>
-            </article>
+            <p class="empty-state">Procurement report will appear once RFQs and quotes are available.</p>
           </div>
         </section>
       </section>
@@ -306,10 +204,8 @@
           <span>Live procurement updates</span>
         </div>
 
-        <div class="activity-list">
-          <div class="activity-item"><strong>ABC Supplies</strong> submitted a quote for Office Furniture Supply.</div>
-          <div class="activity-item"><strong>Zambezi Enterprises</strong> updated delivery time to 5 days.</div>
-          <div class="activity-item"><strong>RFQ-031</strong> moved to Under Review.</div>
+        <div class="activity-list" id="business-activity-list">
+          <div class="activity-item"><strong>System</strong> ready for live RFQ creation.</div>
         </div>
       </section>
 
@@ -319,62 +215,6 @@
   <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
-
-  <script>
-    const supabaseClient = supabase.createClient(
-      window.ELSATI_SUPABASE.url,
-      window.ELSATI_SUPABASE.publishableKey
-    );
-
-    async function loadBusinessProfile() {
-      const { data: userData, error: userError } = await supabaseClient.auth.getUser();
-
-      if (userError || !userData.user) {
-        window.location.href = "customer-signin.html";
-        return;
-      }
-
-      const { data: profile, error: profileError } = await supabaseClient
-        .from("profiles")
-        .select("company_name, email, role")
-        .eq("id", userData.user.id)
-        .single();
-
-      if (profileError || !profile) {
-        await supabaseClient.auth.signOut();
-        window.location.href = "customer-signin.html";
-        return;
-      }
-
-      if (profile.role !== "business") {
-        await supabaseClient.auth.signOut();
-        window.location.href = "signin.html";
-        return;
-      }
-
-      const displayName = profile.company_name || profile.email || "Business user";
-
-      document.getElementById("dashboard-user-name").textContent = displayName;
-      document.getElementById("dashboard-company-name").textContent = displayName;
-    }
-
-    async function logoutUser() {
-      await supabaseClient.auth.signOut();
-      window.location.href = "customer-signin.html";
-    }
-
-    document.getElementById("logout-button").addEventListener("click", logoutUser);
-
-    document.getElementById("rfq-create-form").addEventListener("submit", function(event) {
-      event.preventDefault();
-
-      const feedback = document.getElementById("rfq-create-feedback");
-      feedback.textContent = "Request created successfully. Supplier notifications will be added next.";
-
-      event.target.reset();
-    });
-
-    loadBusinessProfile();
-  </script>
+  <script src="dashboard.js"></script>
 </body>
 </html>
