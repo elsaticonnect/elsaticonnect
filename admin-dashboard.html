@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard | Elsati Connect</title>
-  <meta name="description" content="Admin dashboard for supplier verification on Elsati Connect.">
+  <meta name="description" content="Admin dashboard for supplier verification and platform monitoring on Elsati Connect.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,13 +13,14 @@
   <link rel="stylesheet" href="styles.css">
 
   <style>
-    .admin-grid {
+    .admin-kpi-grid {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(4, minmax(160px, 1fr));
       gap: 18px;
-      margin-top: 28px;
+      margin: 28px 0;
     }
 
+    .admin-kpi-card,
     .admin-card {
       background: #ffffff;
       border-radius: 24px;
@@ -28,9 +29,40 @@
       border: 1px solid rgba(15, 23, 42, 0.06);
     }
 
+    .admin-kpi-card span {
+      color: #64748b;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .admin-kpi-card strong {
+      display: block;
+      font-size: 34px;
+      margin-top: 8px;
+      color: #102033;
+    }
+
+    .admin-layout-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
     .admin-row {
       display: grid;
-      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      grid-template-columns: 1.2fr 0.7fr 1fr 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(248, 250, 252, 0.95);
+      margin-bottom: 12px;
+    }
+
+    .admin-rfq-row,
+    .admin-quote-row {
+      display: grid;
+      grid-template-columns: 1fr 0.8fr 0.8fr 0.8fr;
       gap: 14px;
       align-items: center;
       padding: 16px;
@@ -56,18 +88,48 @@
       text-transform: capitalize;
     }
 
-    .admin-badge.approved {
+    .admin-badge.approved,
+    .admin-badge.awarded {
       background: #dcfce7;
       color: #166534;
     }
 
-    .admin-badge.rejected {
+    .admin-badge.rejected,
+    .admin-badge.closed {
       background: #fee2e2;
       color: #991b1b;
     }
 
-    @media (max-width: 900px) {
-      .admin-row {
+    .admin-badge.open {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .admin-muted {
+      color: #64748b;
+      font-size: 0.92rem;
+    }
+
+    .admin-section-stack {
+      display: grid;
+      gap: 22px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 1000px) {
+      .admin-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .admin-row,
+      .admin-rfq-row,
+      .admin-quote-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .admin-kpi-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -90,21 +152,67 @@
     <main class="dashboard-page reveal">
       <section class="dashboard-intro">
         <p class="eyebrow">ELSATI admin</p>
-        <h1>Supplier Verification Dashboard</h1>
+        <h1>Platform Control Centre</h1>
         <p class="auth-copy">
-          Review supplier PACRA and ZRA submissions, then approve or reject supplier access.
+          Review supplier verification, RFQs, quotations, award decisions, and overall procurement activity.
         </p>
       </section>
 
-      <section class="admin-card">
-        <div class="panel-head">
-          <h2>Supplier verification queue</h2>
-          <span>Submitted supplier compliance documents</span>
-        </div>
+      <section class="admin-kpi-grid">
+        <article class="admin-kpi-card">
+          <span>Total Suppliers</span>
+          <strong id="admin-total-suppliers">0</strong>
+        </article>
 
-        <div id="admin-supplier-list" class="admin-grid">
-          <p class="empty-state">Loading supplier verification requests...</p>
-        </div>
+        <article class="admin-kpi-card">
+          <span>Pending Suppliers</span>
+          <strong id="admin-pending-suppliers">0</strong>
+        </article>
+
+        <article class="admin-kpi-card">
+          <span>Open RFQs</span>
+          <strong id="admin-open-rfqs">0</strong>
+        </article>
+
+        <article class="admin-kpi-card">
+          <span>Total Quotes</span>
+          <strong id="admin-total-quotes">0</strong>
+        </article>
+      </section>
+
+      <section class="admin-section-stack">
+        <section class="admin-card">
+          <div class="panel-head">
+            <h2>Supplier verification queue</h2>
+            <span>Submitted supplier compliance documents</span>
+          </div>
+
+          <div id="admin-supplier-list">
+            <p class="empty-state">Loading suppliers...</p>
+          </div>
+        </section>
+
+        <section class="admin-card">
+          <div class="panel-head">
+            <h2>RFQ activity</h2>
+            <span>Open, awarded, and closed procurement requests</span>
+          </div>
+
+          <div id="admin-rfq-list">
+            <p class="empty-state">Loading RFQs...</p>
+          </div>
+        </section>
+
+        <section class="admin-card">
+          <div class="panel-head">
+            <h2>Quotation activity</h2>
+            <span>Suppliers, submitted prices, delivery periods, and award status</span>
+          </div>
+
+          <div id="admin-quote-list">
+            <p class="empty-state">Loading quotations...</p>
+          </div>
+        </section>
       </section>
     </main>
   </div>
@@ -118,6 +226,10 @@
       window.ELSATI_SUPABASE.url,
       window.ELSATI_SUPABASE.publishableKey
     );
+
+    function money(value) {
+      return `K${Number(value || 0).toLocaleString()}`;
+    }
 
     async function getCurrentAdmin() {
       const { data: userData } = await supabaseClient.auth.getUser();
@@ -154,24 +266,62 @@
       return data.signedUrl;
     }
 
-    async function loadSupplierVerificationQueue() {
+    async function loadAdminDashboard() {
       const admin = await getCurrentAdmin();
       if (!admin) return;
 
-      const container = document.getElementById("admin-supplier-list");
+      const supplierContainer = document.getElementById("admin-supplier-list");
+      const rfqContainer = document.getElementById("admin-rfq-list");
+      const quoteContainer = document.getElementById("admin-quote-list");
 
-      const { data: suppliers, error } = await supabaseClient
+      const { data: suppliers, error: supplierError } = await supabaseClient
         .from("profiles")
         .select("*")
         .eq("role", "supplier")
         .order("company_name", { ascending: true });
 
-      if (error) {
-        container.innerHTML = `<p class="empty-state">${error.message}</p>`;
-        return;
+      const { data: rfqs, error: rfqError } = await supabaseClient
+        .from("rfqs")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      const { data: quotes, error: quoteError } = await supabaseClient
+        .from("quotes")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (supplierError) {
+        supplierContainer.innerHTML = `<p class="empty-state">${supplierError.message}</p>`;
       }
 
-      if (!suppliers || suppliers.length === 0) {
+      if (rfqError) {
+        rfqContainer.innerHTML = `<p class="empty-state">${rfqError.message}</p>`;
+      }
+
+      if (quoteError) {
+        quoteContainer.innerHTML = `<p class="empty-state">${quoteError.message}</p>`;
+      }
+
+      const supplierList = suppliers || [];
+      const rfqList = rfqs || [];
+      const quoteList = quotes || [];
+
+      document.getElementById("admin-total-suppliers").textContent = supplierList.length;
+      document.getElementById("admin-pending-suppliers").textContent =
+        supplierList.filter(s => !s.verified && s.verification_status !== "rejected").length;
+      document.getElementById("admin-open-rfqs").textContent =
+        rfqList.filter(r => r.status === "open").length;
+      document.getElementById("admin-total-quotes").textContent = quoteList.length;
+
+      await renderSuppliers(supplierList);
+      renderRfqs(rfqList, quoteList);
+      renderQuotes(quoteList, rfqList);
+    }
+
+    async function renderSuppliers(suppliers) {
+      const container = document.getElementById("admin-supplier-list");
+
+      if (!suppliers.length) {
         container.innerHTML = `<p class="empty-state">No suppliers found yet.</p>`;
         return;
       }
@@ -185,15 +335,18 @@
             ? "approved"
             : supplier.verification_status || "pending";
 
+          const isApproved = status === "approved";
+
           return `
             <div class="admin-row">
               <div>
                 <strong>${supplier.company_name || "Supplier"}</strong><br>
-                <small>${supplier.email || ""}</small>
+                <small>${supplier.email || ""}</small><br>
+                <small class="admin-muted">Verified: ${supplier.verified ? "Yes" : "No"}</small>
               </div>
 
               <div>
-                <span class="admin-badge ${status === "approved" ? "approved" : status === "rejected" ? "rejected" : ""}">
+                <span class="admin-badge ${status}">
                   ${status}
                 </span>
               </div>
@@ -202,24 +355,28 @@
                 ${
                   pacraUrl
                     ? `<a class="button button-secondary button-small" href="${pacraUrl}" target="_blank">View PACRA</a>`
-                    : `<span class="empty-state">No PACRA</span>`
+                    : `<span class="admin-muted">No PACRA</span>`
                 }
 
                 ${
                   zraUrl
                     ? `<a class="button button-secondary button-small" href="${zraUrl}" target="_blank">View ZRA</a>`
-                    : `<span class="empty-state">No ZRA</span>`
+                    : `<span class="admin-muted">No ZRA</span>`
                 }
               </div>
 
               <div class="admin-actions">
-                <button class="button button-primary button-small" onclick="approveSupplier('${supplier.id}')">
-                  Approve
-                </button>
+                ${
+                  isApproved
+                    ? `<span class="admin-badge approved">Already approved</span>`
+                    : `<button class="button button-primary button-small" onclick="approveSupplier('${supplier.id}')">Approve</button>`
+                }
 
-                <button class="button button-secondary button-small" onclick="rejectSupplier('${supplier.id}')">
-                  Reject
-                </button>
+                ${
+                  status === "rejected"
+                    ? `<span class="admin-badge rejected">Rejected</span>`
+                    : `<button class="button button-secondary button-small" onclick="rejectSupplier('${supplier.id}')">Reject</button>`
+                }
               </div>
             </div>
           `;
@@ -227,6 +384,79 @@
       );
 
       container.innerHTML = rows.join("");
+    }
+
+    function renderRfqs(rfqs, quotes) {
+      const container = document.getElementById("admin-rfq-list");
+
+      if (!rfqs.length) {
+        container.innerHTML = `<p class="empty-state">No RFQs created yet.</p>`;
+        return;
+      }
+
+      container.innerHTML = rfqs.map((rfq) => {
+        const rfqQuotes = quotes.filter(q => q.rfq_id === rfq.id);
+
+        return `
+          <div class="admin-rfq-row">
+            <div>
+              <strong>${rfq.code || "RFQ"} · ${rfq.title || "Untitled RFQ"}</strong><br>
+              <small class="admin-muted">${rfq.business_name || rfq.created_by_company || "Business"}</small>
+            </div>
+
+            <div>
+              <span class="admin-badge ${rfq.status || "open"}">${rfq.status || "open"}</span>
+            </div>
+
+            <div>
+              <strong>${rfq.quantity || 0}</strong><br>
+              <small class="admin-muted">Quantity</small>
+            </div>
+
+            <div>
+              <strong>${rfqQuotes.length}</strong><br>
+              <small class="admin-muted">Quotes submitted</small>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderQuotes(quotes, rfqs) {
+      const container = document.getElementById("admin-quote-list");
+
+      if (!quotes.length) {
+        container.innerHTML = `<p class="empty-state">No supplier quotations submitted yet.</p>`;
+        return;
+      }
+
+      container.innerHTML = quotes.map((quote) => {
+        const relatedRfq = rfqs.find(rfq => rfq.id === quote.rfq_id);
+        const status = quote.awarded || quote.status === "awarded" ? "awarded" : quote.status || "submitted";
+
+        return `
+          <div class="admin-quote-row">
+            <div>
+              <strong>${quote.supplier_name || quote.supplier_company || "Supplier"}</strong><br>
+              <small class="admin-muted">${relatedRfq ? relatedRfq.title : quote.rfq_id}</small>
+            </div>
+
+            <div>
+              <strong>${money(quote.quoted_price || quote.price)}</strong><br>
+              <small class="admin-muted">Quoted price</small>
+            </div>
+
+            <div>
+              <strong>${quote.delivery_period || quote.delivery || "-"}</strong><br>
+              <small class="admin-muted">Delivery period</small>
+            </div>
+
+            <div>
+              <span class="admin-badge ${status}">${status}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
     }
 
     async function approveSupplier(supplierId) {
@@ -245,7 +475,7 @@
       }
 
       alert("Supplier approved successfully.");
-      loadSupplierVerificationQueue();
+      loadAdminDashboard();
     }
 
     async function rejectSupplier(supplierId) {
@@ -266,7 +496,7 @@
       }
 
       alert("Supplier rejected.");
-      loadSupplierVerificationQueue();
+      loadAdminDashboard();
     }
 
     async function logoutUser() {
@@ -276,7 +506,7 @@
 
     document.getElementById("logout-button").addEventListener("click", logoutUser);
 
-    loadSupplierVerificationQueue();
+    loadAdminDashboard();
   </script>
 </body>
 </html>
