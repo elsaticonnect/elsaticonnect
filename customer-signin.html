@@ -17,6 +17,7 @@
       <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home">
         <img src="elsati.png" alt="Elsati Connect logo">
       </a>
+
       <div class="topbar-actions topbar-actions-compact">
         <a class="login-icon-link" href="signin.html" aria-label="Log in">
           <span class="login-icon"></span>
@@ -109,41 +110,50 @@
     form.addEventListener("submit", async function(event) {
       event.preventDefault();
 
-      const email = document.querySelector('input[name="email"]').value;
+      const email = document.querySelector('input[name="email"]').value.trim();
       const password = document.querySelector('input[name="password"]').value;
 
       feedback.textContent = "Signing in...";
+      feedback.className = "form-feedback";
 
       const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
+        email,
+        password
       });
 
       if (error) {
         feedback.textContent = error.message;
+        feedback.className = "form-feedback error";
         return;
       }
 
       const { data: profile, error: profileError } = await supabaseClient
         .from("profiles")
-        .select("role")
+        .select("*")
         .eq("id", data.user.id)
         .single();
 
       if (profileError || !profile) {
-        feedback.textContent = "Profile not found. Please register again.";
-        await supabaseClient.auth.signOut();
+        feedback.textContent = "Profile not found. Please contact administrator.";
+        feedback.className = "form-feedback error";
         return;
       }
 
       if (profile.role !== "business") {
         feedback.textContent = "This account is not registered as a business.";
+        feedback.className = "form-feedback error";
         await supabaseClient.auth.signOut();
         return;
       }
 
       feedback.textContent = "Login successful. Opening dashboard...";
-      window.location.href = "business-dashboard.html";
+      feedback.className = "form-feedback ok";
+
+      if (profile.is_admin === true) {
+        window.location.href = "admin-dashboard.html";
+      } else {
+        window.location.href = "business-dashboard.html";
+      }
     });
   </script>
 </body>
