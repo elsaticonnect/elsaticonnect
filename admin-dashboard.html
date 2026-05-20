@@ -53,6 +53,7 @@
       color: #92400e;
       font-weight: 800;
       font-size: 12px;
+      text-transform: capitalize;
     }
 
     .admin-badge.approved {
@@ -108,6 +109,7 @@
     </main>
   </div>
 
+  <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
 
@@ -121,7 +123,7 @@
       const { data: userData } = await supabaseClient.auth.getUser();
 
       if (!userData.user) {
-        window.location.href = "signin.html";
+        window.location.href = "customer-signin.html";
         return null;
       }
 
@@ -129,7 +131,7 @@
         .from("profiles")
         .select("*")
         .eq("id", userData.user.id)
-        .single();
+        .maybeSingle();
 
       if (error || !profile || profile.is_admin !== true) {
         alert("Admin access only.");
@@ -162,7 +164,7 @@
         .from("profiles")
         .select("*")
         .eq("role", "supplier")
-        .order("created_at", { ascending: false });
+        .order("company_name", { ascending: true });
 
       if (error) {
         container.innerHTML = `<p class="empty-state">${error.message}</p>`;
@@ -269,7 +271,7 @@
 
     async function logoutUser() {
       await supabaseClient.auth.signOut();
-      window.location.href = "signin.html";
+      window.location.href = "customer-signin.html";
     }
 
     document.getElementById("logout-button").addEventListener("click", logoutUser);
