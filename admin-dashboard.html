@@ -375,10 +375,13 @@
                 }
 
                 ${
-                  status === "rejected"
-                    ? `<span class="admin-badge rejected">Rejected</span>`
-                    : `<button class="button button-secondary button-small" onclick="rejectSupplier('${supplier.id}')">Reject</button>`
-                }
+                  ${
+  isApproved
+    ? ``
+    : status === "rejected"
+      ? `<span class="admin-badge rejected">Rejected</span>`
+      : `<button class="button button-secondary button-small" onclick="rejectSupplier('${supplier.id}')">Reject</button>`
+}
               </div>
             </div>
           `;
