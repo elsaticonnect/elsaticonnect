@@ -35,7 +35,8 @@
       margin: 28px 0;
     }
 
-    .kpi-card {
+    .kpi-card,
+    .profile-panel {
       background: #ffffff;
       border-radius: 24px;
       padding: 22px;
@@ -56,14 +57,57 @@
       color: #102033;
     }
 
-    @media (max-width: 900px) {
-      .kpi-grid {
+    .dashboard-section-stack {
+      display: grid;
+      gap: 22px;
+      margin-top: 24px;
+    }
+
+    .profile-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .profile-form-grid label.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .supplier-directory-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .activity-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .activity-item {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(248, 250, 252, 0.94);
+      color: #64748b;
+    }
+
+    .activity-item strong {
+      color: #102033;
+      margin-right: 6px;
+    }
+
+    @media (max-width: 1000px) {
+      .kpi-grid,
+      .supplier-directory-grid,
+      .profile-form-grid {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 600px) {
-      .kpi-grid {
+    @media (max-width: 700px) {
+      .kpi-grid,
+      .supplier-directory-grid,
+      .profile-form-grid {
         grid-template-columns: 1fr;
       }
 
@@ -101,8 +145,7 @@
 
         <p class="auth-copy">
           Your organization <strong id="dashboard-company-name">Company</strong>
-          is ready to create requests, compare supplier quotes, choose winning quotations,
-          and produce procurement reports.
+          can create RFQs, compare supplier quotes, review verified suppliers, and track sourcing decisions.
         </p>
       </section>
 
@@ -119,13 +162,63 @@
 
         <article class="kpi-card">
           <span>Approved Suppliers</span>
-          <strong>0</strong>
+          <strong id="approved-supplier-count">0</strong>
         </article>
 
         <article class="kpi-card">
           <span>Estimated Savings</span>
           <strong>K0</strong>
         </article>
+      </section>
+
+      <section class="profile-panel">
+        <div class="panel-head">
+          <h2>Business profile</h2>
+          <span>Complete your buyer profile for better supplier visibility and admin records</span>
+        </div>
+
+        <form class="contact-form compact-form" id="business-profile-form">
+          <div class="profile-form-grid">
+            <label>
+              Business name
+              <input type="text" name="company_name" placeholder="Your business name" required>
+            </label>
+
+            <label>
+              Contact person
+              <input type="text" name="contact_person" placeholder="Full name">
+            </label>
+
+            <label>
+              Contact phone
+              <input type="text" name="contact_phone" placeholder="+260...">
+            </label>
+
+            <label>
+              City
+              <input type="text" name="city" placeholder="Lusaka">
+            </label>
+
+            <label>
+              Country
+              <input type="text" name="country" placeholder="Zambia">
+            </label>
+
+            <label>
+              Business address
+              <input type="text" name="business_address" placeholder="Physical address">
+            </label>
+
+            <label class="full-width">
+              Business description
+              <textarea name="business_description" rows="3" placeholder="Briefly describe your business and procurement needs"></textarea>
+            </label>
+          </div>
+
+          <button class="button button-primary" type="submit">Save Business Profile</button>
+        </form>
+
+        <p class="form-feedback" id="business-profile-feedback"></p>
       </section>
 
       <section class="app-grid business-app-grid">
@@ -142,8 +235,23 @@
             </label>
 
             <label>
+              Category
+              <input type="text" name="category" placeholder="Stationery, furniture, ICT, catering...">
+            </label>
+
+            <label>
               Quantity
               <input type="number" name="quantity" placeholder="180" required>
+            </label>
+
+            <label>
+              Estimated budget
+              <input type="number" name="estimated_budget" placeholder="25000">
+            </label>
+
+            <label>
+              Delivery location
+              <input type="text" name="delivery_location" placeholder="Lusaka, Zambia">
             </label>
 
             <label>
@@ -164,7 +272,7 @@
 
         <section class="app-panel app-panel-list">
           <div class="panel-head">
-            <h2>Open requests</h2>
+            <h2>Requests</h2>
             <span>Select a request to compare quotes</span>
           </div>
 
@@ -189,13 +297,24 @@
         <section class="app-panel app-panel-report">
           <div class="panel-head">
             <h2>Procurement report</h2>
-            <span>Price comparison and decision guidance</span>
+            <span>RFQ details, price comparison and decision guidance</span>
           </div>
 
           <div class="report-summary" id="procurement-report">
             <p class="empty-state">Procurement report will appear once RFQs and quotes are available.</p>
           </div>
         </section>
+      </section>
+
+      <section class="app-panel">
+        <div class="panel-head">
+          <h2>Verified supplier directory</h2>
+          <span>Approved suppliers currently available on ELSATI</span>
+        </div>
+
+        <div class="supplier-directory-grid" id="business-supplier-directory">
+          <p class="empty-state">Loading verified suppliers...</p>
+        </div>
       </section>
 
       <section class="app-panel">
