@@ -335,7 +335,9 @@
             ? "approved"
             : supplier.verification_status || "pending";
 
-          const isApproved = status === "approved";
+          const isApproved =
+  supplier.verified === true ||
+  supplier.verification_status === "approved";
 
           return `
             <div class="admin-row">
