@@ -167,7 +167,7 @@
         .from("profiles")
         .select("*")
         .eq("id", data.user.id)
-        .single();
+        .maybeSingle();
 
       if (profileError || !profile) {
         feedback.textContent = "Supplier profile not found. Please contact administrator.";
