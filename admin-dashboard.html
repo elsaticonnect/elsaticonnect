@@ -42,10 +42,10 @@
       color: #102033;
     }
 
-    .admin-layout-grid {
+    .admin-section-stack {
       display: grid;
-      grid-template-columns: 1fr;
       gap: 22px;
+      margin-top: 24px;
     }
 
     .admin-row {
@@ -75,6 +75,7 @@
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .admin-badge {
@@ -105,15 +106,14 @@
       color: #1d4ed8;
     }
 
+    .admin-badge.submitted {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
     .admin-muted {
       color: #64748b;
       font-size: 0.92rem;
-    }
-
-    .admin-section-stack {
-      display: grid;
-      gap: 22px;
-      margin-top: 24px;
     }
 
     @media (max-width: 1000px) {
@@ -331,13 +331,22 @@
           const pacraUrl = await getSignedFileUrl(supplier.pacra_url);
           const zraUrl = await getSignedFileUrl(supplier.zra_url);
 
-          const status = supplier.verified
+          const status = supplier.verified === true || supplier.verification_status === "approved"
             ? "approved"
             : supplier.verification_status || "pending";
 
-          const isApproved =
-  supplier.verified === true ||
-  supplier.verification_status === "approved";
+          const isApproved = supplier.verified === true || supplier.verification_status === "approved";
+          const isRejected = status === "rejected";
+
+          const approveAction = isApproved
+            ? `<span class="admin-badge approved">Already approved</span>`
+            : `<button class="button button-primary button-small" onclick="approveSupplier('${supplier.id}')">Approve</button>`;
+
+          const rejectAction = isApproved
+            ? ``
+            : isRejected
+              ? `<span class="admin-badge rejected">Rejected</span>`
+              : `<button class="button button-secondary button-small" onclick="rejectSupplier('${supplier.id}')">Reject</button>`;
 
           return `
             <div class="admin-row">
@@ -355,33 +364,21 @@
 
               <div class="admin-actions">
                 ${
-  pacraUrl
-    ? `<a class="button button-secondary button-small" href="${pacraUrl}" target="_blank">View PACRA</a>`
-    : `<span class="admin-muted">No PACRA</span>`
-}
-
-                ${
-  zraUrl
-    ? `<a class="button button-secondary button-small" href="${zraUrl}" target="_blank">View ZRA</a>`
-    : `<span class="admin-muted">No ZRA</span>`
-}
-              </div>
-
-              <div class="admin-actions">
-                ${
-                  isApproved
-                    ? `<span class="admin-badge approved">Already approved</span>`
-                    : `<button class="button button-primary button-small" onclick="approveSupplier('${supplier.id}')">Approve</button>`
+                  pacraUrl
+                    ? `<a class="button button-secondary button-small" href="${pacraUrl}" target="_blank">View PACRA</a>`
+                    : `<span class="admin-muted">No PACRA</span>`
                 }
 
                 ${
-                  ${
-  isApproved
-    ? ``
-    : status === "rejected"
-      ? `<span class="admin-badge rejected">Rejected</span>`
-      : `<button class="button button-secondary button-small" onclick="rejectSupplier('${supplier.id}')">Reject</button>`
-}
+                  zraUrl
+                    ? `<a class="button button-secondary button-small" href="${zraUrl}" target="_blank">View ZRA</a>`
+                    : `<span class="admin-muted">No ZRA</span>`
+                }
+              </div>
+
+              <div class="admin-actions">
+                ${approveAction}
+                ${rejectAction}
               </div>
             </div>
           `;
@@ -401,6 +398,7 @@
 
       container.innerHTML = rfqs.map((rfq) => {
         const rfqQuotes = quotes.filter(q => q.rfq_id === rfq.id);
+        const status = rfq.status || "open";
 
         return `
           <div class="admin-rfq-row">
@@ -410,7 +408,7 @@
             </div>
 
             <div>
-              <span class="admin-badge ${rfq.status || "open"}">${rfq.status || "open"}</span>
+              <span class="admin-badge ${status}">${status}</span>
             </div>
 
             <div>
@@ -437,7 +435,9 @@
 
       container.innerHTML = quotes.map((quote) => {
         const relatedRfq = rfqs.find(rfq => rfq.id === quote.rfq_id);
-        const status = quote.awarded || quote.status === "awarded" ? "awarded" : quote.status || "submitted";
+        const status = quote.awarded === true || quote.status === "awarded"
+          ? "awarded"
+          : quote.status || "submitted";
 
         return `
           <div class="admin-quote-row">
