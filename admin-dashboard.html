@@ -15,12 +15,8 @@
     .admin-hero-card {
       padding: 28px;
       border-radius: 28px;
-      background:
-        radial-gradient(circle at top left, rgba(60,163,93,0.16), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(47,109,170,0.13), transparent 30%),
-        #ffffff;
+      background: radial-gradient(circle at top left, rgba(60,163,93,0.16), transparent 35%), #ffffff;
       box-shadow: 0 24px 70px rgba(15, 23, 42, 0.1);
-      border: 1px solid rgba(15, 23, 42, 0.06);
     }
 
     .admin-kpi-grid {
@@ -39,24 +35,6 @@
       border: 1px solid rgba(15, 23, 42, 0.06);
     }
 
-    .admin-kpi-card {
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .admin-kpi-card:hover,
-    .admin-row:hover,
-    .admin-rfq-row:hover,
-    .admin-quote-row:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
-    }
-
-    .admin-kpi-card span {
-      color: #64748b;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
     .admin-kpi-card strong {
       display: block;
       font-size: 34px;
@@ -64,10 +42,26 @@
       color: #102033;
     }
 
+    .admin-kpi-card span,
+    .admin-muted {
+      color: #64748b;
+      font-weight: 700;
+    }
+
     .admin-section-stack {
       display: grid;
       gap: 22px;
       margin-top: 24px;
+    }
+
+    .admin-search {
+      width: 100%;
+      max-width: 430px;
+      padding: 14px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.1);
+      margin-bottom: 16px;
+      font: inherit;
     }
 
     .admin-filters {
@@ -93,15 +87,21 @@
 
     .admin-row {
       display: grid;
-      grid-template-columns: 1.2fr 0.6fr 1fr 1fr;
-      gap: 14px;
-      align-items: center;
-      padding: 18px;
-      border-radius: 20px;
+      grid-template-columns: 1.3fr 0.7fr 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+      padding: 20px;
+      border-radius: 22px;
       background: rgba(248, 250, 252, 0.95);
-      border: 1px solid rgba(15, 23, 42, 0.04);
-      margin-bottom: 12px;
+      border: 1px solid rgba(15, 23, 42, 0.05);
+      margin-bottom: 14px;
       transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .admin-row:hover,
+    .admin-kpi-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
     }
 
     .admin-rfq-row,
@@ -109,16 +109,14 @@
       display: grid;
       grid-template-columns: 1fr 0.7fr 0.7fr 0.7fr;
       gap: 14px;
-      align-items: center;
       padding: 18px;
       border-radius: 20px;
       background: rgba(248, 250, 252, 0.95);
-      border: 1px solid rgba(15, 23, 42, 0.04);
       margin-bottom: 12px;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
-    .admin-actions {
+    .admin-actions,
+    .admin-doc-links {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
@@ -126,21 +124,18 @@
     }
 
     .admin-doc-links {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
       margin-top: 10px;
     }
 
     .admin-doc-link {
       display: inline-flex;
-      align-items: center;
-      padding: 7px 11px;
+      padding: 8px 12px;
       border-radius: 999px;
       background: #eef4ff;
       color: #1d4ed8;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 900;
+      text-decoration: none;
     }
 
     .admin-doc-link.missing {
@@ -150,17 +145,18 @@
 
     .admin-badge {
       display: inline-flex;
-      padding: 7px 12px;
+      padding: 8px 13px;
       border-radius: 999px;
       background: #fef3c7;
       color: #92400e;
-      font-weight: 800;
+      font-weight: 900;
       font-size: 12px;
       text-transform: capitalize;
     }
 
     .admin-badge.approved,
-    .admin-badge.awarded {
+    .admin-badge.awarded,
+    .admin-badge.complete {
       background: #dcfce7;
       color: #166534;
     }
@@ -177,36 +173,21 @@
       color: #1d4ed8;
     }
 
-    .admin-badge.submitted,
-    .admin-badge.pending {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .admin-muted {
-      color: #64748b;
-      font-size: 0.92rem;
-    }
-
     .admin-note {
-      margin-top: 8px;
-      padding: 10px 12px;
-      border-radius: 12px;
+      margin-top: 10px;
+      padding: 11px 13px;
+      border-radius: 14px;
       background: rgba(15, 23, 42, 0.04);
       color: #64748b;
-      font-size: 0.86rem;
-      line-height: 1.5;
+      font-size: 0.9rem;
     }
 
-    .admin-search {
-      width: 100%;
-      max-width: 420px;
-      padding: 13px 15px;
-      border-radius: 999px;
-      border: 1px solid rgba(15, 23, 42, 0.1);
-      background: #ffffff;
-      font: inherit;
-      margin-bottom: 16px;
+    .admin-detail-list {
+      margin-top: 12px;
+      display: grid;
+      gap: 6px;
+      color: #64748b;
+      font-size: 0.9rem;
     }
 
     @media (max-width: 1000px) {
@@ -247,57 +228,26 @@
         <p class="eyebrow">ELSATI admin</p>
         <h1>Platform Control Centre</h1>
         <p class="auth-copy">
-          Monitor suppliers, compliance documents, RFQs, quotations, awards, and procurement activity from one admin workspace.
+          Monitor suppliers, business profiles, compliance documents, RFQs, quotations, and award activity.
         </p>
       </section>
 
       <section class="admin-kpi-grid">
-        <article class="admin-kpi-card">
-          <span>Total Businesses</span>
-          <strong id="admin-total-businesses">0</strong>
-        </article>
-
-        <article class="admin-kpi-card">
-          <span>Total Suppliers</span>
-          <strong id="admin-total-suppliers">0</strong>
-        </article>
-
-        <article class="admin-kpi-card">
-          <span>Pending Verification</span>
-          <strong id="admin-pending-suppliers">0</strong>
-        </article>
-
-        <article class="admin-kpi-card">
-          <span>Approved Suppliers</span>
-          <strong id="admin-approved-suppliers">0</strong>
-        </article>
-
-        <article class="admin-kpi-card">
-          <span>Open RFQs</span>
-          <strong id="admin-open-rfqs">0</strong>
-        </article>
-
-        <article class="admin-kpi-card">
-          <span>Awarded / Closed RFQs</span>
-          <strong id="admin-closed-rfqs">0</strong>
-        </article>
-
-        <article class="admin-kpi-card">
-          <span>Total Quotes</span>
-          <strong id="admin-total-quotes">0</strong>
-        </article>
-
-        <article class="admin-kpi-card">
-          <span>Missing Documents</span>
-          <strong id="admin-missing-docs">0</strong>
-        </article>
+        <article class="admin-kpi-card"><span>Total Businesses</span><strong id="admin-total-businesses">0</strong></article>
+        <article class="admin-kpi-card"><span>Total Suppliers</span><strong id="admin-total-suppliers">0</strong></article>
+        <article class="admin-kpi-card"><span>Pending Verification</span><strong id="admin-pending-suppliers">0</strong></article>
+        <article class="admin-kpi-card"><span>Approved Suppliers</span><strong id="admin-approved-suppliers">0</strong></article>
+        <article class="admin-kpi-card"><span>Open RFQs</span><strong id="admin-open-rfqs">0</strong></article>
+        <article class="admin-kpi-card"><span>Awarded / Closed RFQs</span><strong id="admin-closed-rfqs">0</strong></article>
+        <article class="admin-kpi-card"><span>Total Quotes</span><strong id="admin-total-quotes">0</strong></article>
+        <article class="admin-kpi-card"><span>Missing Documents</span><strong id="admin-missing-docs">0</strong></article>
       </section>
 
       <section class="admin-section-stack">
         <section class="admin-card">
           <div class="panel-head">
             <h2>Supplier compliance control</h2>
-            <span>Review PACRA/ZRA documents and approve verified suppliers</span>
+            <span>View documents, review profile details, approve or reject suppliers</span>
           </div>
 
           <input class="admin-search" id="supplier-search" type="search" placeholder="Search supplier by name or email...">
@@ -320,21 +270,15 @@
             <h2>RFQ activity</h2>
             <span>Open, awarded, and closed procurement requests</span>
           </div>
-
-          <div id="admin-rfq-list">
-            <p class="empty-state">Loading RFQs...</p>
-          </div>
+          <div id="admin-rfq-list"><p class="empty-state">Loading RFQs...</p></div>
         </section>
 
         <section class="admin-card">
           <div class="panel-head">
             <h2>Quotation activity</h2>
-            <span>Suppliers, submitted prices, delivery periods, and award status</span>
+            <span>Suppliers, prices, delivery periods, and award status</span>
           </div>
-
-          <div id="admin-quote-list">
-            <p class="empty-state">Loading quotations...</p>
-          </div>
+          <div id="admin-quote-list"><p class="empty-state">Loading quotations...</p></div>
         </section>
       </section>
     </main>
@@ -358,23 +302,18 @@
     }
 
     function supplierStatus(supplier) {
-      if (supplier.verified === true || supplier.verification_status === "approved") {
-        return "approved";
-      }
-
-      if (supplier.verification_status === "rejected") {
-        return "rejected";
-      }
-
-      if (supplier.verification_status === "submitted") {
-        return "submitted";
-      }
-
+      if (supplier.verified === true || supplier.verification_status === "approved") return "approved";
+      if (supplier.verification_status === "rejected") return "rejected";
+      if (supplier.verification_status === "submitted") return "submitted";
       return "pending";
     }
 
+    function hasAllDocs(supplier) {
+      return Boolean(supplier.pacra_url && supplier.zra_url);
+    }
+
     function hasMissingDocs(supplier) {
-      return !supplier.pacra_url || !supplier.zra_url;
+      return !hasAllDocs(supplier);
     }
 
     async function getCurrentAdmin() {
@@ -421,12 +360,12 @@
         .select("*")
         .order("company_name", { ascending: true });
 
-      const { data: rfqs, error: rfqError } = await supabaseClient
+      const { data: rfqs } = await supabaseClient
         .from("rfqs")
         .select("*")
         .order("created_at", { ascending: false });
 
-      const { data: quotes, error: quoteError } = await supabaseClient
+      const { data: quotes } = await supabaseClient
         .from("quotes")
         .select("*")
         .order("created_at", { ascending: false });
@@ -435,16 +374,6 @@
         document.getElementById("admin-supplier-list").innerHTML =
           `<p class="empty-state">${profileError.message}</p>`;
         return;
-      }
-
-      if (rfqError) {
-        document.getElementById("admin-rfq-list").innerHTML =
-          `<p class="empty-state">${rfqError.message}</p>`;
-      }
-
-      if (quoteError) {
-        document.getElementById("admin-quote-list").innerHTML =
-          `<p class="empty-state">${quoteError.message}</p>`;
       }
 
       const profileList = profiles || [];
@@ -478,18 +407,18 @@
       const container = document.getElementById("admin-supplier-list");
       const searchValue = document.getElementById("supplier-search").value.toLowerCase().trim();
 
-      let suppliers = allSuppliersCache.filter((supplier) => {
+      const suppliers = allSuppliersCache.filter((supplier) => {
         const status = supplierStatus(supplier);
         const searchText = `${supplier.company_name || ""} ${supplier.email || ""}`.toLowerCase();
 
-        const matchesSearch = !searchValue || searchText.includes(searchValue);
-
-        const matchesFilter =
-          supplierFilter === "all" ||
-          supplierFilter === status ||
-          (supplierFilter === "missing" && hasMissingDocs(supplier));
-
-        return matchesSearch && matchesFilter;
+        return (
+          (!searchValue || searchText.includes(searchValue)) &&
+          (
+            supplierFilter === "all" ||
+            supplierFilter === status ||
+            (supplierFilter === "missing" && hasMissingDocs(supplier))
+          )
+        );
       });
 
       if (!suppliers.length) {
@@ -505,12 +434,12 @@
           const status = supplierStatus(supplier);
           const isApproved = status === "approved";
           const isRejected = status === "rejected";
-          const missingDocs = hasMissingDocs(supplier);
+          const docsComplete = hasAllDocs(supplier);
 
           const approveAction = isApproved
             ? `<span class="admin-badge approved">Verified Supplier</span>`
-            : missingDocs
-              ? `<span class="admin-badge missing">Documents required</span>`
+            : !docsComplete
+              ? `<span class="admin-badge missing">Cannot approve yet</span>`
               : `<button class="button button-primary button-small" onclick="approveSupplier('${supplier.id}')">Approve</button>`;
 
           const rejectAction = isApproved
@@ -539,6 +468,19 @@
                   }
                 </div>
 
+                <div class="admin-detail-list">
+                  <span>Contact person: ${supplier.contact_person || "Not provided"}</span>
+                  <span>Phone: ${supplier.contact_phone || supplier.phone || "Not provided"}</span>
+                  <span>Address: ${supplier.business_address || "Not provided"}</span>
+                  <span>City/Country: ${supplier.city || "Not provided"} / ${supplier.country || "Zambia"}</span>
+                </div>
+
+                ${
+                  supplier.business_description
+                    ? `<div class="admin-note">${supplier.business_description}</div>`
+                    : ``
+                }
+
                 ${
                   supplier.verification_notes
                     ? `<div class="admin-note">Admin notes: ${supplier.verification_notes}</div>`
@@ -547,19 +489,14 @@
               </div>
 
               <div>
-                <span class="admin-badge ${status}">
-                  ${status}
-                </span>
+                <span class="admin-badge ${status}">${status}</span>
               </div>
 
               <div>
-                <small class="admin-muted">
-                  Compliance status
-                </small><br>
                 ${
-                  missingDocs
-                    ? `<span class="admin-badge missing">Missing documents</span>`
-                    : `<span class="admin-badge approved">Documents uploaded</span>`
+                  docsComplete
+                    ? `<span class="admin-badge complete">Documents complete</span>`
+                    : `<span class="admin-badge missing">Documents missing</span>`
                 }
               </div>
 
@@ -594,9 +531,7 @@
               <small class="admin-muted">${rfq.business_name || rfq.created_by_company || "Business"}</small>
             </div>
 
-            <div>
-              <span class="admin-badge ${status}">${status}</span>
-            </div>
+            <div><span class="admin-badge ${status}">${status}</span></div>
 
             <div>
               <strong>${rfq.quantity || 0}</strong><br>
@@ -643,21 +578,28 @@
               <small class="admin-muted">Delivery period</small>
             </div>
 
-            <div>
-              <span class="admin-badge ${status}">${status}</span>
-            </div>
+            <div><span class="admin-badge ${status}">${status}</span></div>
           </div>
         `;
       }).join("");
     }
 
     async function approveSupplier(supplierId) {
+      const supplier = allSuppliersCache.find(s => s.id === supplierId);
+
+      if (!supplier || !hasAllDocs(supplier)) {
+        alert("This supplier cannot be approved until both PACRA and ZRA documents are uploaded.");
+        return;
+      }
+
       const { error } = await supabaseClient
         .from("profiles")
         .update({
           verified: true,
           verification_status: "approved",
-          verification_notes: "Approved by ELSATI admin"
+          verification_notes: "Approved by ELSATI admin",
+          documents_uploaded: true,
+          approved_at: new Date().toISOString()
         })
         .eq("id", supplierId);
 
