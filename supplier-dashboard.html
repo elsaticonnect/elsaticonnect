@@ -21,7 +21,8 @@
     }
 
     .supplier-kpi-card,
-    .verification-panel {
+    .verification-panel,
+    .profile-panel {
       background: #ffffff;
       border-radius: 24px;
       padding: 22px;
@@ -51,6 +52,11 @@
       margin-top: 10px;
       background: #dcfce7;
       color: #166534;
+    }
+
+    .closed-badge {
+      background: #fee2e2;
+      color: #991b1b;
     }
 
     .supplier-dashboard-actions {
@@ -85,14 +91,37 @@
       line-height: 1.6;
     }
 
+    .profile-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .profile-form-grid label.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .rfq-section-block {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .rfq-section-block h3 {
+      font-size: 1.15rem;
+      margin: 0;
+    }
+
     @media (max-width: 900px) {
-      .supplier-kpi-grid {
+      .supplier-kpi-grid,
+      .profile-form-grid {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
     @media (max-width: 600px) {
-      .supplier-kpi-grid {
+      .supplier-kpi-grid,
+      .profile-form-grid {
         grid-template-columns: 1fr;
       }
 
@@ -112,7 +141,7 @@
       </a>
 
       <div class="topbar-actions supplier-dashboard-actions">
-        <button class="notification-btn" type="button">🔔 2</button>
+        <button class="notification-btn" type="button">🔔</button>
         <a class="button button-secondary" href="monitor.html">Background Monitor</a>
         <button class="button button-secondary" id="logout-button" type="button">Log out</button>
       </div>
@@ -141,18 +170,73 @@
 
         <article class="supplier-kpi-card">
           <span>Submitted Quotes</span>
-          <strong>0</strong>
+          <strong id="supplier-submitted-quote-count">0</strong>
         </article>
 
         <article class="supplier-kpi-card">
           <span>Won Orders</span>
-          <strong>0</strong>
+          <strong id="supplier-won-order-count">0</strong>
         </article>
 
         <article class="supplier-kpi-card">
           <span>Response Rate</span>
-          <strong>0%</strong>
+          <strong id="supplier-response-rate">0%</strong>
         </article>
+      </section>
+
+      <section class="profile-panel">
+        <div class="panel-head">
+          <h2>Supplier profile</h2>
+          <span>Complete your company profile for buyers and ELSATI admin review</span>
+        </div>
+
+        <form class="contact-form compact-form" id="supplier-profile-form">
+          <div class="profile-form-grid">
+            <label>
+              Supplier company name
+              <input type="text" name="company_name" placeholder="Your supplier company" required>
+            </label>
+
+            <label>
+              Supplier category
+              <input type="text" name="supplier_category" placeholder="Stationery, ICT, logistics, furniture...">
+            </label>
+
+            <label>
+              Contact person
+              <input type="text" name="contact_person" placeholder="Full name">
+            </label>
+
+            <label>
+              Contact phone
+              <input type="text" name="contact_phone" placeholder="+260...">
+            </label>
+
+            <label>
+              City
+              <input type="text" name="city" placeholder="Lusaka">
+            </label>
+
+            <label>
+              Country
+              <input type="text" name="country" placeholder="Zambia">
+            </label>
+
+            <label>
+              Business address
+              <input type="text" name="business_address" placeholder="Physical address">
+            </label>
+
+            <label class="full-width">
+              Business description
+              <textarea name="business_description" rows="3" placeholder="Briefly describe what your company supplies, industries served, and capacity"></textarea>
+            </label>
+          </div>
+
+          <button class="button button-primary" type="submit">Save Supplier Profile</button>
+        </form>
+
+        <p class="form-feedback" id="supplier-profile-feedback"></p>
       </section>
 
       <section class="verification-panel">
@@ -192,7 +276,7 @@
         <section class="app-panel app-panel-list">
           <div class="panel-head">
             <h2>Client RFQs</h2>
-            <span>Open procurement requests waiting for quotations</span>
+            <span>Open and closed procurement opportunities</span>
           </div>
 
           <div class="request-list" id="supplier-rfq-list">
@@ -203,7 +287,7 @@
         <section class="app-panel app-panel-form">
           <div class="panel-head">
             <h2>Submit quotation</h2>
-            <span id="supplier-form-title">Select an RFQ to submit your quote</span>
+            <span id="supplier-form-title">Select an open RFQ to submit your quote</span>
           </div>
 
           <form class="contact-form compact-form" id="supplier-quote-form">
@@ -238,7 +322,7 @@
         <section class="app-panel app-panel-table">
           <div class="panel-head">
             <h2>My submitted quotes</h2>
-            <span>Track pricing and award progress</span>
+            <span>Track pricing, shortlist and award progress</span>
           </div>
 
           <div class="comparison-table" id="supplier-quote-list">
@@ -249,7 +333,7 @@
         <section class="app-panel app-panel-report">
           <div class="panel-head">
             <h2>Status tracker</h2>
-            <span>Buyer review and order updates</span>
+            <span>Buyer review, award updates and verification status</span>
           </div>
 
           <div class="report-summary" id="supplier-status-summary">
@@ -294,7 +378,7 @@
         .from("profiles")
         .select("*")
         .eq("id", userData.user.id)
-        .single();
+        .maybeSingle();
 
       if (profileError || !profile) {
         await supabaseClient.auth.signOut();
@@ -328,16 +412,16 @@
       const zraStatus = document.getElementById("zra-status");
       const accountStatus = document.getElementById("account-status");
 
-      if (profile.pacra_url) {
-        pacraStatus.textContent = "PACRA verification: Uploaded";
-      }
+      pacraStatus.textContent = profile.pacra_url
+        ? "PACRA verification: Uploaded"
+        : "PACRA verification: Pending";
 
-      if (profile.zra_url) {
-        zraStatus.textContent = "ZRA verification: Uploaded";
-      }
+      zraStatus.textContent = profile.zra_url
+        ? "ZRA verification: Uploaded"
+        : "ZRA verification: Pending";
 
       if (profile.verified === true || profile.verification_status === "approved") {
-        warning.textContent = "Your supplier account is verified. You can now submit quotations.";
+        warning.textContent = "Verified supplier account ✓";
         warning.style.background = "#dcfce7";
         warning.style.color = "#166534";
 
@@ -444,6 +528,7 @@
         .update({
           pacra_url: pacraPath,
           zra_url: zraPath,
+          documents_uploaded: true,
           verification_status: "submitted",
           verified: false
         })
@@ -466,27 +551,6 @@
 
     document.getElementById("logout-button").addEventListener("click", logoutUser);
     document.getElementById("verification-form").addEventListener("submit", uploadSupplierDocuments);
-
-    document.getElementById("supplier-quote-form").addEventListener("submit", function(event) {
-      event.preventDefault();
-
-      const selectedRfq = document.getElementById("supplier-selected-rfq").value;
-      const feedback = document.getElementById("supplier-quote-feedback");
-
-      if (!currentSupplierProfile || currentSupplierProfile.verified !== true) {
-        feedback.textContent = "Your supplier account must be verified before submitting quotations.";
-        return;
-      }
-
-      if (!selectedRfq) {
-        feedback.textContent = "Please select an RFQ first.";
-        return;
-      }
-
-      feedback.textContent = "Quotation submitted successfully. Live database submission will be connected next.";
-
-      event.target.reset();
-    });
 
     loadSupplierProfile();
   </script>
