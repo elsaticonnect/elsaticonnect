@@ -97,11 +97,23 @@
         return;
       }
 
+      const { error: rfqError } = await supabaseClient
+        .from("rfqs")
+        .update({
+          status: "awarded",
+          awarded_quote_id: quoteId,
+          awarded_at: new Date().toISOString()
+        })
+        .eq("id", rfqId);
+
+      if (rfqError) {
+        alert(rfqError.message);
+        return;
+      }
+
       alert("Supplier awarded successfully.");
 
-      if (currentBusinessRfq) {
-        await loadQuotesForRfq(currentBusinessRfq);
-      }
+      await loadBusinessRFQs();
     }
 
     async function loadQuotesForRfq(rfq) {
@@ -228,7 +240,9 @@
         return;
       }
 
-      if (activeCount) activeCount.textContent = rfqs ? rfqs.length : 0;
+      if (activeCount) {
+        activeCount.textContent = rfqs ? rfqs.filter((rfq) => rfq.status === "open").length : 0;
+      }
 
       const { data: allQuotes } = await supabaseClient.from("quotes").select("*");
       if (quoteCount) quoteCount.textContent = allQuotes ? allQuotes.length : 0;
@@ -340,7 +354,7 @@
     const { data: rfqs, error } = await supabaseClient
       .from("rfqs")
       .select("*")
-      .eq("status", "open")
+      .in("status", ["open", "awarded", "closed"])
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -348,25 +362,57 @@
       return;
     }
 
-    if (openCount) openCount.textContent = rfqs ? rfqs.length : 0;
+    const openRfqs = rfqs ? rfqs.filter((rfq) => rfq.status === "open") : [];
+    const closedRfqs = rfqs ? rfqs.filter((rfq) => rfq.status !== "open") : [];
+
+    if (openCount) openCount.textContent = openRfqs.length;
 
     if (!rfqs || rfqs.length === 0) {
-      listNode.innerHTML = `<p class="empty-state">No live RFQs available yet.</p>`;
+      listNode.innerHTML = `<p class="empty-state">No RFQs available yet.</p>`;
       return;
     }
 
-    listNode.innerHTML = rfqs
-      .map(
-        (rfq, index) => `
-          <article class="request-card" data-rfq-id="${rfq.id}">
-            <strong>${shortRfqCode(rfq, index)}</strong>
-            <p>${rfq.title}</p>
-            <small>${rfq.quantity || 0} units · ${rfq.deadline || "No deadline"}</small><br>
-            <span class="supplier-status-badge">OPEN</span>
-          </article>
-        `
-      )
-      .join("");
+    listNode.innerHTML = `
+      <div class="rfq-section-block">
+        <h3>Open Opportunities</h3>
+        ${
+          openRfqs.length
+            ? openRfqs
+                .map(
+                  (rfq, index) => `
+                    <article class="request-card" data-rfq-id="${rfq.id}" data-rfq-status="open">
+                      <strong>${shortRfqCode(rfq, index)}</strong>
+                      <p>${rfq.title}</p>
+                      <small>${rfq.quantity || 0} units · ${rfq.deadline || "No deadline"}</small><br>
+                      <span class="supplier-status-badge">OPEN</span>
+                    </article>
+                  `
+                )
+                .join("")
+            : `<p class="empty-state">No open RFQs available right now.</p>`
+        }
+      </div>
+
+      <div class="rfq-section-block">
+        <h3>Closed Opportunities</h3>
+        ${
+          closedRfqs.length
+            ? closedRfqs
+                .map(
+                  (rfq, index) => `
+                    <article class="request-card closed-rfq-card" data-rfq-id="${rfq.id}" data-rfq-status="${rfq.status}">
+                      <strong>${shortRfqCode(rfq, index)}</strong>
+                      <p>${rfq.title}</p>
+                      <small>${rfq.quantity || 0} units · ${rfq.deadline || "No deadline"}</small><br>
+                      <span class="supplier-status-badge closed-badge">${rfq.status || "closed"}</span>
+                    </article>
+                  `
+                )
+                .join("")
+            : `<p class="empty-state">No closed RFQs yet.</p>`
+        }
+      </div>
+    `;
 
     document.querySelectorAll("#supplier-rfq-list .request-card").forEach((card) => {
       card.addEventListener("click", function () {
@@ -376,14 +422,30 @@
 
         card.classList.add("active");
 
-        selectedSupplierRfqId = card.dataset.rfqId;
-
+        const status = card.dataset.rfqStatus;
         const rfqNumber = card.querySelector("strong").textContent;
         const rfqTitle = card.querySelector("p").textContent;
+
+        if (status !== "open") {
+          selectedSupplierRfqId = null;
+
+          if (selectedField) {
+            selectedField.value = `${rfqNumber} - ${rfqTitle} is closed`;
+          }
+
+          feedback.textContent = "This RFQ is closed and no longer accepts quotations.";
+          feedback.className = "form-feedback error";
+          return;
+        }
+
+        selectedSupplierRfqId = card.dataset.rfqId;
 
         if (selectedField) {
           selectedField.value = rfqNumber + " - " + rfqTitle;
         }
+
+        feedback.textContent = "";
+        feedback.className = "form-feedback";
       });
     });
 
@@ -449,8 +511,21 @@
       }
 
       if (!selectedSupplierRfqId) {
-        feedback.textContent = "Please select an RFQ first.";
+        feedback.textContent = "Please select an open RFQ first.";
         feedback.className = "form-feedback error";
+        return;
+      }
+
+      const { data: selectedRfq, error: selectedRfqError } = await supabaseClient
+        .from("rfqs")
+        .select("*")
+        .eq("id", selectedSupplierRfqId)
+        .single();
+
+      if (selectedRfqError || !selectedRfq || selectedRfq.status !== "open") {
+        feedback.textContent = "This RFQ is closed and no longer accepts quotations.";
+        feedback.className = "form-feedback error";
+        selectedSupplierRfqId = null;
         return;
       }
 
