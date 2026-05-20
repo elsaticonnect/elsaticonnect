@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Elsati Connect</title>
+  <meta name="description" content="Admin dashboard for supplier verification on Elsati Connect.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .admin-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+    }
+
+    .admin-row {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(248, 250, 252, 0.95);
+      margin-bottom: 12px;
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .admin-badge {
+      display: inline-flex;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #fef3c7;
+      color: #92400e;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .admin-badge.approved {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .admin-badge.rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    @media (max-width: 900px) {
+      .admin-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="site-shell auth-shell">
+    <header class="topbar auth-topbar">
+      <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home">
+        <img src="elsati.png" alt="Elsati Connect logo">
+      </a>
+
+      <div class="topbar-actions">
+        <a class="button button-secondary" href="business-dashboard.html">Business Dashboard</a>
+        <button class="button button-secondary" id="logout-button" type="button">Log out</button>
+      </div>
+    </header>
+
+    <main class="dashboard-page reveal">
+      <section class="dashboard-intro">
+        <p class="eyebrow">ELSATI admin</p>
+        <h1>Supplier Verification Dashboard</h1>
+        <p class="auth-copy">
+          Review supplier PACRA and ZRA submissions, then approve or reject supplier access.
+        </p>
+      </section>
+
+      <section class="admin-card">
+        <div class="panel-head">
+          <h2>Supplier verification queue</h2>
+          <span>Submitted supplier compliance documents</span>
+        </div>
+
+        <div id="admin-supplier-list" class="admin-grid">
+          <p class="empty-state">Loading supplier verification requests...</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+
+  <script>
+    const supabaseClient = supabase.createClient(
+      window.ELSATI_SUPABASE.url,
+      window.ELSATI_SUPABASE.publishableKey
+    );
+
+    async function getCurrentAdmin() {
+      const { data: userData } = await supabaseClient.auth.getUser();
+
+      if (!userData.user) {
+        window.location.href = "signin.html";
+        return null;
+      }
+
+      const { data: profile, error } = await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id", userData.user.id)
+        .single();
+
+      if (error || !profile || profile.is_admin !== true) {
+        alert("Admin access only.");
+        window.location.href = "business-dashboard.html";
+        return null;
+      }
+
+      return profile;
+    }
+
+    async function getSignedFileUrl(path) {
+      if (!path) return null;
+
+      const { data, error } = await supabaseClient.storage
+        .from("supplier-documents")
+        .createSignedUrl(path, 3600);
+
+      if (error) return null;
+
+      return data.signedUrl;
+    }
+
+    async function loadSupplierVerificationQueue() {
+      const admin = await getCurrentAdmin();
+      if (!admin) return;
+
+      const container = document.getElementById("admin-supplier-list");
+
+      const { data: suppliers, error } = await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("role", "supplier")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        container.innerHTML = `<p class="empty-state">${error.message}</p>`;
+        return;
+      }
+
+      if (!suppliers || suppliers.length === 0) {
+        container.innerHTML = `<p class="empty-state">No suppliers found yet.</p>`;
+        return;
+      }
+
+      const rows = await Promise.all(
+        suppliers.map(async (supplier) => {
+          const pacraUrl = await getSignedFileUrl(supplier.pacra_url);
+          const zraUrl = await getSignedFileUrl(supplier.zra_url);
+
+          const status = supplier.verified
+            ? "approved"
+            : supplier.verification_status || "pending";
+
+          return `
+            <div class="admin-row">
+              <div>
+                <strong>${supplier.company_name || "Supplier"}</strong><br>
+                <small>${supplier.email || ""}</small>
+              </div>
+
+              <div>
+                <span class="admin-badge ${status === "approved" ? "approved" : status === "rejected" ? "rejected" : ""}">
+                  ${status}
+                </span>
+              </div>
+
+              <div class="admin-actions">
+                ${
+                  pacraUrl
+                    ? `<a class="button button-secondary button-small" href="${pacraUrl}" target="_blank">View PACRA</a>`
+                    : `<span class="empty-state">No PACRA</span>`
+                }
+
+                ${
+                  zraUrl
+                    ? `<a class="button button-secondary button-small" href="${zraUrl}" target="_blank">View ZRA</a>`
+                    : `<span class="empty-state">No ZRA</span>`
+                }
+              </div>
+
+              <div class="admin-actions">
+                <button class="button button-primary button-small" onclick="approveSupplier('${supplier.id}')">
+                  Approve
+                </button>
+
+                <button class="button button-secondary button-small" onclick="rejectSupplier('${supplier.id}')">
+                  Reject
+                </button>
+              </div>
+            </div>
+          `;
+        })
+      );
+
+      container.innerHTML = rows.join("");
+    }
+
+    async function approveSupplier(supplierId) {
+      const { error } = await supabaseClient
+        .from("profiles")
+        .update({
+          verified: true,
+          verification_status: "approved",
+          verification_notes: "Approved by ELSATI admin"
+        })
+        .eq("id", supplierId);
+
+      if (error) {
+        alert(error.message);
+        return;
+      }
+
+      alert("Supplier approved successfully.");
+      loadSupplierVerificationQueue();
+    }
+
+    async function rejectSupplier(supplierId) {
+      const reason = prompt("Enter rejection reason:");
+
+      const { error } = await supabaseClient
+        .from("profiles")
+        .update({
+          verified: false,
+          verification_status: "rejected",
+          verification_notes: reason || "Rejected by ELSATI admin"
+        })
+        .eq("id", supplierId);
+
+      if (error) {
+        alert(error.message);
+        return;
+      }
+
+      alert("Supplier rejected.");
+      loadSupplierVerificationQueue();
+    }
+
+    async function logoutUser() {
+      await supabaseClient.auth.signOut();
+      window.location.href = "signin.html";
+    }
+
+    document.getElementById("logout-button").addEventListener("click", logoutUser);
+
+    loadSupplierVerificationQueue();
+  </script>
+</body>
+</html>
