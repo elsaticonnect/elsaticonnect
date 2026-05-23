@@ -19,6 +19,63 @@
     return value && String(value).trim() ? value : fallback;
   }
 
+  function extractDeliveryDays(value) {
+    if (!value) return 9999;
+
+    const match = String(value).match(/\d+/);
+    return match ? Number(match[0]) : 9999;
+  }
+
+  function getSmartQuoteRecommendation(quotes) {
+    if (!quotes || quotes.length === 0) return null;
+
+    const normalizedQuotes = quotes.map((quote) => ({
+      ...quote,
+      finalPrice: Number(quote.quoted_price || quote.price || 0),
+      deliveryDays: extractDeliveryDays(quote.delivery_period || quote.delivery)
+    }));
+
+    const validPrices = normalizedQuotes.map((quote) => quote.finalPrice).filter(price => price > 0);
+
+    if (validPrices.length === 0) return null;
+
+    const lowestPrice = Math.min(...validPrices);
+    const highestPrice = Math.max(...validPrices);
+    const averagePrice = validPrices.reduce((sum, price) => sum + price, 0) / validPrices.length;
+
+    const lowestQuote = normalizedQuotes.find((quote) => quote.finalPrice === lowestPrice);
+    const fastestQuote = normalizedQuotes.reduce((best, quote) => {
+      return quote.deliveryDays < best.deliveryDays ? quote : best;
+    }, normalizedQuotes[0]);
+
+    const recommendedQuote = lowestQuote || normalizedQuotes[0];
+
+    const potentialSaving = highestPrice - lowestPrice;
+
+    let reason = "This supplier currently has the most competitive submitted price.";
+
+    if (
+      fastestQuote &&
+      fastestQuote.id === recommendedQuote.id &&
+      normalizedQuotes.length > 1
+    ) {
+      reason = "This supplier currently has the lowest price and the fastest delivery period.";
+    } else if (recommendedQuote.deliveryDays <= 3) {
+      reason = "This supplier has the lowest price and a strong delivery timeline.";
+    }
+
+    return {
+      recommendedQuote,
+      lowestQuote,
+      fastestQuote,
+      lowestPrice,
+      highestPrice,
+      averagePrice,
+      potentialSaving,
+      reason
+    };
+  }
+
   async function getCurrentUserAndProfile() {
     const { data: userData, error: userError } = await supabaseClient.auth.getUser();
 
@@ -304,16 +361,39 @@
         });
       });
 
-      const prices = quotes.map((q) => Number(q.quoted_price || q.price || 0));
-      const lowest = Math.min(...prices);
-      const highest = Math.max(...prices);
-      const average = prices.reduce((sum, p) => sum + p, 0) / prices.length;
+      const insight = getSmartQuoteRecommendation(quotes);
 
-      const bestQuote = quotes.find(
-        (q) => Number(q.quoted_price || q.price || 0) === lowest
-      );
+      if (!insight) {
+        reportNode.innerHTML = `
+          <article class="report-card">
+            <h3>RFQ Details</h3>
+            <p>Category: ${safeText(rfq.category)}</p>
+            <p>Delivery location: ${safeText(rfq.delivery_location)}</p>
+            <p>Estimated budget: ${formatCurrency(rfq.estimated_budget)}</p>
+            <p>Status: ${rfq.status || "open"}</p>
+          </article>
+        `;
+        return;
+      }
+
+      const recommendedName =
+        insight.recommendedQuote.supplier_name ||
+        insight.recommendedQuote.supplier_company ||
+        "Supplier";
+
+      const fastestName =
+        insight.fastestQuote?.supplier_name ||
+        insight.fastestQuote?.supplier_company ||
+        "Supplier";
 
       reportNode.innerHTML = `
+        <article class="report-card">
+          <h3>Smart Recommendation</h3>
+          <p><strong>${recommendedName}</strong> is currently recommended.</p>
+          <p>${insight.reason}</p>
+          <p>Potential saving compared to highest quote: <strong>${formatCurrency(insight.potentialSaving)}</strong></p>
+        </article>
+
         <article class="report-card">
           <h3>RFQ Details</h3>
           <p>Category: ${safeText(rfq.category)}</p>
@@ -323,18 +403,20 @@
         </article>
 
         <article class="report-card">
-          <h3>Price comparison</h3>
-          <p>Lowest quote: ${formatCurrency(lowest)}</p>
-          <p>Highest quote: ${formatCurrency(highest)}</p>
-          <p>Average quote: ${formatCurrency(average.toFixed(2))}</p>
+          <h3>Price Intelligence</h3>
+          <p>Lowest quote: ${formatCurrency(insight.lowestPrice)}</p>
+          <p>Highest quote: ${formatCurrency(insight.highestPrice)}</p>
+          <p>Average quote: ${formatCurrency(insight.averagePrice.toFixed(2))}</p>
         </article>
 
         <article class="report-card">
-          <h3>Recommended supplier</h3>
-          <p>
-            <strong>${bestQuote?.supplier_name || bestQuote?.supplier_company || "Supplier"}</strong>
-            currently has the lowest submitted quote.
-          </p>
+          <h3>Delivery Intelligence</h3>
+          <p>Fastest supplier: <strong>${fastestName}</strong></p>
+          <p>Fastest delivery estimate: ${
+            insight.fastestQuote?.delivery_period ||
+            insight.fastestQuote?.delivery ||
+            "Not provided"
+          }</p>
         </article>
       `;
     }
