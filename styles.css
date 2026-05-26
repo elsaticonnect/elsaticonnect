@@ -2315,3 +2315,298 @@ h3 {
 .report-summary article h3 { margin-bottom: 12px; }
 .report-summary article p { margin: 8px 0; color: var(--muted); }
 @media (max-width: 760px) { .comparison-row, .comparison-head { grid-template-columns: 1fr; } .comparison-head { display: none; } }
+/* =========================================================
+   HOW IT WORKS PAGE UPGRADE
+   ========================================================= */
+
+.how-hero {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 34px;
+  align-items: center;
+  margin-top: 54px;
+}
+
+.how-hero-copy {
+  max-width: 680px;
+}
+
+.how-hero-copy p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.75;
+  margin-top: 22px;
+}
+
+.how-workflow-visual {
+  padding: 26px;
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(255,255,255,0.72);
+  box-shadow: var(--shadow);
+}
+
+.workflow-mini-step {
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: rgba(248,250,252,0.94);
+  border: 1px solid rgba(16,32,49,0.06);
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.workflow-arrow {
+  text-align: center;
+  color: var(--green-deep);
+  font-weight: 900;
+  font-size: 1.35rem;
+  margin: 8px 0;
+}
+
+.how-section {
+  margin-top: 64px;
+}
+
+.how-section-head {
+  max-width: 820px;
+  margin-bottom: 28px;
+}
+
+.how-section-head p {
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.how-process-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.how-process-card,
+.how-side-card,
+.how-change-card,
+.how-preview-card,
+.how-ai-card,
+.how-principle-card,
+.how-trust-card {
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  background: rgba(255,255,255,0.84);
+  border: 1px solid rgba(255,255,255,0.72);
+  box-shadow: 0 16px 44px rgba(22,40,62,0.08);
+}
+
+.how-process-card {
+  position: relative;
+}
+
+.how-process-card::after {
+  content: "";
+  position: absolute;
+  top: 42px;
+  right: -13px;
+  width: 24px;
+  height: 2px;
+  background: rgba(60,163,93,0.35);
+}
+
+.how-process-card:last-child::after {
+  display: none;
+}
+
+.how-step-number {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background: rgba(60,163,93,0.13);
+  color: var(--green-deep);
+  font-weight: 900;
+}
+
+.how-process-card p,
+.how-side-card p,
+.how-change-card p,
+.how-preview-card p,
+.how-ai-card p,
+.how-principle-card p,
+.how-trust-card p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.how-two-grid,
+.how-before-after-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.how-side-card ul,
+.how-change-card ul {
+  margin: 22px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.9;
+}
+
+.how-change-card.before {
+  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(246,248,250,0.95));
+}
+
+.how-change-card.after {
+  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(232,246,236,0.95));
+}
+
+.how-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.how-preview-card strong {
+  display: block;
+  margin: 12px 0 8px;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  font-size: 2.6rem;
+  letter-spacing: -0.05em;
+  color: var(--green-deep);
+}
+
+.how-ai-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.how-principles-grid,
+.how-trust-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.how-icon {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(60,163,93,0.16), rgba(47,109,170,0.16));
+  color: var(--green-deep);
+  font-weight: 900;
+}
+
+.how-final-cta {
+  margin-top: 70px;
+  padding: 52px 34px;
+  text-align: center;
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(circle at top left, rgba(60,163,93,0.16), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(47,109,170,0.13), transparent 28%),
+    rgba(255,255,255,0.86);
+  border: 1px solid rgba(255,255,255,0.72);
+  box-shadow: var(--shadow);
+}
+
+.how-final-cta p {
+  max-width: 680px;
+  margin: 18px auto 0;
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.75;
+}
+
+.how-final-cta .hero-actions {
+  justify-content: center;
+}
+
+/* Hover polish */
+.how-process-card,
+.how-side-card,
+.how-change-card,
+.how-preview-card,
+.how-ai-card,
+.how-principle-card,
+.how-trust-card,
+.workflow-mini-step {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.how-process-card:hover,
+.how-side-card:hover,
+.how-change-card:hover,
+.how-preview-card:hover,
+.how-ai-card:hover,
+.how-principle-card:hover,
+.how-trust-card:hover,
+.workflow-mini-step:hover {
+  transform: translateY(-5px);
+  border-color: rgba(60,163,93,0.22);
+  box-shadow: 0 24px 64px rgba(22,40,62,0.13);
+}
+
+/* Responsive */
+@media (max-width: 1120px) {
+  .how-hero,
+  .how-two-grid,
+  .how-before-after-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .how-process-grid,
+  .how-ai-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .how-process-card::after {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .how-preview-grid,
+  .how-principles-grid,
+  .how-trust-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .how-hero,
+  .how-section {
+    margin-top: 42px;
+  }
+
+  .how-process-grid,
+  .how-ai-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .how-workflow-visual,
+  .how-process-card,
+  .how-side-card,
+  .how-change-card,
+  .how-preview-card,
+  .how-ai-card,
+  .how-principle-card,
+  .how-trust-card {
+    border-radius: 24px;
+    padding: 22px;
+  }
+
+  .how-final-cta {
+    padding: 38px 22px;
+    border-radius: 24px;
+  }
+}
