@@ -4251,3 +4251,375 @@ h3 {
     border-radius: 24px;
   }
 }
+/* =========================================================
+   PREMIUM SIGN IN PAGE UPGRADE
+   ========================================================= */
+
+.premium-signin-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.02fr 0.98fr;
+  gap: 44px;
+  align-items: center;
+  min-height: 76svh;
+  margin-top: 54px;
+  padding: 46px;
+  overflow: hidden;
+  border-radius: 40px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(60, 163, 93, 0.16), transparent 30%),
+    radial-gradient(circle at 84% 22%, rgba(47, 109, 170, 0.14), transparent 28%),
+    linear-gradient(135deg, rgba(255,255,255,0.86), rgba(235,242,247,0.9));
+  border: 1px solid rgba(255,255,255,0.72);
+  box-shadow: 0 34px 90px rgba(22, 40, 62, 0.12);
+}
+
+.premium-signin-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.22;
+  background-image:
+    linear-gradient(rgba(16, 32, 49, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 32, 49, 0.04) 1px, transparent 1px);
+  background-size: 42px 42px;
+  pointer-events: none;
+}
+
+.signin-hero-copy,
+.signin-dashboard-preview {
+  position: relative;
+  z-index: 2;
+}
+
+.signin-hero-copy h1 {
+  max-width: 760px;
+  font-size: clamp(3.1rem, 5.6vw, 5.4rem);
+}
+
+.signin-hero-copy p:not(.eyebrow) {
+  max-width: 650px;
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.75;
+}
+
+.signin-dashboard-preview {
+  min-height: 500px;
+}
+
+.signin-window {
+  position: absolute;
+  top: 54px;
+  right: 0;
+  width: min(100%, 540px);
+  overflow: hidden;
+  border-radius: 32px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(255,255,255,0.84);
+  box-shadow: 0 42px 110px rgba(22, 40, 62, 0.2);
+  backdrop-filter: blur(18px);
+  animation: premiumFloat 8s ease-in-out infinite;
+}
+
+.signin-window-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 18px;
+  background: rgba(248,250,252,0.96);
+  border-bottom: 1px solid rgba(16,32,49,0.08);
+}
+
+.signin-window-top span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(16,32,49,0.2);
+}
+
+.signin-window-top span:nth-child(2) {
+  background: rgba(239,178,62,0.8);
+}
+
+.signin-window-top span:nth-child(3) {
+  background: rgba(60,163,93,0.8);
+}
+
+.signin-window-top strong {
+  margin-left: 8px;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+}
+
+.signin-window-body {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+}
+
+.signin-preview-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.signin-preview-stats article {
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(248,250,252,0.95);
+  border: 1px solid rgba(16,32,49,0.06);
+}
+
+.signin-preview-stats small {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.signin-preview-stats strong {
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  font-size: 2.2rem;
+}
+
+.signin-preview-board {
+  display: grid;
+  gap: 12px;
+}
+
+.preview-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(248,250,252,0.95);
+  color: var(--muted);
+  font-weight: 800;
+  border: 1px solid rgba(16,32,49,0.06);
+}
+
+.preview-line span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(16,32,49,0.22);
+}
+
+.preview-line.active {
+  color: var(--ink);
+  background: rgba(232,246,236,0.95);
+  border-color: rgba(60,163,93,0.24);
+}
+
+.preview-line.active span {
+  background: var(--green);
+  box-shadow: 0 0 0 6px rgba(60,163,93,0.12);
+}
+
+.signin-floating-note {
+  position: absolute;
+  left: 0;
+  bottom: 42px;
+  max-width: 300px;
+  padding: 24px;
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(233,248,239,0.94));
+  border: 1px solid rgba(255,255,255,0.78);
+  box-shadow: 0 28px 80px rgba(22, 40, 62, 0.16);
+  backdrop-filter: blur(16px);
+}
+
+.signin-floating-note span,
+.role-badge {
+  display: inline-flex;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(60,163,93,0.12);
+  color: var(--green-deep);
+  font-weight: 900;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.signin-floating-note strong {
+  display: block;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  line-height: 1.35;
+  font-size: 1.15rem;
+}
+
+.signin-role-section,
+.signin-register-section,
+.signin-dark-cta {
+  margin-top: 72px;
+}
+
+.signin-section-head {
+  max-width: 860px;
+  margin-bottom: 28px;
+}
+
+.signin-section-head h2 {
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+}
+
+.signin-role-grid,
+.signin-register-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.signin-role-card,
+.signin-register-card {
+  display: block;
+  padding: 32px;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.86);
+  border: 1px solid rgba(255,255,255,0.74);
+  box-shadow: 0 20px 60px rgba(22, 40, 62, 0.09);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.signin-role-card h3,
+.signin-register-card h3 {
+  font-size: clamp(1.9rem, 3vw, 3rem);
+}
+
+.signin-role-card p,
+.signin-register-card p,
+.signin-dark-cta p {
+  color: var(--muted);
+  line-height: 1.75;
+  font-size: 1.03rem;
+}
+
+.signin-role-card strong,
+.signin-register-card strong {
+  display: inline-flex;
+  margin-top: 20px;
+  color: var(--green-deep);
+  font-weight: 900;
+}
+
+.register-icon {
+  display: inline-flex;
+  width: 52px;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(60,163,93,0.16), rgba(47,109,170,0.16));
+  color: var(--green-deep);
+  font-weight: 900;
+}
+
+.signin-dark-cta {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 28px;
+  align-items: center;
+  padding: 42px;
+  border-radius: 40px;
+  background:
+    radial-gradient(circle at top left, rgba(60,163,93,0.18), transparent 30%),
+    linear-gradient(135deg, rgba(19,37,60,0.96), rgba(14,27,45,0.96));
+  color: #ffffff;
+  box-shadow: 0 34px 90px rgba(22, 40, 62, 0.16);
+}
+
+.signin-dark-cta h2,
+.signin-dark-cta .eyebrow {
+  color: #ffffff;
+}
+
+.signin-dark-cta p {
+  max-width: 720px;
+  color: rgba(255,255,255,0.74);
+}
+
+.signin-dark-cta .button-secondary {
+  color: #ffffff;
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.16);
+}
+
+.signin-role-card:hover,
+.signin-register-card:hover,
+.signin-window:hover,
+.signin-floating-note:hover {
+  transform: translateY(-6px);
+  border-color: rgba(60,163,93,0.22);
+  box-shadow: 0 30px 90px rgba(22, 40, 62, 0.16);
+}
+
+@media (max-width: 1120px) {
+  .premium-signin-hero,
+  .signin-dark-cta {
+    grid-template-columns: 1fr;
+  }
+
+  .signin-dashboard-preview {
+    min-height: 560px;
+  }
+
+  .signin-window {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    animation: none;
+  }
+
+  .signin-role-grid,
+  .signin-register-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .signin-dark-cta .hero-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .premium-signin-hero,
+  .signin-dark-cta {
+    padding: 24px;
+    border-radius: 28px;
+  }
+
+  .signin-hero-copy h1 {
+    font-size: 2.75rem;
+  }
+
+  .signin-dashboard-preview {
+    min-height: auto;
+  }
+
+  .signin-window,
+  .signin-floating-note {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .signin-preview-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .signin-role-card,
+  .signin-register-card {
+    padding: 24px;
+    border-radius: 24px;
+  }
+}
