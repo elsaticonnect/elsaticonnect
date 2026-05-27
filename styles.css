@@ -4933,3 +4933,20 @@ h3 {
     width: 100%;
   }
 }
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: none;
+  width: auto;
+  overflow: visible;
+}
+
+.nav a {
+  white-space: nowrap;
+}
+
+.topbar {
+  gap: 32px;
+}
