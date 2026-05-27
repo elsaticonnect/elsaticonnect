@@ -4730,3 +4730,90 @@ h3 {
     padding: 10px;
   }
 }
+/* PREMIUM ACCOUNT ICON */
+
+.login-icon-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.92), rgba(244,248,250,0.92));
+  border: 1px solid rgba(16,32,49,0.08);
+  box-shadow:
+    0 18px 40px rgba(22,40,62,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+  overflow: hidden;
+}
+
+.login-icon-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top left,
+    rgba(60,163,93,0.16),
+    transparent 45%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.login-icon-link:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: rgba(60,163,93,0.24);
+  box-shadow:
+    0 24px 60px rgba(22,40,62,0.18),
+    0 0 0 10px rgba(60,163,93,0.08);
+}
+
+.login-icon-link:hover::before {
+  opacity: 1;
+}
+
+.login-icon {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+.login-icon::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: linear-gradient(180deg, #11263f, #0d1f33);
+}
+
+.login-icon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 1px;
+  width: 18px;
+  height: 10px;
+  transform: translateX(-50%);
+  border-radius: 12px 12px 8px 8px;
+  background: linear-gradient(180deg, #11263f, #0d1f33);
+}
+
+@media (max-width: 720px) {
+  .login-icon-link {
+    width: 50px;
+    height: 50px;
+  }
+
+  .login-icon {
+    transform: scale(0.9);
+  }
+}
