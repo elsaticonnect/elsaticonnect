@@ -4817,3 +4817,65 @@ h3 {
     transform: scale(0.9);
   }
 }
+/* =========================================================
+   PREMIUM FOOTER ALIGNMENT
+   ========================================================= */
+
+.site-footer {
+  margin-top: 86px;
+  padding: 42px 48px;
+  border-radius: 34px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.9), rgba(242,247,250,0.86));
+  border: 1px solid rgba(255,255,255,0.78);
+  box-shadow: 0 24px 70px rgba(22,40,62,0.1);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: center;
+}
+
+.site-footer > div:first-child {
+  display: grid;
+  gap: 14px;
+}
+
+.site-footer p {
+  max-width: 560px;
+  margin: 0;
+  color: var(--muted);
+}
+
+.footer-logo img {
+  width: 180px;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 28px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.footer-links a {
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.footer-links a:hover {
+  color: var(--green-deep);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 800px) {
+  .site-footer {
+    grid-template-columns: 1fr;
+    padding: 30px 24px;
+    text-align: left;
+  }
+
+  .footer-links {
+    justify-content: flex-start;
+  }
+}
