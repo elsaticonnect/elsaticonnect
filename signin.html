@@ -10,10 +10,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <div class="site-shell signin-shell">
     <header class="topbar signin-topbar">
-      <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home"><img src="elsati.png" alt="Elsati Connect logo"></a>
+      <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home">
+        <img src="elsati.png" alt="Elsati Connect logo">
+      </a>
 
       <nav class="nav">
         <a href="index.html">Home</a>
@@ -23,156 +26,133 @@
       </nav>
 
       <div class="topbar-actions topbar-actions-compact">
-        <a class="login-icon-link" href="signin.html" aria-label="Log in"><span class="login-icon"></span></a>
+        <a class="login-icon-link" href="signin.html" aria-label="Log in">
+          <span class="login-icon"></span>
+        </a>
       </div>
     </header>
 
-    <main class="signin-stage reveal">
-      <div class="signin-backdrop">
-        <span class="signin-leaf leaf-left"></span>
-        <span class="signin-leaf leaf-right"></span>
-      </div>
-
-      <section class="signin-poster">
-        <div class="poster-copy">
+    <main>
+      <section class="premium-signin-hero reveal">
+        <div class="signin-hero-copy">
           <p class="eyebrow">Welcome to Elsati Connect</p>
-          <h1>Simplifying Procurement. Connecting Businesses & Suppliers.</h1>
-          <p class="hero-text">
-            Choose the right workspace for your role and continue into a clean procurement experience built around trusted suppliers,
-            quotation comparison, and transparent trade decisions.
+          <h1>Choose your procurement workspace.</h1>
+          <p>
+            Sign in or create an account based on your role. Elsati Connect gives businesses and suppliers
+            a structured space to manage RFQs, quotations, supplier visibility, and procurement decisions.
           </p>
-          <div class="poster-actions">
-            <a class="button button-primary" href="customer-signin.html">Sign In as Customer</a>
-            <a class="button button-secondary" href="supplier-signin.html">Sign In as Supplier</a>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="customer-signin.html">Customer Sign In</a>
+            <a class="button button-secondary" href="supplier-signin.html">Supplier Sign In</a>
           </div>
         </div>
 
-        <div class="poster-collage">
-          <div class="poster-device poster-monitor">
-            <div class="device-top poster-device-top">
-              <span class="window-controls"></span>
-              <span class="device-brand">Elsati Connect</span>
-              <span class="device-menu">Dashboard · Quotations · Suppliers · Pricing</span>
+        <div class="signin-dashboard-preview">
+          <div class="signin-window">
+            <div class="signin-window-top">
+              <span></span><span></span><span></span>
+              <strong>Elsati Workspace</strong>
             </div>
-            <div class="monitor-surface">
-              <aside class="monitor-sidebar">
-                <span>Dashboard</span>
-                <span>Create Request</span>
-                <span class="active">My Requests</span>
-                <span>Quotations</span>
-                <span>Suppliers</span>
-                <span>Reports</span>
-              </aside>
-              <div class="monitor-main">
-                <div class="monitor-top-row">
-                  <article><small>Open Requests</small><strong>4</strong></article>
-                  <article><small>Pending Quotations</small><strong>6</strong></article>
-                  <article><small>Approved Orders</small><strong>3</strong></article>
+
+            <div class="signin-window-body">
+              <div class="signin-preview-stats">
+                <article>
+                  <small>Open RFQs</small>
+                  <strong>12</strong>
+                </article>
+                <article>
+                  <small>Supplier Quotes</small>
+                  <strong>36</strong>
+                </article>
+                <article>
+                  <small>Verified Suppliers</small>
+                  <strong>10+</strong>
+                </article>
+              </div>
+
+              <div class="signin-preview-board">
+                <div class="preview-line active">
+                  <span></span>
+                  Business buyer created a new RFQ
                 </div>
-                <div class="monitor-quote-card">
-                  <div class="chart-head">
-                    <span>Compare quotations</span>
-                    <strong>N$321,500</strong>
-                  </div>
-                  <div class="report-row"><b>Lumen Supplies</b><span>N$ 214</span><em>2 days</em></div>
-                  <div class="report-row"><b>Zambezi Traders</b><span>N$ 228</span><em>3 days</em></div>
-                  <div class="report-row"><b>Arco Holdings</b><span>N$ 240</span><em>4 days</em></div>
-                  <div class="report-row"><b>ABC Supplies</b><span>N$ 248</span><em>4 days</em></div>
+                <div class="preview-line">
+                  <span></span>
+                  Supplier submitted quotation
+                </div>
+                <div class="preview-line">
+                  <span></span>
+                  Quote comparison updated
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="poster-device poster-laptop">
-            <div class="device-top poster-device-top">
-              <span class="window-controls"></span>
-              <span class="device-brand">Elsati Connect</span>
-            </div>
-            <div class="laptop-surface">
-              <div class="mini-hero poster-mini-hero">
-                <h3>Simplifying Procurement. Connecting Businesses & Suppliers.</h3>
-                <div class="mini-buttons"><span></span><span></span></div>
-              </div>
-              <div class="mini-features poster-mini-features">
-                <div>Supplier Discovery</div>
-                <div>Verified Network</div>
-                <div>Quote Comparison</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="poster-device poster-tablet">
-            <div class="device-top poster-device-top">
-              <span class="window-controls"></span>
-              <span class="device-brand">Elsati Connect</span>
-            </div>
-            <div class="tablet-surface">
-              <div class="tablet-copy poster-tablet-copy">
-                <h3>Simplifying Procurement. Connecting Businesses & Suppliers.</h3>
-                <p>Smart sourcing, trusted suppliers, and faster decisions.</p>
-              </div>
-              <div class="tablet-analytics">
-                <span></span>
-                <span class="mid"></span>
-                <span></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="poster-device poster-chat">
-            <div class="device-top poster-device-top">
-              <span class="window-controls"></span>
-              <span class="device-brand">Elsati Connect</span>
-            </div>
-            <div class="chat-ui poster-chat-ui">
-              <div class="chat-bubble chat-bubble-light">Find verified suppliers for office equipment.</div>
-              <div class="chat-bubble chat-bubble-green">3 matching suppliers found with buyer-approved verification.</div>
-            </div>
+          <div class="signin-floating-note">
+            <span>Role Access</span>
+            <strong>Customers and suppliers each get their own focused workspace.</strong>
           </div>
         </div>
       </section>
 
-      <section class="signin-split-grid reveal">
-        <div>
-          <div class="section-mini-head">
-            <p class="eyebrow">Quick sign in</p>
-            <h2>Continue into your platform.</h2>
-          </div>
-          <div class="signin-choice-grid poster-choice-grid">
-            <a class="signin-choice poster-choice customer-choice" href="customer-signin.html">
-              <p class="eyebrow">Customer</p>
-              <h2>Business sign in</h2>
-              <p>For procurement teams creating RFQs, reviewing supplier quotes, and approving sourcing decisions.</p>
-              <span>Open customer sign in</span>
-            </a>
-            <a class="signin-choice poster-choice supplier-choice" href="supplier-signin.html">
-              <p class="eyebrow">Supplier</p>
-              <h2>Supplier sign in</h2>
-              <p>For vendors receiving RFQs, submitting quotations, and tracking live buyer decisions.</p>
-              <span>Open supplier sign in</span>
-            </a>
-          </div>
+      <section class="signin-role-section reveal">
+        <div class="signin-section-head">
+          <p class="eyebrow">Quick Access</p>
+          <h2>Continue with the option that matches your role.</h2>
         </div>
 
+        <div class="signin-role-grid">
+          <a class="signin-role-card" href="customer-signin.html">
+            <span class="role-badge">Customer</span>
+            <h3>Business sign in</h3>
+            <p>For procurement teams creating RFQs, reviewing supplier quotes, and managing sourcing decisions.</p>
+            <strong>Open customer workspace â†’</strong>
+          </a>
+
+          <a class="signin-role-card" href="supplier-signin.html">
+            <span class="role-badge">Supplier</span>
+            <h3>Supplier sign in</h3>
+            <p>For suppliers receiving RFQs, submitting quotations, and tracking buyer decisions.</p>
+            <strong>Open supplier workspace â†’</strong>
+          </a>
+        </div>
+      </section>
+
+      <section class="signin-register-section reveal">
+        <div class="signin-section-head">
+          <p class="eyebrow">New to Elsati?</p>
+          <h2>Create the right account for your procurement role.</h2>
+        </div>
+
+        <div class="signin-register-grid">
+          <a class="signin-register-card" href="register-business.html">
+            <div class="register-icon">B</div>
+            <h3>Register as a business</h3>
+            <p>Create a buyer account for supplier discovery, RFQ management, quotation comparison, and procurement visibility.</p>
+            <strong>Start business registration â†’</strong>
+          </a>
+
+          <a class="signin-register-card" href="register-supplier.html">
+            <div class="register-icon">S</div>
+            <h3>Register as a supplier</h3>
+            <p>Join the supplier network, receive relevant RFQs, submit quotations, and build visibility with buyers.</p>
+            <strong>Start supplier registration â†’</strong>
+          </a>
+        </div>
+      </section>
+
+      <section class="signin-dark-cta reveal">
         <div>
-          <div class="section-mini-head">
-            <p class="eyebrow">Quick sign up</p>
-            <h2>Choose the type of sign up you need.</h2>
-          </div>
-          <div class="signin-choice-grid poster-choice-grid">
-            <a class="signin-choice poster-choice customer-choice" href="register-business.html">
-              <p class="eyebrow">Customer / Buyer</p>
-              <h2>Business sign up</h2>
-              <p>Create a buyer portal for supplier discovery, RFQ management, and side-by-side quote comparison.</p>
-              <span>Start buyer registration</span>
-            </a>
-            <a class="signin-choice poster-choice supplier-choice" href="register-supplier.html">
-              <p class="eyebrow">Supplier</p>
-              <h2>Supplier sign up</h2>
-              <p>Join the verified supplier network, receive RFQs, and submit quotations inside your own supplier portal.</p>
-              <span>Start supplier registration</span>
-            </a>
-          </div>
+          <p class="eyebrow">Need help choosing?</p>
+          <h2>Not sure which account you need?</h2>
+          <p>
+            Contact the Elsati Connect team and we will help you choose the right workspace for your business or supplier profile.
+          </p>
+        </div>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="contact.html">Contact Us</a>
+          <a class="button button-secondary" href="how-it-works.html">View Workflow</a>
         </div>
       </section>
     </main>
