@@ -39,7 +39,8 @@
           <p class="eyebrow">Contact Elsati Connect</p>
           <h1>Start a procurement conversation with us.</h1>
           <p>
-            Reach out to register your business, join as a supplier, request a demo, or explore how Elsati Connect can support your procurement workflow.
+            Reach out to register your business, join as a supplier, request a demo,
+            or explore how Elsati Connect can support your procurement workflow.
           </p>
 
           <div class="hero-actions">
@@ -71,19 +72,28 @@
           <article>
             <span>01</span>
             <h3>Business Enquiry</h3>
-            <p>For businesses that want to onboard, manage procurement requests, or compare supplier quotations.</p>
+            <p>
+              For businesses that want to onboard, manage procurement requests,
+              or compare supplier quotations.
+            </p>
           </article>
 
           <article>
             <span>02</span>
             <h3>Supplier Registration</h3>
-            <p>For suppliers that want to join the network, receive RFQs, and submit quotations digitally.</p>
+            <p>
+              For suppliers that want to join the network, receive RFQs,
+              and submit quotations digitally.
+            </p>
           </article>
 
           <article>
             <span>03</span>
             <h3>Partnerships</h3>
-            <p>For logistics, financing, ecosystem, or strategic partnerships connected to procurement support.</p>
+            <p>
+              For logistics, financing, ecosystem, or strategic partnerships
+              connected to procurement support.
+            </p>
           </article>
         </div>
       </section>
@@ -174,5 +184,52 @@
   </div>
 
   <script src="script.js"></script>
+
+  <script>
+    const contactForm = document.querySelector(".contact-form");
+
+    if (contactForm) {
+      contactForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const submitButton = contactForm.querySelector("button");
+        const originalButtonText = submitButton.textContent;
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Sending...";
+
+        const formData = new FormData(contactForm);
+
+        try {
+          const response = await fetch(contactForm.action, {
+            method: "POST",
+            body: formData,
+            headers: {
+              Accept: "application/json"
+            }
+          });
+
+          if (response.ok) {
+            contactForm.innerHTML = `
+              <div class="form-success-message">
+                <div class="success-icon">✓</div>
+                <h3>Message sent successfully.</h3>
+                <p>
+                  Thank you for reaching out to Elsati Connect.
+                  Our team will get back to you shortly.
+                </p>
+              </div>
+            `;
+          } else {
+            throw new Error("Form submission failed");
+          }
+        } catch (error) {
+          submitButton.disabled = false;
+          submitButton.textContent = originalButtonText;
+          alert("Something went wrong. Please try again or email elsaticonnect@gmail.com directly.");
+        }
+      });
+    }
+  </script>
 </body>
 </html>
