@@ -11799,3 +11799,24 @@ h3 {
     padding: 10px 12px;
   }
 }
+/* IMAGE MOCKUP HOMEPAGE */
+
+.mockup-home {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+}
+
+.mockup-page {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.homepage-mockup-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+}
