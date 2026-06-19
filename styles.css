@@ -6078,3 +6078,607 @@ h3 {
     border-radius: 28px;
   }
 }
+/* =========================================================
+   ELSATI HOMEPAGE UPGRADE SECTIONS
+   ========================================================= */
+
+.elsati-intelligence-section,
+.elsati-ecosystem-section,
+.elsati-impact-section,
+.elsati-africa-section,
+.elsati-roadmap-section {
+  padding: 96px 6%;
+  position: relative;
+  overflow: hidden;
+}
+
+.elsati-intelligence-section {
+  background:
+    radial-gradient(circle at top left, rgba(98, 0, 238, 0.12), transparent 36%),
+    radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.12), transparent 35%),
+    linear-gradient(135deg, #fbfaff 0%, #ffffff 45%, #f8fbff 100%);
+}
+
+.elsati-ecosystem-section {
+  background:
+    radial-gradient(circle at center, rgba(98, 0, 238, 0.08), transparent 38%),
+    #ffffff;
+}
+
+.elsati-impact-section {
+  background: #f8fafc;
+}
+
+.elsati-africa-section {
+  background:
+    linear-gradient(135deg, rgba(98, 0, 238, 0.04), rgba(14, 165, 233, 0.04)),
+    #ffffff;
+}
+
+.elsati-roadmap-section {
+  background:
+    radial-gradient(circle at top right, rgba(192, 38, 211, 0.12), transparent 34%),
+    linear-gradient(135deg, #f8f6ff 0%, #f9fafb 100%);
+}
+
+.ei-container {
+  max-width: 1220px;
+  margin: 0 auto;
+}
+
+.ei-header {
+  text-align: center;
+  max-width: 880px;
+  margin: 0 auto 58px;
+}
+
+.ei-header h2 {
+  font-size: clamp(34px, 5vw, 58px);
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+  color: #0f172a;
+  margin: 10px 0 18px;
+  font-weight: 800;
+}
+
+.ei-header p {
+  font-size: 18px;
+  color: #64748b;
+  line-height: 1.75;
+}
+
+.ei-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 46px;
+  align-items: center;
+}
+
+.ei-copy-card {
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 32px;
+  padding: 34px;
+  box-shadow: 0 25px 70px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.ei-copy-card h3 {
+  font-size: 34px;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+  margin-bottom: 14px;
+}
+
+.ei-copy-card > p {
+  color: #64748b;
+  font-size: 17px;
+  line-height: 1.75;
+  margin-bottom: 28px;
+}
+
+.ei-features-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.ei-feature-card,
+.impact-card,
+.africa-card,
+.roadmap-card,
+.ecosystem-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 16px 45px rgba(15, 23, 42, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.ei-feature-card:hover,
+.impact-card:hover,
+.africa-card:hover,
+.roadmap-card:hover,
+.ecosystem-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(98, 0, 238, 0.22);
+  box-shadow: 0 24px 65px rgba(15, 23, 42, 0.11);
+}
+
+.ei-feature-card span,
+.africa-card span {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 13px;
+}
+
+.ei-feature-card h4,
+.impact-card h3,
+.africa-card h3,
+.roadmap-card h3,
+.ecosystem-card h3 {
+  color: #0f172a;
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.ei-feature-card p,
+.impact-card p,
+.africa-card p,
+.ecosystem-card p {
+  color: #64748b;
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+.ei-chat-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 34px;
+  padding: 30px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow:
+    0 30px 85px rgba(15, 23, 42, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  position: relative;
+  overflow: hidden;
+}
+
+.ei-chat-card::before {
+  content: "";
+  position: absolute;
+  inset: -80px -80px auto auto;
+  width: 190px;
+  height: 190px;
+  background: radial-gradient(circle, rgba(98, 0, 238, 0.16), transparent 68%);
+  pointer-events: none;
+}
+
+.ei-chat-top {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 26px;
+  position: relative;
+  z-index: 1;
+}
+
+.ei-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6200ee, #c026d3);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  box-shadow: 0 12px 28px rgba(98, 0, 238, 0.3);
+}
+
+.ei-chat-top strong {
+  color: #0f172a;
+  font-size: 17px;
+}
+
+.ei-chat-top p {
+  color: #64748b;
+  font-size: 14px;
+  margin: 4px 0 0;
+}
+
+.ei-message {
+  padding: 18px 20px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  line-height: 1.65;
+  font-size: 15.5px;
+  position: relative;
+  z-index: 1;
+}
+
+.ei-user {
+  background: #f1f5f9;
+  color: #334155;
+  margin-left: 42px;
+}
+
+.ei-ai {
+  background: linear-gradient(135deg, rgba(98, 0, 238, 0.08), rgba(192, 38, 211, 0.08));
+  color: #1e293b;
+  border: 1px solid rgba(98, 0, 238, 0.12);
+  margin-right: 28px;
+}
+
+.ei-insight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 20px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.ei-insight-grid article {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 16px;
+  text-align: center;
+}
+
+.ei-insight-grid small {
+  display: block;
+  color: #64748b;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.ei-insight-grid strong {
+  color: #0f172a;
+  font-size: 20px;
+}
+
+.ei-input-box {
+  margin-top: 18px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 14px 14px 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #94a3b8;
+  position: relative;
+  z-index: 1;
+}
+
+.ei-input-box button {
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6200ee, #c026d3);
+  color: #ffffff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Ecosystem */
+
+.ecosystem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.45fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.ecosystem-card {
+  min-height: 420px;
+}
+
+.ecosystem-icon,
+.impact-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(98, 0, 238, 0.12), rgba(14, 165, 233, 0.12));
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+.ecosystem-card ul,
+.roadmap-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 22px 0 0;
+}
+
+.ecosystem-card li,
+.roadmap-card li {
+  padding: 11px 0;
+  color: #475569;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 15px;
+}
+
+.ecosystem-card li::before,
+.roadmap-card li::before {
+  content: "✓";
+  color: #6200ee;
+  font-weight: 900;
+  margin-right: 10px;
+}
+
+.ecosystem-center {
+  text-align: center;
+}
+
+.ecosystem-orbit {
+  width: 430px;
+  height: 430px;
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.ecosystem-orbit::before,
+.ecosystem-orbit::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.ecosystem-orbit::before {
+  inset: 18px;
+}
+
+.ecosystem-orbit::after {
+  inset: 58px;
+}
+
+.ecosystem-circle {
+  width: 285px;
+  height: 285px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 180deg,
+    #6200ee,
+    #7c3aed,
+    #2563eb,
+    #06b6d4,
+    #22c55e,
+    #c026d3,
+    #6200ee
+  );
+  padding: 13px;
+  box-shadow: 0 28px 70px rgba(98, 0, 238, 0.24);
+  position: relative;
+  z-index: 2;
+}
+
+.circle-inner {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-inner span {
+  font-size: 38px;
+  font-weight: 900;
+  color: #6200ee;
+  letter-spacing: 2px;
+}
+
+.circle-inner strong {
+  color: #0f172a;
+  font-size: 22px;
+  margin-top: 6px;
+}
+
+.circle-inner small {
+  margin-top: 10px;
+  color: #64748b;
+  max-width: 170px;
+  line-height: 1.4;
+}
+
+.orbit-item {
+  position: absolute;
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 10px 15px;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+  z-index: 3;
+}
+
+.item-one { top: 12px; left: 50%; transform: translateX(-50%); }
+.item-two { right: 0; top: 116px; }
+.item-three { right: 18px; bottom: 96px; }
+.item-four { bottom: 14px; left: 50%; transform: translateX(-50%); }
+.item-five { left: 0; bottom: 96px; }
+.item-six { left: 18px; top: 116px; }
+
+/* Impact / Africa / Roadmap */
+
+.impact-grid,
+.africa-grid,
+.roadmap-grid {
+  display: grid;
+  gap: 22px;
+}
+
+.impact-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.africa-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.roadmap-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.impact-card {
+  min-height: 260px;
+}
+
+.africa-card {
+  min-height: 245px;
+}
+
+.roadmap-card {
+  min-height: 310px;
+  position: relative;
+  overflow: hidden;
+}
+
+.roadmap-card::after {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: -60px;
+  top: -60px;
+  background: radial-gradient(circle, rgba(98, 0, 238, 0.12), transparent 65%);
+}
+
+.roadmap-card > span {
+  display: inline-block;
+  color: #6200ee;
+  background: rgba(98, 0, 238, 0.08);
+  padding: 8px 15px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 900;
+  margin-bottom: 20px;
+}
+
+.roadmap-card.active {
+  border: 2px solid rgba(98, 0, 238, 0.35);
+  background: linear-gradient(135deg, #ffffff, #faf5ff);
+  transform: translateY(-8px);
+}
+
+/* Responsive */
+
+@media (max-width: 1100px) {
+  .ei-hero-grid,
+  .ecosystem-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ecosystem-center {
+    order: -1;
+  }
+
+  .impact-grid,
+  .africa-grid,
+  .roadmap-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ecosystem-card {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .elsati-intelligence-section,
+  .elsati-ecosystem-section,
+  .elsati-impact-section,
+  .elsati-africa-section,
+  .elsati-roadmap-section {
+    padding: 74px 5%;
+  }
+
+  .ei-header {
+    margin-bottom: 38px;
+  }
+
+  .ei-header h2 {
+    font-size: 34px;
+  }
+
+  .ei-header p {
+    font-size: 16px;
+  }
+
+  .ei-copy-card {
+    padding: 24px;
+    border-radius: 26px;
+  }
+
+  .ei-copy-card h3 {
+    font-size: 28px;
+  }
+
+  .ei-features-grid,
+  .impact-grid,
+  .africa-grid,
+  .roadmap-grid,
+  .ei-insight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ei-chat-card {
+    padding: 22px;
+    border-radius: 26px;
+  }
+
+  .ei-user,
+  .ei-ai {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .ecosystem-orbit {
+    width: 310px;
+    height: 310px;
+  }
+
+  .ecosystem-circle {
+    width: 220px;
+    height: 220px;
+  }
+
+  .circle-inner span {
+    font-size: 28px;
+  }
+
+  .circle-inner strong {
+    font-size: 18px;
+  }
+
+  .circle-inner small {
+    font-size: 11px;
+    max-width: 130px;
+  }
+
+  .orbit-item {
+    font-size: 11px;
+    padding: 7px 10px;
+  }
+
+  .item-two { right: -8px; top: 88px; }
+  .item-three { right: -2px; bottom: 78px; }
+  .item-five { left: -8px; bottom: 78px; }
+  .item-six { left: -2px; top: 88px; }
+}
