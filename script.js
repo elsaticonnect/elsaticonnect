@@ -56,3 +56,39 @@ if (activityItems.length) {
     activeActivity = (activeActivity + 1) % activityItems.length;
   }, 2200);
 }
+
+/* Header hide on scroll + bottom floating nav */
+
+const topbar = document.querySelector(".topbar");
+const bottomNav = document.querySelector(".bottom-floating-nav");
+
+let lastScrollY = window.scrollY;
+let ticking = false;
+
+function handleScrollNavigation() {
+  const currentScrollY = window.scrollY;
+
+  if (!topbar || !bottomNav) return;
+
+  if (currentScrollY > 120) {
+    bottomNav.classList.add("show");
+  } else {
+    bottomNav.classList.remove("show");
+  }
+
+  if (currentScrollY > 120 && currentScrollY > lastScrollY) {
+    topbar.classList.add("header-hidden");
+  } else {
+    topbar.classList.remove("header-hidden");
+  }
+
+  lastScrollY = currentScrollY;
+  ticking = false;
+}
+
+window.addEventListener("scroll", () => {
+  if (!ticking) {
+    window.requestAnimationFrame(handleScrollNavigation);
+    ticking = true;
+  }
+});
