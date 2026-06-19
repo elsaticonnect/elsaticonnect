@@ -57,8 +57,6 @@ if (activityItems.length) {
   }, 2200);
 }
 
-/* Header hide on scroll + bottom floating nav */
-
 const topbar = document.querySelector(".topbar");
 const bottomNav = document.querySelector(".bottom-floating-nav");
 
