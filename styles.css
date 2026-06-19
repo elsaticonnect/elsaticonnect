@@ -14125,3 +14125,80 @@ h3 {
     padding: 10px 12px;
   }
 }
+/* ==================================================
+   ELSATI PREMIUM HOMEPAGE
+================================================== */
+
+.premium-home{
+  display:flex;
+  flex-direction:column;
+  gap:120px;
+}
+
+.section-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:999px;
+  background:rgba(18,181,95,.08);
+  color:#0d8f4f;
+  font-size:.8rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.section-pill.dark{
+  background:rgba(255,255,255,.08);
+  color:#9df0c0;
+}
+
+.section-heading{
+  max-width:850px;
+}
+
+.section-heading.centered{
+  margin:0 auto;
+  text-align:center;
+}
+
+.section-heading h2{
+  margin-top:18px;
+  font-size:clamp(2.5rem,4vw,4.5rem);
+  line-height:1;
+  letter-spacing:-.05em;
+}
+
+.section-heading p{
+  margin-top:18px;
+  color:#64748b;
+  line-height:1.8;
+}
+
+.premium-list{
+  list-style:none;
+  padding:0;
+  margin:28px 0;
+  display:grid;
+  gap:14px;
+}
+
+.premium-list li{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:600;
+}
+
+.premium-list li::before{
+  content:"";
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#12b55f;
+}
+
+.light-list li{
+  color:#fff;
+}
