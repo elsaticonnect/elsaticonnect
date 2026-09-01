@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Supplier RFQs | Elsati Connect</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f7f9f8;
+    color: #17202c;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.header {
+    height: 70px;
+    background: white;
+    border-bottom: 1px solid #e4e9e6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 35px;
+}
+
+.logo {
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.logo span {
+    color: #2f9e44;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-name {
+    text-align: right;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.user-status {
+    color: #2f9e44;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #e7f5eb;
+    color: #2f9e44;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.container {
+    max-width: 1300px;
+    margin: auto;
+    padding: 30px;
+}
+
+.title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 20px;
+}
+
+.title-row h1 {
+    margin: 0 0 5px;
+    font-size: 25px;
+}
+
+.title-row p {
+    margin: 0;
+    color: #7a8593;
+    font-size: 12px;
+}
+
+.search {
+    width: 240px;
+    height: 38px;
+    border: 1px solid #dce3df;
+    border-radius: 8px;
+    padding: 0 12px;
+    outline: none;
+    background: white;
+}
+
+.search:focus {
+    border-color: #2f9e44;
+}
+
+.tabs {
+    display: flex;
+    gap: 7px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.tab {
+    border: 1px solid #dce3df;
+    background: white;
+    color: #697586;
+    padding: 9px 15px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.tab.active {
+    background: #2f9e44;
+    color: white;
+    border-color: #2f9e44;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e1e7e3;
+    border-radius: 12px;
+    padding: 18px;
+    min-height: 235px;
+    position: relative;
+    box-shadow: 0 3px 12px rgba(0,0,0,.035);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.badge {
+    padding: 5px 8px;
+    border-radius: 20px;
+    font-size: 8px;
+    font-weight: 800;
+}
+
+.open {
+    background: #e7f5eb;
+    color: #23813a;
+}
+
+.direct {
+    background: #e8f3ff;
+    color: #1670c5;
+}
+
+.submitted {
+    background: #fff3d8;
+    color: #916500;
+}
+
+.code {
+    font-size: 9px;
+    color: #7b8694;
+    font-weight: 700;
+}
+
+.card h3 {
+    margin: 16px 0 5px;
+    font-size: 16px;
+}
+
+.quantity {
+    font-size: 10px;
+    color: #697586;
+    margin-bottom: 16px;
+}
+
+.company {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.location {
+    color: #7b8694;
+    font-size: 10px;
+    margin-top: 4px;
+}
+
+.info {
+    margin-top: 15px;
+    display: grid;
+    gap: 6px;
+    color: #667384;
+    font-size: 10px;
+}
+
+.view {
+    position: absolute;
+    right: 16px;
+    bottom: 15px;
+    border: 0;
+    background: #2f9e44;
+    color: white;
+    border-radius: 7px;
+    padding: 9px 14px;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.view:hover {
+    background: #27863a;
+}
+
+.message {
+    background: white;
+    border: 1px solid #e1e7e3;
+    border-radius: 10px;
+    padding: 35px;
+    text-align: center;
+    color: #7a8593;
+    font-size: 12px;
+    grid-column: 1 / -1;
+}
+
+/* DETAILS */
+
+#details {
+    display: none;
+}
+
+.back {
+    border: none;
+    background: none;
+    color: #687586;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 0;
+    margin: 25px 0 15px;
+}
+
+.back:hover {
+    color: #2f9e44;
+}
+
+.details {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 18px;
+}
+
+.details-card {
+    background: white;
+    border: 1px solid #e1e7e3;
+    border-radius: 12px;
+    padding: 21px;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #e8ecea;
+    padding-bottom: 18px;
+}
+
+.detail-header h2 {
+    margin: 8px 0 5px;
+    font-size: 22px;
+}
+
+.meta {
+    color: #7b8694;
+    font-size: 10px;
+}
+
+.deadline {
+    text-align: right;
+    font-size: 10px;
+    color: #697586;
+}
+
+.deadline strong {
+    display: block;
+    margin-top: 5px;
+    color: #17202c;
+}
+
+.customer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid #e8ecea;
+}
+
+.customer-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.company-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #e7f5eb;
+    color: #2f9e44;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 800;
+}
+
+.customer-label {
+    color: #7b8694;
+    font-size: 9px;
+}
+
+.customer-name {
+    margin-top: 3px;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.customer-location {
+    margin-top: 3px;
+    color: #7b8694;
+    font-size: 9px;
+}
+
+.verified {
+    color: #2f9e44;
+}
+
+.profile {
+    border: 1px solid #dce3df;
+    background: white;
+    border-radius: 7px;
+    padding: 8px 12px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.section {
+    margin-top: 20px;
+}
+
+.section-title {
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 9px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: #e8ecea;
+    border: 1px solid #e8ecea;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.detail-item {
+    background: #fbfcfc;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+}
+
+.detail-item span {
+    color: #697586;
+}
+
+.notes {
+    color: #596777;
+    font-size: 10px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+/* QUOTE */
+
+.quote-box {
+    background: #f3faf5;
+    border: 1px solid #dcecdf;
+    border-radius: 12px;
+    padding: 20px;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.quote-box h2 {
+    color: #287a3b;
+    margin: 0 0 18px;
+    font-size: 17px;
+}
+
+.field {
+    margin-bottom: 14px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    border: 1px solid #d9e2dc;
+    border-radius: 7px;
+    padding: 10px;
+    background: white;
+    outline: none;
+    font-size: 10px;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    border-color: #2f9e44;
+}
+
+.field textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.confirmation {
+    background: #e5f4e9;
+    color: #317543;
+    border-radius: 7px;
+    padding: 10px;
+    font-size: 9px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.submit {
+    width: 100%;
+    border: none;
+    background: #2f9e44;
+    color: white;
+    border-radius: 7px;
+    padding: 12px;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.submit:hover {
+    background: #27863a;
+}
+
+.submit:disabled {
+    opacity: .6;
+}
+
+.success {
+    color: #15803d;
+    font-size: 10px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.error {
+    color: #b91c1c;
+    font-size: 10px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+@media(max-width: 950px) {
+
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .details {
+        grid-template-columns: 1fr;
+    }
+
+    .quote-box {
+        position: static;
+    }
+
+}
+
+@media(max-width: 650px) {
+
+    .header {
+        padding: 0 18px;
+    }
+
+    .container {
+        padding: 18px;
+    }
+
+    .title-row {
+        display: block;
+    }
+
+    .search {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .customer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .detail-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .deadline {
+        text-align: left;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<header class="header">
+
+    <div class="logo">
+        ELSATI <span>CONNECT</span>
+    </div>
+
+    <div class="user">
+
+        <div>
+
+            <div
+                id="supplierName"
+                class="user-name"
+            >
+                Supplier
+            </div>
+
+            <div class="user-status">
+                ✓ Verified Supplier
+            </div>
+
+        </div>
+
+        <div
+            id="avatar"
+            class="avatar"
+        >
+            S
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <div class="title-row">
+
+        <div>
+
+            <h1>
+                RFQs
+            </h1>
+
+            <p>
+                View and respond to quotation requests from businesses.
+            </p>
+
+        </div>
+
+        <input
+            id="search"
+            class="search"
+            placeholder="Search RFQs..."
+        >
+
+    </div>
+
+
+    <div class="tabs">
+
+        <button
+            class="tab active"
+            data-filter="all"
+        >
+            All
+        </button>
+
+        <button
+            class="tab"
+            data-filter="open"
+        >
+            Open
+        </button>
+
+        <button
+            class="tab"
+            data-filter="direct"
+        >
+            Direct Requests
+        </button>
+
+        <button
+            class="tab"
+            data-filter="submitted"
+        >
+            Submitted
+        </button>
+
+        <button
+            class="tab"
+            data-filter="awarded"
+        >
+            Awarded
+        </button>
+
+    </div>
+
+
+    <div
+        id="rfqGrid"
+        class="grid"
+    >
+
+        <div class="message">
+            Loading RFQs...
+        </div>
+
+    </div>
+
+
+    <section id="details">
+
+        <button
+            id="back"
+            class="back"
+        >
+            ← Back to RFQs
+        </button>
+
+
+        <div class="details">
+
+
+            <div class="details-card">
+
+                <div class="detail-header">
+
+                    <div>
+
+                        <span
+                            id="detailBadge"
+                            class="badge open"
+                        >
+                            OPEN TO ALL SUPPLIERS
+                        </span>
+
+                        <h2 id="detailTitle">
+                            —
+                        </h2>
+
+                        <div
+                            id="detailMeta"
+                            class="meta"
+                        >
+                            —
+                        </div>
+
+                    </div>
+
+                    <div class="deadline">
+
+                        Closing Date
+
+                        <strong id="detailDeadline">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="customer">
+
+                    <div class="customer-left">
+
+                        <div
+                            id="companyIcon"
+                            class="company-icon"
+                        >
+                            B
+                        </div>
+
+                        <div>
+
+                            <div class="customer-label">
+                                Requested by
+                            </div>
+
+                            <div
+                                id="detailCompany"
+                                class="customer-name"
+                            >
+                                —
+                            </div>
+
+                            <div
+                                id="detailCompanyLocation"
+                                class="customer-location"
+                            >
+                                —
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="profile"
+                        onclick="alert('Company profile will be available here.')"
+                    >
+                        View Company Profile
+                    </button>
+
+                </div>
+
+
+                <div class="section">
+
+                    <div class="section-title">
+                        Procurement Details
+                    </div>
+
+                    <div class="detail-grid">
+
+                        <div class="detail-item">
+                            <span>Category</span>
+                            <strong id="detailCategory">—</strong>
+                        </div>
+
+                        <div class="detail-item">
+                            <span>Estimated Budget</span>
+                            <strong id="detailBudget">—</strong>
+                        </div>
+
+                        <div class="detail-item">
+                            <span>Quantity</span>
+                            <strong id="detailQuantity">—</strong>
+                        </div>
+
+                        <div class="detail-item">
+                            <span>Request Type</span>
+                            <strong id="detailType">—</strong>
+                        </div>
+
+                        <div class="detail-item">
+                            <span>Required By</span>
+                            <strong id="detailRequired">—</strong>
+                        </div>
+
+                        <div class="detail-item">
+                            <span>Delivery Location</span>
+                            <strong id="detailLocation">—</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="section">
+
+                    <div class="section-title">
+                        Requirements / Specifications
+                    </div>
+
+                    <div
+                        id="detailNotes"
+                        class="notes"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <aside class="quote-box">
+
+                <h2>
+                    Submit Your Quotation
+                </h2>
+
+
+                <form id="quoteForm">
+
+                    <div class="field">
+
+                        <label>
+                            Your Price (Total)
+                        </label>
+
+                        <input
+                            id="quotePrice"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            placeholder="ZMW 0.00"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Delivery Period
+                        </label>
+
+                        <input
+                            id="quoteDelivery"
+                            placeholder="e.g. 7–10 days"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Payment Terms
+                        </label>
+
+                        <select id="quotePayment">
+
+                            <option value="">
+                                Select terms
+                            </option>
+
+                            <option>
+                                Cash on delivery
+                            </option>
+
+                            <option>
+                                Payment on delivery
+                            </option>
+
+                            <option>
+                                50% deposit / 50% on delivery
+                            </option>
+
+                            <option>
+                                7 days credit
+                            </option>
+
+                            <option>
+                                14 days credit
+                            </option>
+
+                            <option>
+                                30 days credit
+                            </option>
+
+                            <option>
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Notes
+                        </label>
+
+                        <textarea
+                            id="quoteNotes"
+                            placeholder="Add any notes..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div
+                        id="quoteMessage"
+                    ></div>
+
+
+                    <div class="confirmation">
+
+                        ⓘ By submitting, you confirm that
+                        your quotation is valid and accurate.
+
+                    </div>
+
+
+                    <button
+                        id="submitQuote"
+                        class="submit"
+                        type="submit"
+                    >
+                        Submit Quotation
+                    </button>
+
+                </form>
+
+            </aside>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+let supabaseClient = null;
+
+let currentUser = null;
+
+let currentProfile = null;
+
+let rfqs = [];
+
+let selectedRfq = null;
+
+let activeFilter = "all";
+
+
+/* ==========================================
+   SUPABASE
+========================================== */
+
+function initialiseSupabase() {
+
+    if (
+        typeof supabase === "undefined"
+    ) {
+
+        throw new Error(
+            "Supabase library did not load."
+        );
+
+    }
+
+
+    /*
+     * Use Elsati's existing configuration.
+     */
+
+    if (
+        window.ELSATI_SUPABASE &&
+        window.ELSATI_SUPABASE.url &&
+        window.ELSATI_SUPABASE.publishableKey
+    ) {
+
+        supabaseClient =
+            supabase.createClient(
+                window.ELSATI_SUPABASE.url,
+                window.ELSATI_SUPABASE.publishableKey
+            );
+
+        return;
+
+    }
+
+
+    /*
+     * Also support common configuration
+     * variable names.
+     */
+
+    const url =
+        window.SUPABASE_URL ||
+        window.supabaseUrl;
+
+
+    const key =
+        window.SUPABASE_ANON_KEY ||
+        window.supabaseAnonKey;
+
+
+    if (
+        url &&
+        key
+    ) {
+
+        supabaseClient =
+            supabase.createClient(
+                url,
+                key
+            );
+
+        return;
+
+    }
+
+
+    throw new Error(
+        "Supabase configuration was not found."
+    );
+
+}
+
+
+/* ==========================================
+   START
+========================================== */
+
+async function startPage() {
+
+    try {
+
+        initialiseSupabase();
+
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient.auth.getUser();
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        if (
+            !data ||
+            !data.user
+        ) {
+
+            showError(
+                "Please sign in first."
+            );
+
+            return;
+
+        }
+
+
+        currentUser =
+            data.user;
+
+
+        const profileResult =
+            await supabaseClient
+                .from("profiles")
+                .select("*")
+                .eq(
+                    "id",
+                    currentUser.id
+                )
+                .maybeSingle();
+
+
+        if (
+            profileResult.error
+        ) {
+
+            throw profileResult.error;
+
+        }
+
+
+        currentProfile =
+            profileResult.data;
+
+
+        if (!currentProfile) {
+
+            showError(
+                "Your supplier profile could not be found."
+            );
+
+            return;
+
+        }
+
+
+        setSupplier();
+
+
+        await loadRfqs();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+        showError(
+            error.message ||
+            "Unable to load RFQs."
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   SUPPLIER HEADER
+========================================== */
+
+function setSupplier() {
+
+    const name =
+        currentProfile.company_name ||
+        currentProfile.email ||
+        "Supplier";
+
+
+    document.getElementById(
+        "supplierName"
+    ).textContent =
+        name;
+
+
+    document.getElementById(
+        "avatar"
+    ).textContent =
+        name
+            .substring(0,2)
+            .toUpperCase();
+
+}
+
+
+/* ==========================================
+   LOAD RFQS
+========================================== */
+
+async function loadRfqs() {
+
+    const result =
+        await supabaseClient
+            .from("rfqs")
+            .select("*")
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+    if (
+        result.error
+    ) {
+
+        throw result.error;
+
+    }
+
+
+    rfqs =
+        result.data || [];
+
+
+    await loadMyQuotes();
+
+
+    render();
+
+}
+
+
+/* ==========================================
+   SUPPLIER QUOTES
+========================================== */
+
+async function loadMyQuotes() {
+
+    if (
+        !rfqs.length
+    ) {
+
+        return;
+
+    }
+
+
+    const ids =
+        rfqs.map(
+            rfq =>
+                rfq.id
+        );
+
+
+    const result =
+        await supabaseClient
+            .from("quotes")
+            .select("*")
+            .eq(
+                "supplier_user_id",
+                currentUser.id
+            )
+            .in(
+                "rfq_id",
+                ids
+            );
+
+
+    if (
+        result.error
+    ) {
+
+        console.warn(
+            result.error
+        );
+
+        return;
+
+    }
+
+
+    const quotes =
+        result.data || [];
+
+
+    rfqs.forEach(
+        rfq => {
+
+            rfq.myQuote =
+                quotes.find(
+                    quote =>
+                        quote.rfq_id ===
+                        rfq.id
+                ) || null;
+
+        }
+    );
+
+}
+
+
+/* ==========================================
+   DIRECT REQUEST
+========================================== */
+
+function isDirectRequest(rfq) {
+
+    const text =
+        (
+            (rfq.title || "") +
+            " " +
+            (rfq.notes || "")
+        ).toLowerCase();
+
+
+    return (
+        text.includes("direct request") ||
+        text.includes("direct rfq")
+    );
+
+}
+
+
+/* ==========================================
+   FILTER
+========================================== */
+
+function getFiltered() {
+
+    const search =
+        document.getElementById(
+            "search"
+        )
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    return rfqs.filter(
+        rfq => {
+
+            const direct =
+                isDirectRequest(
+                    rfq
+                );
+
+
+            const submitted =
+                !!rfq.myQuote;
+
+
+            const awarded =
+                rfq.status ===
+                    "awarded" ||
+                rfq.awarded_supplier_id ===
+                    currentProfile.id;
+
+
+            if (
+                activeFilter ===
+                "open" &&
+                rfq.status !==
+                "open"
+            ) {
+
+                return false;
+
+            }
+
+
+            if (
+                activeFilter ===
+                "direct" &&
+                !direct
+            ) {
+
+                return false;
+
+            }
+
+
+            if (
+                activeFilter ===
+                "submitted" &&
+                !submitted
+            ) {
+
+                return false;
+
+            }
+
+
+            if (
+                activeFilter ===
+                "awarded" &&
+                !awarded
+            ) {
+
+                return false;
+
+            }
+
+
+            if (!search) {
+
+                return true;
+
+            }
+
+
+            const searchable =
+                [
+                    rfq.title,
+                    rfq.code,
+                    rfq.business_name,
+                    rfq.created_by_company,
+                    rfq.category,
+                    rfq.delivery_location,
+                    rfq.notes
+                ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase();
+
+
+            return searchable.includes(
+                search
+            );
+
+        }
+    );
+
+}
+
+
+/* ==========================================
+   RENDER
+========================================== */
+
+function render() {
+
+    const grid =
+        document.getElementById(
+            "rfqGrid"
+        );
+
+
+    const list =
+        getFiltered();
+
+
+    if (
+        !list.length
+    ) {
+
+        grid.innerHTML = `
+
+            <div class="message">
+
+                <strong>
+                    No RFQs found
+                </strong>
+
+                <div style="margin-top:7px;">
+                    No requests match this selection.
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+        list
+            .map(
+                card
+            )
+            .join("");
+
+}
+
+
+/* ==========================================
+   CARD
+========================================== */
+
+function card(rfq) {
+
+    const direct =
+        isDirectRequest(
+            rfq
+        );
+
+
+    const submitted =
+        !!rfq.myQuote;
+
+
+    const company =
+        rfq.business_name ||
+        rfq.created_by_company ||
+        "Business";
+
+
+    let badge =
+        "OPEN TO ALL SUPPLIERS";
+
+    let badgeClass =
+        "open";
+
+
+    if (direct) {
+
+        badge =
+            "DIRECT REQUEST";
+
+        badgeClass =
+            "direct";
+
+    }
+
+
+    if (submitted) {
+
+        badge =
+            "QUOTATION SUBMITTED";
+
+        badgeClass =
+            "submitted";
+
+    }
+
+
+    return `
+
+        <article class="card">
+
+            <div class="card-top">
+
+                <span class="badge ${badgeClass}">
+                    ${escapeHtml(badge)}
+                </span>
+
+                <span class="code">
+                    ${escapeHtml(
+                        rfq.code || "RFQ"
+                    )}
+                </span>
+
+            </div>
+
+
+            <h3>
+                ${escapeHtml(
+                    rfq.title ||
+                    "Procurement Request"
+                )}
+            </h3>
+
+
+            <div class="quantity">
+
+                ${escapeHtml(
+                    rfq.quantity ||
+                    "0"
+                )}
+
+                ${
+                    Number(rfq.quantity) === 1
+                        ? " Unit"
+                        : " Units"
+                }
+
+            </div>
+
+
+            <div class="company">
+
+                🏢
+                ${escapeHtml(
+                    company
+                )}
+
+            </div>
+
+
+            <div class="location">
+
+                ${escapeHtml(
+                    rfq.delivery_location ||
+                    "Zambia"
+                )}
+
+            </div>
+
+
+            <div class="info">
+
+                <div>
+                    📅 Required by:
+                    ${escapeHtml(
+                        rfq.deadline ||
+                        "Not specified"
+                    )}
+                </div>
+
+                <div>
+                    📍 Delivery:
+                    ${escapeHtml(
+                        rfq.delivery_location ||
+                        "Not specified"
+                    )}
+                </div>
+
+                <div>
+                    ${
+                        submitted
+                            ? "✓ Quotation submitted"
+                            : "◷ Awaiting quotation"
+                    }
+                </div>
+
+            </div>
+
+
+            <button
+                class="view"
+                onclick="openRfq('${rfq.id}')"
+            >
+
+                ${
+                    direct
+                        ? "View Request"
+                        : "View RFQ"
+                }
+
+            </button>
+
+        </article>
+
+    `;
+
+}
+
+
+/* ==========================================
+   OPEN RFQ
+========================================== */
+
+function openRfq(id) {
+
+    selectedRfq =
+        rfqs.find(
+            rfq =>
+                rfq.id === id
+        );
+
+
+    if (!selectedRfq) {
+
+        return;
+
+    }
+
+
+    const rfq =
+        selectedRfq;
+
+
+    const direct =
+        isDirectRequest(
+            rfq
+        );
+
+
+    const company =
+        rfq.business_name ||
+        rfq.created_by_company ||
+        "Business";
+
+
+    const badge =
+        document.getElementById(
+            "detailBadge"
+        );
+
+
+    badge.textContent =
+        direct
+            ? "DIRECT REQUEST"
+            : "OPEN TO ALL SUPPLIERS";
+
+
+    badge.className =
+        "badge " +
+        (
+            direct
+                ? "direct"
+                : "open"
+        );
+
+
+    document.getElementById(
+        "detailTitle"
+    ).textContent =
+        rfq.title ||
+        "Procurement Request";
+
+
+    document.getElementById(
+        "detailMeta"
+    ).textContent =
+        (
+            rfq.code ||
+            "RFQ"
+        ) +
+        " · Posted " +
+        formatDate(
+            rfq.created_at
+        );
+
+
+    document.getElementById(
+        "detailDeadline"
+    ).textContent =
+        rfq.deadline ||
+        "Not specified";
+
+
+    document.getElementById(
+        "detailCompany"
+    ).innerHTML =
+        escapeHtml(
+            company
+        ) +
+        ' <span class="verified">✓</span>';
+
+
+    document.getElementById(
+        "detailCompanyLocation"
+    ).textContent =
+        rfq.delivery_location ||
+        "Zambia";
+
+
+    document.getElementById(
+        "companyIcon"
+    ).textContent =
+        company
+            .substring(0,1)
+            .toUpperCase();
+
+
+    document.getElementById(
+        "detailCategory"
+    ).textContent =
+        rfq.category ||
+        "General";
+
+
+    document.getElementById(
+        "detailBudget"
+    ).textContent =
+        rfq.estimated_budget
+            ? "ZMW " +
+              Number(
+                  rfq.estimated_budget
+              ).toLocaleString()
+            : "Not specified";
+
+
+    document.getElementById(
+        "detailQuantity"
+    ).textContent =
+        rfq.quantity ||
+        "0";
+
+
+    document.getElementById(
+        "detailType"
+    ).textContent =
+        direct
+            ? "Direct Request"
+            : "Open RFQ";
+
+
+    document.getElementById(
+        "detailRequired"
+    ).textContent =
+        rfq.deadline ||
+        "Not specified";
+
+
+    document.getElementById(
+        "detailLocation"
+    ).textContent =
+        rfq.delivery_location ||
+        "Not specified";
+
+
+    document.getElementById(
+        "detailNotes"
+    ).textContent =
+        rfq.notes ||
+        "No additional requirements were provided.";
+
+
+    const button =
+        document.getElementById(
+            "submitQuote"
+        );
+
+
+    if (
+        rfq.myQuote
+    ) {
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            "Quotation Already Submitted";
+
+    } else {
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "Submit Quotation";
+
+    }
+
+
+    document.getElementById(
+        "quoteMessage"
+    ).innerHTML =
+        "";
+
+
+    document.getElementById(
+        "details"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "details"
+    ).scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+
+/* ==========================================
+   SUBMIT QUOTE
+========================================== */
+
+document
+    .getElementById(
+        "quoteForm"
+    )
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            if (
+                !selectedRfq
+            ) {
+
+                return;
+
+            }
+
+
+            const price =
+                Number(
+                    document.getElementById(
+                        "quotePrice"
+                    ).value
+                );
+
+
+            const delivery =
+                document.getElementById(
+                    "quoteDelivery"
+                )
+                .value
+                .trim();
+
+
+            const payment =
+                document.getElementById(
+                    "quotePayment"
+                )
+                .value;
+
+
+            const notes =
+                document.getElementById(
+                    "quoteNotes"
+                )
+                .value
+                .trim();
+
+
+            const message =
+                document.getElementById(
+                    "quoteMessage"
+                );
+
+
+            const button =
+                document.getElementById(
+                    "submitQuote"
+                );
+
+
+            if (
+                !price ||
+                price <= 0
+            ) {
+
+                message.innerHTML =
+                    '<div class="error">Enter a valid price.</div>';
+
+                return;
+
+            }
+
+
+            if (!delivery) {
+
+                message.innerHTML =
+                    '<div class="error">Enter the delivery period.</div>';
+
+                return;
+
+            }
+
+
+            button.disabled =
+                true;
+
+            button.textContent =
+                "Submitting...";
+
+
+            const finalNotes =
+                [
+                    payment
+                        ? "Payment terms: " +
+                          payment
+                        : "",
+
+                    notes
+                ]
+                .filter(Boolean)
+                .join("\n\n");
+
+
+            const result =
+                await supabaseClient
+                    .from("quotes")
+                    .insert({
+
+                        rfq_id:
+                            selectedRfq.id,
+
+                        supplier_user_id:
+                            currentUser.id,
+
+                        supplier_company:
+                            currentProfile.company_name ||
+                            currentProfile.email ||
+                            "Supplier",
+
+                        price:
+                            price,
+
+                        delivery:
+                            delivery,
+
+                        notes:
+                            finalNotes ||
+                            "No additional notes.",
+
+                        status:
+                            "Under review",
+
+                        supplier_id:
+                            currentProfile.id,
+
+                        supplier_name:
+                            currentProfile.company_name ||
+                            currentProfile.email,
+
+                        quoted_price:
+                            price,
+
+                        delivery_period:
+                            delivery,
+
+                        awarded:
+                            false,
+
+                        quote_status:
+                            "submitted"
+
+                    });
+
+
+            if (
+                result.error
+            ) {
+
+                console.error(
+                    result.error
+                );
+
+
+                message.innerHTML =
+                    '<div class="error">' +
+                    escapeHtml(
+                        result.error.message
+                    ) +
+                    '</div>';
+
+
+                button.disabled =
+                    false;
+
+                button.textContent =
+                    "Submit Quotation";
+
+
+                return;
+
+            }
+
+
+            message.innerHTML =
+                '<div class="success">✓ Quotation submitted successfully.</div>';
+
+
+            button.textContent =
+                "Quotation Submitted";
+
+
+            selectedRfq.myQuote =
+                {
+                    submitted: true
+                };
+
+
+            render();
+
+        }
+    );
+
+
+/* ==========================================
+   TABS
+========================================== */
+
+document
+    .querySelectorAll(
+        ".tab"
+    )
+    .forEach(
+        function(tab) {
+
+            tab.addEventListener(
+                "click",
+                function() {
+
+                    document
+                        .querySelectorAll(
+                            ".tab"
+                        )
+                        .forEach(
+                            item =>
+                                item.classList.remove(
+                                    "active"
+                                )
+                        );
+
+
+                    tab.classList.add(
+                        "active"
+                    );
+
+
+                    activeFilter =
+                        tab.dataset.filter;
+
+
+                    render();
+
+                }
+            );
+
+        }
+    );
+
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+document
+    .getElementById(
+        "search"
+    )
+    .addEventListener(
+        "input",
+        render
+    );
+
+
+/* ==========================================
+   BACK
+========================================== */
+
+document
+    .getElementById(
+        "back"
+    )
+    .addEventListener(
+        "click",
+        function() {
+
+            document.getElementById(
+                "details"
+            ).style.display =
+                "none";
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+    );
+
+
+/* ==========================================
+   HELPERS
+========================================== */
+
+function escapeHtml(value) {
+
+    return String(
+        value || ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+function formatDate(value) {
+
+    if (!value) {
+
+        return "recently";
+
+    }
+
+
+    const date =
+        new Date(value);
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "recently";
+
+    }
+
+
+    return date.toLocaleDateString(
+        "en-GB",
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+function showError(message) {
+
+    document.getElementById(
+        "rfqGrid"
+    ).innerHTML = `
+
+        <div class="message">
+
+            <strong>
+                Unable to load RFQs
+            </strong>
+
+            <div style="
+                margin-top:8px;
+                color:#b91c1c;
+            ">
+
+                ${escapeHtml(message)}
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* ==========================================
+   RUN
+========================================== */
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        startPage
+    );
+
+} else {
+
+    startPage();
+
+}
+
+</script>
+
+</body>
+</html>
