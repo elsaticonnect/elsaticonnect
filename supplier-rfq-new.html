@@ -54,9 +54,10 @@ button {
 }
 
 .logo {
-    width: 145px;
-    max-height: 55px;
+    width: 180px;
+    height: 65px;
     object-fit: contain;
+    object-position: left center;
 }
 
 .header-right {
@@ -663,6 +664,11 @@ button {
         padding: 15px;
     }
 
+    .logo {
+        width: 145px;
+        height: 50px;
+    }
+
     .header-btn {
         display: none;
     }
@@ -716,8 +722,9 @@ button {
 
 <header class="header">
 
+    <!-- ELSATI CONNECT LOGO -->
     <img
-        src="logo.svg"
+        src="elsati-logo.png"
         class="logo"
         alt="Elsati Connect"
     >
@@ -1587,12 +1594,6 @@ let activeFilter = "all";
 
 function connectSupabase() {
 
-
-    /*
-       First use an existing client if your
-       configuration already creates one.
-    */
-
     if (
         window.supabaseClient &&
         typeof window.supabaseClient.from === "function"
@@ -1602,24 +1603,17 @@ function connectSupabase() {
 
     }
 
-
-    /*
-       Support common variable names.
-    */
-
     const url =
         window.SUPABASE_URL ||
         window.supabaseUrl ||
         window.SUPABASE_PROJECT_URL ||
         window.supabaseProjectUrl;
 
-
     const key =
         window.SUPABASE_ANON_KEY ||
         window.supabaseAnonKey ||
         window.SUPABASE_PUBLISHABLE_KEY ||
         window.supabasePublishableKey;
-
 
     if (
         url &&
@@ -1634,7 +1628,6 @@ function connectSupabase() {
 
     }
 
-
     throw new Error(
         "Your existing Supabase configuration could not be found."
     );
@@ -1648,17 +1641,13 @@ function connectSupabase() {
 
 async function startDashboard() {
 
-
     try {
-
 
         db =
             connectSupabase();
 
-
         const auth =
             await db.auth.getUser();
-
 
         if (auth.error) {
 
@@ -1666,13 +1655,10 @@ async function startDashboard() {
 
         }
 
-
         currentUser =
             auth.data.user;
 
-
         if (!currentUser) {
-
 
             document.getElementById(
                 "rfqGrid"
@@ -1687,11 +1673,9 @@ async function startDashboard() {
 
             `;
 
-
             return;
 
         }
-
 
         await loadProfile();
 
@@ -1703,17 +1687,14 @@ async function startDashboard() {
 
         renderRfqs();
 
-
     }
 
     catch (error) {
-
 
         console.error(
             "Dashboard error:",
             error
         );
-
 
         document.getElementById(
             "rfqGrid"
@@ -1738,7 +1719,6 @@ async function startDashboard() {
 
         `;
 
-
     }
 
 }
@@ -1750,7 +1730,6 @@ async function startDashboard() {
 
 async function loadProfile() {
 
-
     const result =
         await db
             .from("profiles")
@@ -1761,17 +1740,14 @@ async function loadProfile() {
             )
             .maybeSingle();
 
-
     if (result.error) {
 
         throw result.error;
 
     }
 
-
     profile =
         result.data || {};
-
 
     const company =
         profile.company_name ||
@@ -1779,18 +1755,15 @@ async function loadProfile() {
         currentUser.email ||
         "Supplier";
 
-
     document.getElementById(
         "welcomeName"
     ).textContent =
         company;
 
-
     document.getElementById(
         "profileCompany"
     ).textContent =
         company;
-
 
     document.getElementById(
         "profileCity"
@@ -1799,7 +1772,6 @@ async function loadProfile() {
         profile.country ||
         "Zambia";
 
-
     document.getElementById(
         "profilePhone"
     ).textContent =
@@ -1807,14 +1779,12 @@ async function loadProfile() {
         profile.phone ||
         "Not provided";
 
-
     document.getElementById(
         "profileEmail"
     ).textContent =
         profile.email ||
         currentUser.email ||
         "Not provided";
-
 
     const initials =
         company
@@ -1824,62 +1794,49 @@ async function loadProfile() {
             )
             .toUpperCase();
 
-
     document.getElementById(
         "avatar"
     ).textContent =
         initials;
-
 
     document.getElementById(
         "profileAvatar"
     ).textContent =
         initials;
 
-
     const verified =
         profile.verified === true ||
         profile.verification_status === "approved" ||
         profile.status === "approved";
-
 
     const verification =
         document.getElementById(
             "verification"
         );
 
-
     if (verified) {
-
 
         verification.textContent =
             "✓ Verified supplier account";
 
-
         verification.style.background =
             "#ddf8e5";
 
-
         verification.style.color =
             "#207c39";
-
 
     }
 
     else {
 
-
         verification.textContent =
             "Verification pending";
-
 
         verification.style.background =
             "#fff7df";
 
-
         verification.style.color =
             "#8a6500";
-
 
     }
 
@@ -1892,7 +1849,6 @@ async function loadProfile() {
 
 async function loadRfqs() {
 
-
     const result =
         await db
             .from("rfqs")
@@ -1904,13 +1860,11 @@ async function loadRfqs() {
                 }
             );
 
-
     if (result.error) {
 
         throw result.error;
 
     }
-
 
     rfqs =
         result.data || [];
@@ -1924,29 +1878,23 @@ async function loadRfqs() {
 
 async function loadQuotes() {
 
-
     const result =
         await db
             .from("quotes")
             .select("*");
 
-
     if (result.error) {
-
 
         console.warn(
             "Could not load quotes:",
             result.error
         );
 
-
         quotes = [];
-
 
         return;
 
     }
-
 
     quotes =
         result.data || [];
@@ -1959,7 +1907,6 @@ async function loadQuotes() {
 ===================================================== */
 
 function getBuyerName(rfq) {
-
 
     return (
 
@@ -1985,7 +1932,6 @@ function getBuyerName(rfq) {
 ===================================================== */
 
 function isDirectRequest(rfq) {
-
 
     const text = (
 
@@ -2013,7 +1959,6 @@ function isDirectRequest(rfq) {
 
     ).toLowerCase();
 
-
     return (
         text.includes("direct")
     );
@@ -2026,7 +1971,6 @@ function isDirectRequest(rfq) {
 ===================================================== */
 
 function supplierAlreadyQuoted(rfq) {
-
 
     return quotes.some(
         quote =>
@@ -2065,7 +2009,6 @@ function supplierAlreadyQuoted(rfq) {
 
 function updateStats() {
 
-
     const open =
         rfqs.filter(
             rfq =>
@@ -2074,7 +2017,6 @@ function updateStats() {
                 ).toLowerCase() ===
                 "open"
         ).length;
-
 
     const myQuotes =
         quotes.filter(
@@ -2092,7 +2034,6 @@ function updateStats() {
                 )
         ).length;
 
-
     const won =
         rfqs.filter(
             rfq =>
@@ -2103,7 +2044,6 @@ function updateStats() {
                     currentUser.id
                 )
         ).length;
-
 
     const responseRate =
         rfqs.length > 0
@@ -2121,24 +2061,20 @@ function updateStats() {
 
             0;
 
-
     document.getElementById(
         "openCount"
     ).textContent =
         open;
-
 
     document.getElementById(
         "quoteCount"
     ).textContent =
         myQuotes;
 
-
     document.getElementById(
         "wonCount"
     ).textContent =
         won;
-
 
     document.getElementById(
         "responseRate"
@@ -2155,7 +2091,6 @@ function updateStats() {
 
 function getFilteredRfqs() {
 
-
     const search =
         document.getElementById(
             "search"
@@ -2164,28 +2099,23 @@ function getFilteredRfqs() {
         .trim()
         .toLowerCase();
 
-
     return rfqs.filter(
         rfq => {
-
 
             const status =
                 String(
                     rfq.status || ""
                 ).toLowerCase();
 
-
             const direct =
                 isDirectRequest(
                     rfq
                 );
 
-
             const submitted =
                 supplierAlreadyQuoted(
                     rfq
                 );
-
 
             const awarded =
                 String(
@@ -2194,7 +2124,6 @@ function getFilteredRfqs() {
                 String(
                     currentUser.id
                 );
-
 
             if (
                 activeFilter === "open"
@@ -2206,7 +2135,6 @@ function getFilteredRfqs() {
 
             }
 
-
             if (
                 activeFilter === "direct"
                 &&
@@ -2216,7 +2144,6 @@ function getFilteredRfqs() {
                 return false;
 
             }
-
 
             if (
                 activeFilter === "submitted"
@@ -2228,7 +2155,6 @@ function getFilteredRfqs() {
 
             }
 
-
             if (
                 activeFilter === "awarded"
                 &&
@@ -2239,13 +2165,11 @@ function getFilteredRfqs() {
 
             }
 
-
             if (!search) {
 
                 return true;
 
             }
-
 
             const searchable =
                 [
@@ -2267,11 +2191,9 @@ function getFilteredRfqs() {
                 .join(" ")
                 .toLowerCase();
 
-
             return searchable.includes(
                 search
             );
-
 
         }
     );
@@ -2285,19 +2207,15 @@ function getFilteredRfqs() {
 
 function renderRfqs() {
 
-
     const grid =
         document.getElementById(
             "rfqGrid"
         );
 
-
     const list =
         getFilteredRfqs();
 
-
     if (!list.length) {
-
 
         grid.innerHTML = `
 
@@ -2309,11 +2227,9 @@ function renderRfqs() {
 
         `;
 
-
         return;
 
     }
-
 
     grid.innerHTML =
         list
@@ -2331,68 +2247,52 @@ function renderRfqs() {
 
 function createRfqCard(rfq) {
 
-
     const buyer =
         getBuyerName(
             rfq
         );
-
 
     const direct =
         isDirectRequest(
             rfq
         );
 
-
     const submitted =
         supplierAlreadyQuoted(
             rfq
         );
 
-
     let badge =
         "OPEN TO ALL SUPPLIERS";
-
 
     let badgeClass =
         "badge-open";
 
-
     if (direct) {
-
 
         badge =
             "DIRECT REQUEST";
 
-
         badgeClass =
             "badge-direct";
 
-
     }
 
-
     if (submitted) {
-
 
         badge =
             "QUOTATION SUBMITTED";
 
-
         badgeClass =
             "badge-submitted";
 
-
     }
-
 
     return `
 
         <div class="rfq">
 
-
             <div class="rfq-top">
-
 
                 <span
                     class="badge ${badgeClass}"
@@ -2404,7 +2304,6 @@ function createRfqCard(rfq) {
 
                 </span>
 
-
                 <span class="rfq-code">
 
                     ${escapeHtml(
@@ -2414,9 +2313,7 @@ function createRfqCard(rfq) {
 
                 </span>
 
-
             </div>
-
 
 
             <h3>
@@ -2427,7 +2324,6 @@ function createRfqCard(rfq) {
                 )}
 
             </h3>
-
 
 
             <div class="company">
@@ -2445,9 +2341,7 @@ function createRfqCard(rfq) {
             </div>
 
 
-
             <div class="info">
-
 
                 📦 Quantity:
 
@@ -2458,7 +2352,6 @@ function createRfqCard(rfq) {
 
                 <br>
 
-
                 📅 Required by:
 
                 ${escapeHtml(
@@ -2467,7 +2360,6 @@ function createRfqCard(rfq) {
                 )}
 
                 <br>
-
 
                 📍 Delivery:
 
@@ -2478,7 +2370,6 @@ function createRfqCard(rfq) {
 
                 <br>
 
-
                 🏷 Category:
 
                 ${escapeHtml(
@@ -2486,9 +2377,7 @@ function createRfqCard(rfq) {
                     "General"
                 )}
 
-
             </div>
-
 
 
             <button
@@ -2517,7 +2406,6 @@ function createRfqCard(rfq) {
 
 function openRfq(id) {
 
-
     selectedRfq =
         rfqs.find(
             rfq =>
@@ -2529,29 +2417,24 @@ function openRfq(id) {
                 )
         );
 
-
     if (!selectedRfq) {
 
         return;
 
     }
 
-
     const rfq =
         selectedRfq;
-
 
     const buyer =
         getBuyerName(
             rfq
         );
 
-
     const direct =
         isDirectRequest(
             rfq
         );
-
 
     document.getElementById(
         "modalBadge"
@@ -2559,7 +2442,6 @@ function openRfq(id) {
         direct
             ? "DIRECT REQUEST"
             : "OPEN TO ALL SUPPLIERS";
-
 
     document.getElementById(
         "modalBadge"
@@ -2571,13 +2453,11 @@ function openRfq(id) {
                 : "badge-open"
         );
 
-
     document.getElementById(
         "modalTitle"
     ).textContent =
         rfq.title ||
         "Procurement Request";
-
 
     document.getElementById(
         "modalCode"
@@ -2598,7 +2478,6 @@ function openRfq(id) {
             rfq.created_at
         );
 
-
     document.getElementById(
         "buyerName"
     ).innerHTML =
@@ -2611,7 +2490,6 @@ function openRfq(id) {
 
         ' <span style="color:#2f9e44">✓</span>';
 
-
     document.getElementById(
         "buyerInitial"
     ).textContent =
@@ -2622,13 +2500,11 @@ function openRfq(id) {
             )
             .toUpperCase();
 
-
     document.getElementById(
         "buyerLocation"
     ).textContent =
         rfq.delivery_location ||
         "Zambia";
-
 
     document.getElementById(
         "detailCategory"
@@ -2636,13 +2512,11 @@ function openRfq(id) {
         rfq.category ||
         "General";
 
-
     document.getElementById(
         "detailQuantity"
     ).textContent =
         rfq.quantity ||
         "Not specified";
-
 
     document.getElementById(
         "detailDeadline"
@@ -2650,13 +2524,11 @@ function openRfq(id) {
         rfq.deadline ||
         "Not specified";
 
-
     document.getElementById(
         "detailDelivery"
     ).textContent =
         rfq.delivery_location ||
         "Not specified";
-
 
     document.getElementById(
         "detailBudget"
@@ -2676,7 +2548,6 @@ function openRfq(id) {
 
             "Not specified";
 
-
     document.getElementById(
         "detailType"
     ).textContent =
@@ -2684,7 +2555,6 @@ function openRfq(id) {
         direct
             ? "Direct Request"
             : "Open RFQ";
-
 
     document.getElementById(
         "detailNotes"
@@ -2694,57 +2564,45 @@ function openRfq(id) {
 
         "No additional requirements were provided.";
 
-
     document.getElementById(
         "quoteMessage"
     ).innerHTML =
         "";
-
 
     const submitted =
         supplierAlreadyQuoted(
             rfq
         );
 
-
     const button =
         document.getElementById(
             "submitQuote"
         );
 
-
     if (submitted) {
-
 
         button.disabled =
             true;
 
-
         button.textContent =
             "Quotation Already Submitted";
-
 
     }
 
     else {
 
-
         button.disabled =
             false;
-
 
         button.textContent =
             "Submit Quotation";
 
-
     }
-
 
     document.getElementById(
         "modalBg"
     ).style.display =
         "block";
-
 
     document.body.style.overflow =
         "hidden";
@@ -2758,12 +2616,10 @@ function openRfq(id) {
 
 function closeModal() {
 
-
     document.getElementById(
         "modalBg"
     ).style.display =
         "none";
-
 
     document.body.style.overflow =
         "";
@@ -2783,16 +2639,13 @@ document
         "submit",
         async function(event) {
 
-
             event.preventDefault();
-
 
             if (!selectedRfq) {
 
                 return;
 
             }
-
 
             const price =
                 Number(
@@ -2801,7 +2654,6 @@ document
                     ).value
                 );
 
-
             const delivery =
                 document.getElementById(
                     "quoteDelivery"
@@ -2809,13 +2661,11 @@ document
                 .value
                 .trim();
 
-
             const payment =
                 document.getElementById(
                     "quotePayment"
                 )
                 .value;
-
 
             const notes =
                 document.getElementById(
@@ -2824,24 +2674,20 @@ document
                 .value
                 .trim();
 
-
             const message =
                 document.getElementById(
                     "quoteMessage"
                 );
-
 
             const button =
                 document.getElementById(
                     "submitQuote"
                 );
 
-
             if (
                 !price ||
                 price <= 0
             ) {
-
 
                 message.innerHTML = `
 
@@ -2853,14 +2699,11 @@ document
 
                 `;
 
-
                 return;
 
             }
 
-
             if (!delivery) {
-
 
                 message.innerHTML = `
 
@@ -2872,19 +2715,15 @@ document
 
                 `;
 
-
                 return;
 
             }
 
-
             button.disabled =
                 true;
 
-
             button.textContent =
                 "Submitting...";
-
 
             const finalNotes =
 
@@ -2905,44 +2744,28 @@ document
                     "\n\n"
                 );
 
-
-            /*
-             * ONLY INSERTS INTO THE
-             * EXISTING QUOTES TABLE.
-             *
-             * IT DOES NOT DELETE,
-             * ALTER OR DROP ANY TABLE.
-             */
-
             const quoteData = {
-
 
                 rfq_id:
                     selectedRfq.id,
 
-
                 supplier_user_id:
                     currentUser.id,
-
 
                 price:
                     price,
 
-
                 delivery:
                     delivery,
-
 
                 notes:
                     finalNotes ||
                     "No additional notes.",
 
-
                 status:
                     "submitted"
 
             };
-
 
             const result =
                 await db
@@ -2953,16 +2776,13 @@ document
                         quoteData
                     );
 
-
             if (
                 result.error
             ) {
 
-
                 console.error(
                     result.error
                 );
-
 
                 message.innerHTML = `
 
@@ -2976,19 +2796,15 @@ document
 
                 `;
 
-
                 button.disabled =
                     false;
-
 
                 button.textContent =
                     "Submit Quotation";
 
-
                 return;
 
             }
-
 
             message.innerHTML = `
 
@@ -3000,23 +2816,17 @@ document
 
             `;
 
-
             button.textContent =
                 "Quotation Submitted";
-
 
             button.disabled =
                 true;
 
-
             await loadQuotes();
-
 
             updateStats();
 
-
             renderRfqs();
-
 
         }
     );
@@ -3033,11 +2843,9 @@ document
     .forEach(
         function(tab) {
 
-
             tab.addEventListener(
                 "click",
                 function() {
-
 
                     document
                         .querySelectorAll(
@@ -3053,22 +2861,17 @@ document
                             }
                         );
 
-
                     this.classList.add(
                         "active"
                     );
 
-
                     activeFilter =
                         this.dataset.filter;
 
-
                     renderRfqs();
-
 
                 }
             );
-
 
         }
     );
@@ -3098,11 +2901,9 @@ document
 
 function showNotifications() {
 
-
     alert(
         "Notifications will appear here for new RFQs, quotation updates and awards."
     );
-
 
 }
 
@@ -3113,10 +2914,8 @@ function showNotifications() {
 
 function editProfile() {
 
-
     window.location.href =
         "supplier-dashboard.html#profile";
-
 
 }
 
@@ -3127,10 +2926,8 @@ function editProfile() {
 
 function openMonitor() {
 
-
     window.location.href =
         "monitor.html";
-
 
 }
 
@@ -3141,16 +2938,13 @@ function openMonitor() {
 
 async function logout() {
 
-
     try {
-
 
         if (db) {
 
             await db.auth.signOut();
 
         }
-
 
     }
 
@@ -3162,10 +2956,8 @@ async function logout() {
 
     }
 
-
     window.location.href =
         "supplier-signin.html";
-
 
 }
 
@@ -3176,19 +2968,16 @@ async function logout() {
 
 function formatDate(value) {
 
-
     if (!value) {
 
         return "Recently";
 
     }
 
-
     const date =
         new Date(
             value
         );
-
 
     if (
         Number.isNaN(
@@ -3199,7 +2988,6 @@ function formatDate(value) {
         return "Recently";
 
     }
-
 
     return date.toLocaleDateString(
         "en-GB",
@@ -3218,7 +3006,6 @@ function formatDate(value) {
 ===================================================== */
 
 function escapeHtml(value) {
-
 
     return String(
         value ?? ""
@@ -3261,20 +3048,16 @@ if (
     "loading"
 ) {
 
-
     document.addEventListener(
         "DOMContentLoaded",
         startDashboard
     );
 
-
 }
 
 else {
 
-
     startDashboard();
-
 
 }
 
@@ -3291,7 +3074,6 @@ document
         "click",
         function(event) {
 
-
             if (
                 event.target ===
                 this
@@ -3300,7 +3082,6 @@ document
                 closeModal();
 
             }
-
 
         }
     );
