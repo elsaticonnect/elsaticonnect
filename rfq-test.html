@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Elsati Connect - RFQs</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase-config.js"></script>
+
+<style>
+
+body {
+    margin: 0;
+    background: #f7f9f8;
+    font-family: Arial, sans-serif;
+    color: #17202c;
+}
+
+.header {
+    background: white;
+    border-bottom: 1px solid #e5e9e7;
+    padding: 20px 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: 800;
+}
+
+.logo span {
+    color: #2f9e44;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 35px;
+}
+
+h1 {
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #718096;
+    margin-bottom: 25px;
+}
+
+.status {
+    background: white;
+    border: 1px solid #e0e6e2;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+.rfqs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e1e7e3;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.04);
+}
+
+.badge {
+    display: inline-block;
+    background: #e7f5eb;
+    color: #23813a;
+    padding: 6px 9px;
+    border-radius: 20px;
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.card h2 {
+    font-size: 18px;
+    margin: 15px 0 8px;
+}
+
+.company {
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.info {
+    color: #687586;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+.button {
+    width: 100%;
+    border: 0;
+    background: #2f9e44;
+    color: white;
+    border-radius: 7px;
+    padding: 11px;
+    margin-top: 18px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.button:hover {
+    background: #27863a;
+}
+
+.error {
+    color: #b91c1c;
+    background: #fff5f5;
+    border: 1px solid #f0cccc;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+@media(max-width: 800px) {
+
+    .rfqs {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+    <div class="logo">
+        ELSATI <span>CONNECT</span>
+    </div>
+
+    <div>
+        Supplier RFQs
+    </div>
+
+</header>
+
+
+<div class="container">
+
+    <h1>
+        Requests for Quotations
+    </h1>
+
+    <div class="subtitle">
+        View procurement requests from businesses and submit your quotation.
+    </div>
+
+
+    <div
+        id="status"
+        class="status"
+    >
+        Connecting to Elsati...
+    </div>
+
+
+    <div
+        id="rfqs"
+        class="rfqs"
+    >
+    </div>
+
+</div>
+
+
+<script>
+
+let client;
+
+
+/* =========================================
+   FIND SUPABASE CONFIGURATION
+========================================= */
+
+function connect() {
+
+    /*
+       First try an existing Supabase client.
+    */
+
+    if (
+        window.supabaseClient &&
+        typeof window.supabaseClient.from === "function"
+    ) {
+
+        client = window.supabaseClient;
+
+        return true;
+
+    }
+
+
+    /*
+       Try common Elsati configuration names.
+    */
+
+    const url =
+        window.SUPABASE_URL ||
+        window.supabaseUrl ||
+        window.SUPABASE_PROJECT_URL;
+
+
+    const key =
+        window.SUPABASE_ANON_KEY ||
+        window.supabaseAnonKey ||
+        window.SUPABASE_PUBLISHABLE_KEY;
+
+
+    if (
+        url &&
+        key
+    ) {
+
+        client =
+            supabase.createClient(
+                url,
+                key
+            );
+
+        return true;
+
+    }
+
+
+    /*
+       Try ELSATI_SUPABASE.
+    */
+
+    if (
+        window.ELSATI_SUPABASE &&
+        window.ELSATI_SUPABASE.url &&
+        window.ELSATI_SUPABASE.publishableKey
+    ) {
+
+        client =
+            supabase.createClient(
+                window.ELSATI_SUPABASE.url,
+                window.ELSATI_SUPABASE.publishableKey
+            );
+
+        return true;
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =========================================
+   LOAD RFQS
+========================================= */
+
+async function loadRFQs() {
+
+    const status =
+        document.getElementById("status");
+
+
+    const area =
+        document.getElementById("rfqs");
+
+
+    try {
+
+        if (!connect()) {
+
+            status.innerHTML =
+                '<div class="error">' +
+                '<strong>Supabase configuration not found.</strong>' +
+                '<br><br>' +
+                'The page can load, but supabase-config.js is not exposing the connection information.' +
+                '</div>';
+
+            return;
+
+        }
+
+
+        status.innerHTML =
+            "✓ Connected to Supabase. Loading RFQs...";
+
+
+        const result =
+            await client
+                .from("rfqs")
+                .select("*")
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        if (result.error) {
+
+            throw result.error;
+
+        }
+
+
+        const data =
+            result.data || [];
+
+
+        status.innerHTML =
+            "✓ Connected successfully. " +
+            data.length +
+            " RFQ(s) found.";
+
+
+        if (!data.length) {
+
+            area.innerHTML = `
+
+                <div class="status">
+
+                    No RFQs are currently available.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        area.innerHTML =
+            data
+                .map(
+                    createCard
+                )
+                .join("");
+
+    }
+
+    catch(error) {
+
+        console.error(
+            error
+        );
+
+
+        status.innerHTML = `
+
+            <div class="error">
+
+                <strong>
+                    Unable to load RFQs
+                </strong>
+
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================
+   CREATE CARD
+========================================= */
+
+function createCard(rfq) {
+
+    const company =
+        rfq.business_name ||
+        rfq.created_by_company ||
+        "Business";
+
+
+    return `
+
+        <div class="card">
+
+            <span class="badge">
+                ${
+                    rfq.status === "open"
+                    ? "OPEN TO ALL SUPPLIERS"
+                    : escapeHtml(
+                        String(
+                            rfq.status ||
+                            "REQUEST"
+                        ).toUpperCase()
+                    )
+                }
+            </span>
+
+
+            <h2>
+                ${escapeHtml(
+                    rfq.title ||
+                    "Procurement Request"
+                )}
+            </h2>
+
+
+            <div class="company">
+
+                🏢 ${escapeHtml(company)}
+
+            </div>
+
+
+            <div class="info">
+
+                Quantity:
+                ${escapeHtml(
+                    rfq.quantity ||
+                    "Not specified"
+                )}
+
+                <br>
+
+                Required by:
+                ${escapeHtml(
+                    rfq.deadline ||
+                    "Not specified"
+                )}
+
+                <br>
+
+                Delivery:
+                ${escapeHtml(
+                    rfq.delivery_location ||
+                    "Not specified"
+                )}
+
+                <br>
+
+                Category:
+                ${escapeHtml(
+                    rfq.category ||
+                    "General"
+                )}
+
+            </div>
+
+
+            <button
+                class="button"
+                onclick="viewRFQ('${rfq.id}')"
+            >
+
+                View RFQ
+
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================
+   VIEW RFQ
+========================================= */
+
+function viewRFQ(id) {
+
+    window.location.href =
+        "supplier-rfqs-test.html?rfq=" +
+        encodeURIComponent(id);
+
+}
+
+
+/* =========================================
+   ESCAPE
+========================================= */
+
+function escapeHtml(value) {
+
+    return String(
+        value || ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+loadRFQs();
+
+</script>
+
+
+</body>
+</html>
