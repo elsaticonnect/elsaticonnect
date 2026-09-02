@@ -3,558 +3,5679 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Supplier Dashboard | Elsati Connect</title>
-  <meta name="description" content="Supplier dashboard for Elsati Connect.">
+
+  <meta
+    name="description"
+    content="Supplier dashboard for Elsati Connect."
+  >
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
 
   <link rel="stylesheet" href="styles.css">
 
   <style>
-    .supplier-kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(160px, 1fr));
-      gap: 18px;
-      margin: 28px 0;
+
+    /* =========================================================
+       ELSATI SUPPLIER DASHBOARD V4
+       ========================================================= */
+
+    :root {
+      --green: #168b55;
+      --green-dark: #08733f;
+      --green-light: #eaf8f0;
+      --green-soft: #f4fbf7;
+
+      --text: #18352b;
+      --muted: #71847c;
+
+      --border: #e5eee9;
+      --background: #f7faf8;
+      --white: #ffffff;
+
+      --danger: #c94747;
+      --danger-bg: #fff2f2;
+
+      --warning: #a76c00;
+      --warning-bg: #fff8e7;
+
+      --shadow-sm:
+        0 4px 16px rgba(21, 52, 39, 0.06);
+
+      --shadow-md:
+        0 12px 30px rgba(21, 52, 39, 0.10);
+
+      --shadow-hover:
+        0 12px 28px rgba(21, 52, 39, 0.13);
+
+      --radius: 18px;
     }
 
-    .supplier-kpi-card,
-    .verification-panel,
-    .profile-panel {
-      background: #ffffff;
-      border-radius: 24px;
-      padding: 22px;
-      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
-      border: 1px solid rgba(15, 23, 42, 0.06);
+    * {
+      box-sizing: border-box;
     }
 
-    .supplier-kpi-card span {
-      color: #64748b;
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font-family: "Manrope", sans-serif;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* =========================================================
+       TOP BAR
+       ========================================================= */
+
+    .supplier-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      height: 76px;
+
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(15px);
+
+      border-bottom: 1px solid var(--border);
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0 34px;
+    }
+
+    .supplier-brand {
+      display: flex;
+      align-items: center;
+      min-width: 180px;
+    }
+
+    .supplier-brand img {
+      width: 145px;
+      height: auto;
+      display: block;
+    }
+
+    /* =========================================================
+       FLOATING NAVIGATION
+       ========================================================= */
+
+    .floating-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nav-item {
+      position: relative;
+
+      border: 0;
+      background: transparent;
+
+      color: #657871;
+
+      padding: 10px 14px;
+
+      border-radius: 12px;
+
+      font-size: 13px;
       font-weight: 700;
+
+      transition:
+        transform .18s ease,
+        background .18s ease,
+        color .18s ease,
+        box-shadow .18s ease;
+    }
+
+    .nav-item:hover {
+      color: var(--green);
+      background: var(--green-light);
+
+      transform: translateY(-3px);
+
+      box-shadow:
+        0 7px 18px rgba(22,139,85,.12);
+    }
+
+    .nav-item.active {
+      color: var(--green);
+      background: var(--green-light);
+    }
+
+    .nav-item:active {
+      transform: translateY(-1px);
+    }
+
+    /* =========================================================
+       PROFILE NAV
+       ========================================================= */
+
+    .profile-wrapper {
+      position: relative;
+    }
+
+    .profile-button {
+      border: 0;
+      background: transparent;
+
+      display: flex;
+      align-items: center;
+      gap: 9px;
+
+      padding: 7px 10px;
+
+      border-radius: 13px;
+
+      transition: .18s ease;
+    }
+
+    .profile-button:hover {
+      background: var(--green-light);
+      transform: translateY(-3px);
+      box-shadow: 0 7px 18px rgba(22,139,85,.12);
+    }
+
+    .profile-avatar {
+      width: 37px;
+      height: 37px;
+
+      border-radius: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: var(--green-light);
+      color: var(--green);
+
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .profile-name {
+      max-width: 110px;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .profile-arrow {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .profile-dropdown {
+      position: absolute;
+
+      right: 0;
+      top: calc(100% + 12px);
+
+      width: 220px;
+
+      background: white;
+
+      border: 1px solid var(--border);
+      border-radius: 16px;
+
+      box-shadow: var(--shadow-md);
+
+      padding: 8px;
+
+      display: none;
+
+      animation: dropdownIn .18s ease;
+    }
+
+    .profile-wrapper:hover .profile-dropdown,
+    .profile-wrapper.open .profile-dropdown {
+      display: block;
+    }
+
+    @keyframes dropdownIn {
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dropdown-item {
+      width: 100%;
+
+      border: 0;
+      background: transparent;
+
+      display: flex;
+      align-items: center;
+
+      gap: 10px;
+
+      text-align: left;
+
+      padding: 11px 12px;
+
+      border-radius: 11px;
+
+      color: #53675f;
+
+      font-size: 13px;
+      font-weight: 700;
+
+      transition: .16s ease;
+    }
+
+    .dropdown-item:hover {
+      background: var(--green-light);
+      color: var(--green);
+
+      transform: translateX(3px);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 6px 4px;
+    }
+
+    /* =========================================================
+       PAGE
+       ========================================================= */
+
+    .supplier-page {
+      max-width: 1440px;
+      margin: 0 auto;
+
+      padding: 34px 38px 60px;
+    }
+
+    .page-view {
+      display: none;
+    }
+
+    .page-view.active {
+      display: block;
+      animation: pageFade .22s ease;
+    }
+
+    @keyframes pageFade {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* =========================================================
+       PAGE HEADER
+       ========================================================= */
+
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+
+      margin-bottom: 26px;
+    }
+
+    .page-header h1 {
+      margin: 0 0 7px;
+
+      font-family: "Plus Jakarta Sans", sans-serif;
+
+      font-size: 30px;
+      line-height: 1.15;
+
+      letter-spacing: -0.7px;
+    }
+
+    .page-header p {
+      margin: 0;
+
+      color: var(--muted);
+
       font-size: 14px;
     }
 
-    .supplier-kpi-card strong {
-      display: block;
-      font-size: 34px;
-      margin-top: 8px;
-      color: #102033;
+    .header-actions {
+      display: flex;
+      gap: 10px;
     }
 
-    .supplier-status-badge {
+    /* =========================================================
+       BUTTONS
+       ========================================================= */
+
+    .btn {
+      border: 0;
+
+      min-height: 42px;
+
+      padding: 0 17px;
+
+      border-radius: 11px;
+
+      font-weight: 800;
+      font-size: 13px;
+
+      transition:
+        transform .16s ease,
+        box-shadow .16s ease,
+        background .16s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      color: white;
+      background: var(--green);
+
+      box-shadow:
+        0 7px 16px rgba(22,139,85,.16);
+    }
+
+    .btn-primary:hover {
+      background: var(--green-dark);
+      box-shadow:
+        0 10px 20px rgba(22,139,85,.20);
+    }
+
+    .btn-secondary {
+      color: var(--green);
+      background: var(--green-light);
+    }
+
+    .btn-outline {
+      color: var(--text);
+      background: white;
+
+      border: 1px solid var(--border);
+    }
+
+    .btn-danger {
+      color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    /* =========================================================
+       STATS
+       ========================================================= */
+
+    .stats-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+      gap: 16px;
+
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: white;
+
+      border: 1px solid var(--border);
+
+      border-radius: var(--radius);
+
+      padding: 21px;
+
+      box-shadow: var(--shadow-sm);
+
+      transition: .18s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .stat-label {
+      color: var(--muted);
+
+      font-size: 12px;
+      font-weight: 700;
+
+      margin-bottom: 9px;
+    }
+
+    .stat-number {
+      font-size: 28px;
+      font-weight: 800;
+
+      font-family: "Plus Jakarta Sans", sans-serif;
+    }
+
+    .stat-sub {
+      color: var(--green);
+
+      font-size: 11px;
+      font-weight: 700;
+
+      margin-top: 4px;
+    }
+
+    /* =========================================================
+       SECTION
+       ========================================================= */
+
+    .section {
+      margin-top: 30px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 15px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+
+      font-size: 18px;
+
+      font-family: "Plus Jakarta Sans", sans-serif;
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* =========================================================
+       RFQ CARD
+       ========================================================= */
+
+    .rfq-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 18px;
+    }
+
+    .rfq-card {
+      background: white;
+
+      border: 1px solid var(--border);
+
+      border-radius: 19px;
+
+      padding: 21px;
+
+      box-shadow: var(--shadow-sm);
+
+      transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+    }
+
+    .rfq-card:hover {
+      transform: translateY(-4px);
+
+      box-shadow: var(--shadow-hover);
+
+      border-color: #d5e9df;
+    }
+
+    .rfq-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+
+      gap: 12px;
+
+      margin-bottom: 15px;
+    }
+
+    .rfq-badge {
       display: inline-flex;
-      padding: 6px 12px;
-      border-radius: 999px;
+      align-items: center;
+
+      padding: 6px 9px;
+
+      border-radius: 8px;
+
+      background: var(--green-light);
+      color: var(--green);
+
+      font-size: 9px;
+      font-weight: 800;
+
+      letter-spacing: .35px;
+    }
+
+    .rfq-badge.direct {
+      background: #edf3ff;
+      color: #4269a8;
+    }
+
+    .rfq-time {
+      color: #8a9993;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .rfq-title {
+      margin: 0 0 8px;
+
+      font-family: "Plus Jakarta Sans", sans-serif;
+
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .company-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      color: #53675f;
+
+      font-size: 12px;
+      font-weight: 700;
+
+      margin-bottom: 17px;
+    }
+
+    .verified-check {
+      width: 16px;
+      height: 16px;
+
+      border-radius: 50%;
+
+      background: var(--green);
+
+      color: white;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 9px;
+      font-weight: 900;
+    }
+
+    .rfq-details {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 12px;
+
+      margin-bottom: 19px;
+    }
+
+    .detail-box {
+      padding: 11px;
+
+      background: var(--green-soft);
+
+      border-radius: 11px;
+    }
+
+    .detail-label {
+      display: block;
+
+      color: #84938d;
+
+      font-size: 9px;
+      font-weight: 700;
+
+      margin-bottom: 4px;
+    }
+
+    .detail-value {
+      display: block;
+
+      color: var(--text);
+
       font-size: 12px;
       font-weight: 800;
-      margin-top: 10px;
-      background: #dcfce7;
-      color: #166534;
     }
 
-    .closed-badge {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .supplier-dashboard-actions {
+    .rfq-bottom {
       display: flex;
-      gap: 12px;
       align-items: center;
+      justify-content: space-between;
+
+      gap: 10px;
     }
 
-    .notification-btn {
-      border: 1px solid rgba(15, 23, 42, 0.12);
-      background: #ffffff;
-      border-radius: 999px;
-      padding: 12px 16px;
-      cursor: pointer;
+    .rfq-category {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .rfq-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .small-btn {
+      min-height: 37px;
+
+      padding: 0 12px;
+
+      border-radius: 9px;
+
+      font-size: 11px;
+    }
+
+    /* =========================================================
+       COMPLETED
+       ========================================================= */
+
+    .completed-panel {
+      background: white;
+
+      border: 1px solid var(--border);
+
+      border-radius: 17px;
+
+      overflow: hidden;
+    }
+
+    .completed-header {
+      width: 100%;
+
+      background: white;
+
+      border: 0;
+
+      padding: 17px 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      color: var(--text);
+
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .completed-list {
+      display: none;
+
+      border-top: 1px solid var(--border);
+    }
+
+    .completed-list.open {
+      display: block;
+    }
+
+    .completed-row {
+      padding: 14px 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      border-bottom: 1px solid var(--border);
+
+      font-size: 12px;
+    }
+
+    .completed-row:last-child {
+      border-bottom: 0;
+    }
+
+    .completed-row small {
+      display: block;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* =========================================================
+       TABLE
+       ========================================================= */
+
+    .table-card {
+      background: white;
+
+      border: 1px solid var(--border);
+
+      border-radius: 18px;
+
+      overflow: hidden;
+
+      box-shadow: var(--shadow-sm);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+
+      padding: 14px 17px;
+
+      background: var(--green-soft);
+
+      color: #71817b;
+
+      font-size: 10px;
+
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    td {
+      padding: 15px 17px;
+
+      border-top: 1px solid var(--border);
+
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-pill {
+      display: inline-flex;
+
+      padding: 6px 9px;
+
+      border-radius: 20px;
+
+      font-size: 10px;
       font-weight: 800;
     }
 
-    .verification-warning {
-      margin-bottom: 18px;
-      padding: 16px;
-      border-radius: 16px;
-      background: #fee2e2;
-      color: #991b1b;
-      font-weight: 700;
+    .status-pending {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .status-success {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .status-danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    /* =========================================================
+       DOCUMENTS
+       ========================================================= */
+
+    .documents-intro {
+      background: linear-gradient(
+        135deg,
+        #eef9f3,
+        #f8fcfa
+      );
+
+      border: 1px solid #dceee4;
+
+      border-radius: 18px;
+
+      padding: 22px;
+
+      margin-bottom: 20px;
+    }
+
+    .documents-intro h2 {
+      margin: 0 0 6px;
+
+      font-size: 18px;
+    }
+
+    .documents-intro p {
+      margin: 0;
+
+      color: var(--muted);
+
+      font-size: 12px;
+
       line-height: 1.6;
     }
 
-    .verification-note {
-      margin-top: 12px;
-      color: #64748b;
-      font-size: 0.94rem;
-      line-height: 1.6;
+    .progress-wrap {
+      margin-top: 18px;
     }
 
-    .profile-form-grid {
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      font-size: 11px;
+      font-weight: 800;
+
+      margin-bottom: 7px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+
+      border-radius: 10px;
+
+      background: #dfece5;
+
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+
+      background: var(--green);
+
+      width: 0%;
+
+      transition: width .3s ease;
+    }
+
+    .documents-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 17px;
     }
 
-    .profile-form-grid label.full-width {
+    .document-card {
+      background: white;
+
+      border: 1px solid var(--border);
+
+      border-radius: 17px;
+
+      padding: 19px;
+
+      box-shadow: var(--shadow-sm);
+
+      transition: .18s ease;
+    }
+
+    .document-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .document-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+
+      gap: 10px;
+    }
+
+    .document-icon {
+      width: 42px;
+      height: 42px;
+
+      border-radius: 12px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: var(--green-light);
+
+      color: var(--green);
+
+      font-weight: 900;
+      font-size: 15px;
+    }
+
+    .document-title {
+      flex: 1;
+    }
+
+    .document-title h3 {
+      margin: 0 0 4px;
+
+      font-size: 14px;
+    }
+
+    .document-title p {
+      margin: 0;
+
+      color: var(--muted);
+
+      font-size: 10px;
+
+      line-height: 1.5;
+    }
+
+    .document-status {
+      margin-top: 15px;
+    }
+
+    .document-file {
+      display: none;
+
+      margin-top: 13px;
+
+      padding: 10px;
+
+      background: var(--green-soft);
+
+      border-radius: 10px;
+
+      font-size: 10px;
+
+      color: #50645c;
+    }
+
+    .document-file.visible {
+      display: block;
+    }
+
+    .document-actions {
+      display: flex;
+      gap: 8px;
+
+      margin-top: 14px;
+    }
+
+    .document-actions .btn {
+      flex: 1;
+    }
+
+    .privacy-note {
+      margin-top: 18px;
+
+      color: var(--muted);
+
+      font-size: 10px;
+
+      line-height: 1.6;
+    }
+
+    /* =========================================================
+       PROFILE
+       ========================================================= */
+
+    .profile-grid {
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 18px;
+    }
+
+    .profile-card {
+      background: white;
+
+      border: 1px solid var(--border);
+
+      border-radius: 18px;
+
+      padding: 22px;
+
+      box-shadow: var(--shadow-sm);
+    }
+
+    .profile-card h3 {
+      margin: 0 0 18px;
+
+      font-size: 16px;
+    }
+
+    .profile-field {
+      margin-bottom: 15px;
+    }
+
+    .profile-field:last-child {
+      margin-bottom: 0;
+    }
+
+    .profile-field label {
+      display: block;
+
+      color: var(--muted);
+
+      font-size: 10px;
+      font-weight: 800;
+
+      margin-bottom: 5px;
+    }
+
+    .profile-field div {
+      padding: 11px 12px;
+
+      background: var(--green-soft);
+
+      border-radius: 10px;
+
+      font-size: 12px;
+
+      min-height: 38px;
+    }
+
+    /* =========================================================
+       STATUS TRACKER
+       ========================================================= */
+
+    .tracker-card {
+      background: white;
+
+      border: 1px solid var(--border);
+
+      border-radius: 18px;
+
+      padding: 25px;
+
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tracker {
+      position: relative;
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(5, 1fr);
+
+      gap: 0;
+
+      margin-top: 25px;
+    }
+
+    .tracker-line {
+      position: absolute;
+
+      top: 20px;
+      left: 10%;
+
+      width: 80%;
+
+      height: 3px;
+
+      background: #dfe9e4;
+
+      z-index: 0;
+    }
+
+    .tracker-step {
+      position: relative;
+
+      z-index: 1;
+
+      text-align: center;
+    }
+
+    .tracker-dot {
+      width: 40px;
+      height: 40px;
+
+      border-radius: 50%;
+
+      margin: 0 auto 10px;
+
+      background: #e8efeb;
+
+      color: #7d8e87;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 13px;
+      font-weight: 900;
+
+      border: 5px solid white;
+    }
+
+    .tracker-step.complete .tracker-dot {
+      background: var(--green);
+      color: white;
+    }
+
+    .tracker-step.current .tracker-dot {
+      background: var(--green-light);
+      color: var(--green);
+
+      box-shadow:
+        0 0 0 4px rgba(22,139,85,.10);
+    }
+
+    .tracker-step strong {
+      display: block;
+
+      font-size: 11px;
+
+      margin-bottom: 3px;
+    }
+
+    .tracker-step span {
+      color: var(--muted);
+
+      font-size: 9px;
+    }
+
+    /* =========================================================
+       EMPTY STATE
+       ========================================================= */
+
+    .empty-state {
+      background: white;
+
+      border: 1px dashed #d7e5df;
+
+      border-radius: 17px;
+
+      padding: 45px 20px;
+
+      text-align: center;
+
+      color: var(--muted);
+    }
+
+    .empty-state h3 {
+      margin: 0 0 6px;
+
+      color: var(--text);
+
+      font-size: 16px;
+    }
+
+    .empty-state p {
+      margin: 0;
+
+      font-size: 12px;
+    }
+
+    /* =========================================================
+       MODALS
+       ========================================================= */
+
+    .modal-backdrop {
+      position: fixed;
+
+      inset: 0;
+
+      background: rgba(12, 31, 23, .48);
+
+      z-index: 3000;
+
+      display: none;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(680px, 100%);
+
+      max-height: 90vh;
+
+      overflow-y: auto;
+
+      background: white;
+
+      border-radius: 20px;
+
+      box-shadow:
+        0 25px 80px rgba(0,0,0,.22);
+
+      padding: 25px;
+
+      animation: modalIn .2s ease;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+
+      gap: 15px;
+
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      margin: 0 0 5px;
+
+      font-family: "Plus Jakarta Sans", sans-serif;
+
+      font-size: 21px;
+    }
+
+    .modal-header p {
+      margin: 0;
+
+      color: var(--muted);
+
+      font-size: 11px;
+    }
+
+    .close-modal {
+      width: 34px;
+      height: 34px;
+
+      border: 0;
+
+      border-radius: 50%;
+
+      background: #f1f5f3;
+
+      color: #63746d;
+
+      font-size: 17px;
+    }
+
+    /* =========================================================
+       RFQ MODAL DETAILS
+       ========================================================= */
+
+    .modal-rfq-summary {
+      padding: 16px;
+
+      border-radius: 13px;
+
+      background: var(--green-soft);
+
+      margin-bottom: 20px;
+    }
+
+    .summary-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, 1fr);
+
+      gap: 10px;
+    }
+
+    .summary-item label {
+      display: block;
+
+      color: var(--muted);
+
+      font-size: 9px;
+
+      margin-bottom: 3px;
+    }
+
+    .summary-item strong {
+      font-size: 11px;
+    }
+
+    /* =========================================================
+       FORMS
+       ========================================================= */
+
+    .form-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 15px;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-field.full {
       grid-column: 1 / -1;
     }
 
-    .rfq-section-block {
-      display: grid;
-      gap: 12px;
-      margin-bottom: 22px;
+    .form-field label {
+      font-size: 10px;
+      font-weight: 800;
+
+      color: #52655d;
     }
 
-    .rfq-section-block h3 {
-      font-size: 1.15rem;
-      margin: 0;
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+
+      border: 1px solid #dce7e2;
+
+      background: white;
+
+      border-radius: 10px;
+
+      padding: 11px 12px;
+
+      outline: none;
+
+      color: var(--text);
+
+      font-size: 12px;
+
+      transition: .15s ease;
+    }
+
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      border-color: var(--green);
+
+      box-shadow:
+        0 0 0 3px rgba(22,139,85,.08);
+    }
+
+    .form-field textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .confirm-row {
+      margin-top: 15px;
+
+      padding: 12px;
+
+      border-radius: 10px;
+
+      background: var(--green-soft);
+
+      display: flex;
+      align-items: flex-start;
+
+      gap: 8px;
+
+      font-size: 10px;
+
+      color: #52655d;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+
+      gap: 9px;
+
+      margin-top: 20px;
+    }
+
+    /* =========================================================
+       UPLOAD
+       ========================================================= */
+
+    .upload-box {
+      border: 1px dashed #cbded4;
+
+      background: var(--green-soft);
+
+      border-radius: 13px;
+
+      padding: 18px;
+
+      text-align: center;
+
+      margin-top: 10px;
+    }
+
+    .upload-box input {
+      display: none;
+    }
+
+    .upload-label {
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      min-height: 40px;
+
+      padding: 0 15px;
+
+      background: var(--green);
+
+      color: white;
+
+      border-radius: 9px;
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+    }
+
+    .upload-help {
+      margin-top: 9px;
+
+      color: var(--muted);
+
+      font-size: 9px;
+    }
+
+    .selected-file {
+      margin-top: 10px;
+
+      font-size: 10px;
+
+      color: var(--green);
+
+      font-weight: 800;
+    }
+
+    /* =========================================================
+       FEEDBACK
+       ========================================================= */
+
+    .feedback {
+      margin-top: 12px;
+
+      font-size: 11px;
+
+      font-weight: 700;
+    }
+
+    .feedback.success {
+      color: var(--green);
+    }
+
+    .feedback.error {
+      color: var(--danger);
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 1200px) {
+
+      .floating-nav {
+        position: static;
+
+        transform: none;
+
+        margin-left: auto;
+        margin-right: 15px;
+      }
+
+      .nav-item {
+        padding: 9px 9px;
+      }
+
+      .nav-item:nth-child(n+5) {
+        display: none;
+      }
     }
 
     @media (max-width: 900px) {
-      .supplier-kpi-grid,
-      .profile-form-grid {
-        grid-template-columns: repeat(2, 1fr);
+
+      .supplier-topbar {
+        padding: 0 18px;
+      }
+
+      .supplier-brand img {
+        width: 125px;
+      }
+
+      .floating-nav {
+        display: none;
+      }
+
+      .supplier-page {
+        padding: 25px 18px 45px;
+      }
+
+      .stats-grid {
+        grid-template-columns:
+          repeat(2, 1fr);
+      }
+
+      .rfq-grid,
+      .documents-grid,
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tracker {
+        grid-template-columns:
+          repeat(5, 100px);
+
+        overflow-x: auto;
+
+        padding-bottom: 10px;
+      }
+
+      .tracker-line {
+        display: none;
       }
     }
 
     @media (max-width: 600px) {
-      .supplier-kpi-grid,
-      .profile-form-grid {
+
+      .supplier-topbar {
+        height: 66px;
+      }
+
+      .profile-name {
+        display: none;
+      }
+
+      .supplier-page {
+        padding: 22px 14px 40px;
+      }
+
+      .page-header {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .page-header h1 {
+        font-size: 25px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .stat-card {
+        padding: 15px;
+      }
+
+      .stat-number {
+        font-size: 23px;
+      }
+
+      .rfq-card {
+        padding: 17px;
+      }
+
+      .rfq-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .rfq-actions {
+        width: 100%;
+      }
+
+      .rfq-actions .btn {
+        flex: 1;
+      }
+
+      .form-grid {
         grid-template-columns: 1fr;
       }
 
-      .supplier-dashboard-actions {
-        flex-direction: column;
-        align-items: stretch;
+      .form-field.full {
+        grid-column: auto;
+      }
+
+      .modal {
+        padding: 18px;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr 1fr;
       }
     }
+
   </style>
 </head>
 
 <body>
-  <div class="site-shell auth-shell">
-    <header class="topbar auth-topbar">
-      <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home">
-        <img src="elsati.png" alt="Elsati Connect logo">
-      </a>
 
-      <div class="topbar-actions supplier-dashboard-actions">
-        <button class="notification-btn" type="button">🔔</button>
-        <a class="button button-secondary" href="monitor.html">Background Monitor</a>
-        <button class="button button-secondary" id="logout-button" type="button">Log out</button>
-      </div>
-    </header>
+<!-- =========================================================
+     TOP NAVIGATION
+     ========================================================= -->
 
-    <main class="dashboard-page reveal">
-      <section class="dashboard-intro">
-        <p class="eyebrow">Supplier dashboard</p>
+<header class="supplier-topbar">
 
-        <h1>
-          Welcome, <span id="dashboard-user-name">Supplier user</span>.
-        </h1>
+  <a
+    href="index.html"
+    class="supplier-brand"
+    aria-label="Elsati Connect Home"
+  >
+    <img
+      src="elsati.png"
+      alt="Elsati Connect"
+    >
+  </a>
 
-        <p class="auth-copy">
-          Your supplier profile
-          <strong id="dashboard-company-name">Company</strong>
-          can review RFQs, submit quotations, and track award status once verified.
-        </p>
-      </section>
 
-      <section class="supplier-kpi-grid">
-        <article class="supplier-kpi-card">
-          <span>Open RFQs</span>
-          <strong id="supplier-open-rfq-count">0</strong>
-        </article>
+  <nav class="floating-nav">
 
-        <article class="supplier-kpi-card">
-          <span>Submitted Quotes</span>
-          <strong id="supplier-submitted-quote-count">0</strong>
-        </article>
+    <button
+      class="nav-item active"
+      data-view="dashboard"
+    >
+      Dashboard
+    </button>
 
-        <article class="supplier-kpi-card">
-          <span>Won Orders</span>
-          <strong id="supplier-won-order-count">0</strong>
-        </article>
+    <button
+      class="nav-item"
+      data-view="rfqs"
+    >
+      Open RFQs
+    </button>
 
-        <article class="supplier-kpi-card">
-          <span>Response Rate</span>
-          <strong id="supplier-response-rate">0%</strong>
-        </article>
-      </section>
+    <button
+      class="nav-item"
+      data-view="quotes"
+    >
+      My Quotes
+    </button>
 
-      <section class="profile-panel">
-        <div class="panel-head">
-          <h2>Supplier profile</h2>
-          <span>Complete your company profile for buyers and ELSATI admin review</span>
-        </div>
+    <button
+      class="nav-item"
+      data-view="awards"
+    >
+      Awards
+    </button>
 
-        <form class="contact-form compact-form" id="supplier-profile-form">
-          <div class="profile-form-grid">
-            <label>
-              Supplier company name
-              <input type="text" name="company_name" placeholder="Your supplier company" required>
-            </label>
+    <button
+      class="nav-item"
+      data-view="orders"
+    >
+      Orders
+    </button>
 
-            <label>
-              Supplier category
-              <input type="text" name="supplier_category" placeholder="Stationery, ICT, logistics, furniture...">
-            </label>
+    <button
+      class="nav-item"
+      data-view="invoices"
+    >
+      Invoices
+    </button>
 
-            <label>
-              Contact person
-              <input type="text" name="contact_person" placeholder="Full name">
-            </label>
+  </nav>
 
-            <label>
-              Contact phone
-              <input type="text" name="contact_phone" placeholder="+260...">
-            </label>
 
-            <label>
-              City
-              <input type="text" name="city" placeholder="Lusaka">
-            </label>
+  <div class="profile-wrapper" id="profile-wrapper">
 
-            <label>
-              Country
-              <input type="text" name="country" placeholder="Zambia">
-            </label>
+    <button
+      class="profile-button"
+      id="profile-button"
+      type="button"
+    >
 
-            <label>
-              Business address
-              <input type="text" name="business_address" placeholder="Physical address">
-            </label>
+      <span
+        class="profile-avatar"
+        id="profile-avatar"
+      >
+        S
+      </span>
 
-            <label class="full-width">
-              Business description
-              <textarea name="business_description" rows="3" placeholder="Briefly describe what your company supplies, industries served, and capacity"></textarea>
-            </label>
-          </div>
+      <span
+        class="profile-name"
+        id="profile-name"
+      >
+        Supplier
+      </span>
 
-          <button class="button button-primary" type="submit">Save Supplier Profile</button>
-        </form>
+      <span class="profile-arrow">
+        ▼
+      </span>
 
-        <p class="form-feedback" id="supplier-profile-feedback"></p>
-      </section>
+    </button>
 
-      <section class="verification-panel">
-        <div class="panel-head">
-          <h2>Supplier Verification</h2>
-          <span>Upload compliance documents to activate your supplier account</span>
-        </div>
 
-        <div id="verification-warning" class="verification-warning">
-          Your supplier account is pending verification. Upload your PACRA and ZRA documents as PDF files before you can submit quotations.
-        </div>
+    <div class="profile-dropdown">
 
-        <form class="contact-form compact-form" id="verification-form">
-          <label>
-            PACRA Certificate PDF
-            <input type="file" id="pacra-file" accept=".pdf,application/pdf" required>
-          </label>
+      <button
+        class="dropdown-item"
+        data-view="profile"
+      >
+        👤 My Profile
+      </button>
 
-          <label>
-            ZRA Tax Clearance PDF
-            <input type="file" id="zra-file" accept=".pdf,application/pdf" required>
-          </label>
+      <button
+        class="dropdown-item"
+        data-view="documents"
+      >
+        📄 Verification & Documents
+      </button>
 
-          <button class="button button-primary" type="submit">
-            Upload Documents
-          </button>
-        </form>
+      <button
+        class="dropdown-item"
+        data-view="tracker"
+      >
+        ✓ Status Tracker
+      </button>
 
-        <p class="form-feedback" id="verification-feedback"></p>
+      <div class="dropdown-divider"></div>
 
-        <p class="verification-note">
-          Only PDF documents are accepted. After uploading, ELSATI will review your documents. You will only be able to submit quotations once your supplier account is approved.
-        </p>
-      </section>
+      <button
+        class="dropdown-item"
+        id="logout-button"
+      >
+        ↪ Logout
+      </button>
 
-      <section class="app-grid supplier-app-grid">
-        <section class="app-panel app-panel-list">
-          <div class="panel-head">
-            <h2>Client RFQs</h2>
-            <span>Open and closed procurement opportunities</span>
-          </div>
+    </div>
 
-          <div class="request-list" id="supplier-rfq-list">
-            <p class="empty-state">Loading live RFQs...</p>
-          </div>
-        </section>
-
-        <section class="app-panel app-panel-form">
-          <div class="panel-head">
-            <h2>Submit quotation</h2>
-            <span id="supplier-form-title">Select an open RFQ to submit your quote</span>
-          </div>
-
-          <form class="contact-form compact-form" id="supplier-quote-form">
-            <label>
-              Selected RFQ
-              <input type="text" id="supplier-selected-rfq" placeholder="Choose from the RFQ list" readonly>
-            </label>
-
-            <label>
-              Quoted price
-              <input type="number" name="price" placeholder="240" required>
-            </label>
-
-            <label>
-              Delivery period
-              <input type="text" name="delivery" placeholder="3 days" required>
-            </label>
-
-            <label>
-              Notes
-              <textarea name="notes" rows="4" placeholder="Value add, compliance notes, and fulfillment detail" required></textarea>
-            </label>
-
-            <button class="button button-primary" type="submit">Submit Quote</button>
-          </form>
-
-          <p class="form-feedback" id="supplier-quote-feedback"></p>
-        </section>
-      </section>
-
-      <section class="app-grid supplier-app-grid">
-        <section class="app-panel app-panel-table">
-          <div class="panel-head">
-            <h2>My submitted quotes</h2>
-            <span>Track pricing, shortlist and award progress</span>
-          </div>
-
-          <div class="comparison-table" id="supplier-quote-list">
-            <p class="empty-state">Submitted quotations will appear here.</p>
-          </div>
-        </section>
-
-        <section class="app-panel app-panel-report">
-          <div class="panel-head">
-            <h2>Status tracker</h2>
-            <span>Buyer review, award updates and verification status</span>
-          </div>
-
-          <div class="report-summary" id="supplier-status-summary">
-            <article>
-              <h3>Current status</h3>
-              <p>Live RFQs will appear once businesses publish requests.</p>
-            </article>
-
-            <article>
-              <h3>Verification status</h3>
-              <p id="pacra-status">PACRA verification: Pending</p>
-              <p id="zra-status">ZRA verification: Pending</p>
-              <p id="account-status">Account status: Pending</p>
-            </article>
-          </div>
-        </section>
-      </section>
-    </main>
   </div>
 
-  <script src="script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
+</header>
 
-  <script>
-    const supabaseClient = supabase.createClient(
-      window.ELSATI_SUPABASE.url,
-      window.ELSATI_SUPABASE.publishableKey
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
+<main class="supplier-page">
+
+
+<!-- =========================================================
+     DASHBOARD
+     ========================================================= -->
+
+<section
+  class="page-view active"
+  id="view-dashboard"
+>
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>
+        Welcome back,
+        <span id="welcome-name">
+          Supplier
+        </span>
+      </h1>
+
+      <p>
+        Manage your opportunities, quotations and supplier activity.
+      </p>
+
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        class="btn btn-primary"
+        data-view="rfqs"
+      >
+        View Open RFQs
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="stats-grid">
+
+    <article class="stat-card">
+
+      <div class="stat-label">
+        Open RFQs
+      </div>
+
+      <div
+        class="stat-number"
+        id="stat-rfqs"
+      >
+        0
+      </div>
+
+      <div class="stat-sub">
+        Opportunities available
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-label">
+        Submitted Quotes
+      </div>
+
+      <div
+        class="stat-number"
+        id="stat-quotes"
+      >
+        0
+      </div>
+
+      <div class="stat-sub">
+        Quotations submitted
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-label">
+        Awards
+      </div>
+
+      <div
+        class="stat-number"
+        id="stat-awards"
+      >
+        0
+      </div>
+
+      <div class="stat-sub">
+        Successful opportunities
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-label">
+        Response Rate
+      </div>
+
+      <div
+        class="stat-number"
+        id="stat-response"
+      >
+        —
+      </div>
+
+      <div class="stat-sub">
+        Based on RFQ activity
+      </div>
+
+    </article>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="section-title">
+
+      <h2>
+        Latest RFQ Opportunities
+      </h2>
+
+      <span>
+        Recently available
+      </span>
+
+    </div>
+
+    <div
+      class="rfq-grid"
+      id="dashboard-rfqs"
+    ></div>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="section-title">
+
+      <h2>
+        Reviewed / Completed
+      </h2>
+
+      <span>
+        Kept collapsed to reduce clutter
+      </span>
+
+    </div>
+
+
+    <div class="completed-panel">
+
+      <button
+        class="completed-header"
+        id="completed-toggle"
+      >
+
+        <span>
+          View reviewed and completed RFQs
+        </span>
+
+        <span id="completed-arrow">
+          +
+        </span>
+
+      </button>
+
+
+      <div
+        class="completed-list"
+        id="completed-list"
+      >
+
+        <div
+          id="completed-content"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     OPEN RFQS
+     ========================================================= -->
+
+<section
+  class="page-view"
+  id="view-rfqs"
+>
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>
+        Open RFQs
+      </h1>
+
+      <p>
+        Review procurement requests and submit competitive quotations.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="rfq-grid"
+    id="all-rfqs"
+  ></div>
+
+</section>
+
+
+<!-- =========================================================
+     MY QUOTES
+     ========================================================= -->
+
+<section
+  class="page-view"
+  id="view-quotes"
+>
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>
+        My Quotes
+      </h1>
+
+      <p>
+        Track quotations you have submitted to businesses.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="table-card">
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>RFQ</th>
+          <th>Customer</th>
+          <th>Price</th>
+          <th>Submitted</th>
+          <th>Status</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="quotes-table-body"></tbody>
+
+    </table>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     AWARDS
+     ========================================================= -->
+
+<section
+  class="page-view"
+  id="view-awards"
+>
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>
+        Awards
+      </h1>
+
+      <p>
+        Opportunities where your quotation has been selected.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="table-card"
+  >
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>RFQ</th>
+          <th>Customer</th>
+          <th>Award Date</th>
+          <th>Status</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="awards-table-body"></tbody>
+
+    </table>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     ORDERS
+     ========================================================= -->
+
+<section
+  class="page-view"
+  id="view-orders"
+>
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>
+        Orders
+      </h1>
+
+      <p>
+        Manage orders created from awarded quotations.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="empty-state">
+
+    <h3>
+      Orders will appear here
+    </h3>
+
+    <p>
+      Once a quotation is awarded and the order is created,
+      the order details will appear in this section.
+    </p>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     INVOICES
+     ========================================================= -->
+
+<section
+  class="page-view"
+  id="view-invoices"
+>
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>
+        Invoices
+      </h1>
+
+      <p>
+        View invoices generated after completed payment milestones.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="empty-state">
+
+    <h3>
+      No invoices yet
+    </h3>
+
+    <p>
+      Once an awarded order reaches the required payment stage,
+      invoices will appear here.
+    </p>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     PROFILE
+     ========================================================= -->
+
+<section
+  class="page-view"
+  id="view-profile"
+>
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>
+        My Profile
+      </h1>
+
+      <p>
+        Your supplier information registered on Elsati Connect.
+      </p>
+
+    </div>
+
+    <button
+      class="btn btn-secondary"
+      data-view="documents"
+    >
+      Verification & Documents
+    </button>
+
+  </div>
+
+
+  <div class="profile-grid">
+
+    <article class="profile-card">
+
+      <h3>
+        Business Information
+      </h3>
+
+
+      <div class="profile-field">
+
+        <label>
+          Company Name
+        </label>
+
+        <div id="profile-company">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="profile-field">
+
+        <label>
+          Supplier Category
+        </label>
+
+        <div id="profile-category">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="profile-field">
+
+        <label>
+          Business Address
+        </label>
+
+        <div id="profile-address">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="profile-field">
+
+        <label>
+          City
+        </label>
+
+        <div id="profile-city">
+          —
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <article class="profile-card">
+
+      <h3>
+        Contact Information
+      </h3>
+
+
+      <div class="profile-field">
+
+        <label>
+          Contact Person
+        </label>
+
+        <div id="profile-contact">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="profile-field">
+
+        <label>
+          Email
+        </label>
+
+        <div id="profile-email">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="profile-field">
+
+        <label>
+          Phone
+        </label>
+
+        <div id="profile-phone">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="profile-field">
+
+        <label>
+          Verification Status
+        </label>
+
+        <div id="profile-verification">
+          —
+        </div>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     DOCUMENTS
+     ========================================================= -->
+
+<section
+  class="page-view"
+  id="view-documents"
+>
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>
+        Verification & Documents
+      </h1>
+
+      <p>
+        Keep your supplier verification records complete and up to date.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="documents-intro">
+
+    <h2>
+      Complete your supplier verification
+    </h2>
+
+    <p>
+      Upload the documents below so Elsati Connect can verify
+      your supplier profile. Verified documents help businesses
+      make procurement decisions with greater confidence.
+    </p>
+
+
+    <div class="progress-wrap">
+
+      <div class="progress-header">
+
+        <span>
+          Verification progress
+        </span>
+
+        <span id="document-progress-text">
+          0 of 4 completed
+        </span>
+
+      </div>
+
+      <div class="progress-bar">
+
+        <div
+          class="progress-fill"
+          id="document-progress-fill"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="documents-grid">
+
+
+    <!-- PACRA -->
+
+    <article
+      class="document-card"
+      data-document-card="pacra"
+    >
+
+      <div class="document-top">
+
+        <div class="document-icon">
+          P
+        </div>
+
+        <div class="document-title">
+
+          <h3>
+            PACRA Certificate
+          </h3>
+
+          <p>
+            Certificate of company registration.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="document-status"
+        id="status-pacra"
+      >
+
+        <span class="status-pill status-pending">
+          Not uploaded
+        </span>
+
+      </div>
+
+
+      <div
+        class="document-file"
+        id="file-pacra"
+      ></div>
+
+
+      <div class="document-actions">
+
+        <button
+          class="btn btn-primary"
+          onclick="openDocumentUpload('pacra')"
+        >
+          Upload
+        </button>
+
+        <button
+          class="btn btn-outline"
+          id="view-pacra"
+          style="display:none;"
+          onclick="viewDocument('pacra')"
+        >
+          View
+        </button>
+
+      </div>
+
+    </article>
+
+
+    <!-- TAX -->
+
+    <article
+      class="document-card"
+      data-document-card="tax"
+    >
+
+      <div class="document-top">
+
+        <div class="document-icon">
+          T
+        </div>
+
+        <div class="document-title">
+
+          <h3>
+            Tax Clearance Certificate
+          </h3>
+
+          <p>
+            Current ZRA tax clearance documentation.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="document-status"
+        id="status-tax"
+      >
+
+        <span class="status-pill status-pending">
+          Not uploaded
+        </span>
+
+      </div>
+
+
+      <div
+        class="document-file"
+        id="file-tax"
+      ></div>
+
+
+      <div class="document-actions">
+
+        <button
+          class="btn btn-primary"
+          onclick="openDocumentUpload('tax')"
+        >
+          Upload
+        </button>
+
+        <button
+          class="btn btn-outline"
+          id="view-tax"
+          style="display:none;"
+          onclick="viewDocument('tax')"
+        >
+          View
+        </button>
+
+      </div>
+
+    </article>
+
+
+    <!-- BANK -->
+
+    <article
+      class="document-card"
+      data-document-card="bank"
+    >
+
+      <div class="document-top">
+
+        <div class="document-icon">
+          B
+        </div>
+
+        <div class="document-title">
+
+          <h3>
+            Bank Details
+          </h3>
+
+          <p>
+            Bank confirmation letter or official bank details document.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="document-status"
+        id="status-bank"
+      >
+
+        <span class="status-pill status-pending">
+          Not uploaded
+        </span>
+
+      </div>
+
+
+      <div
+        class="document-file"
+        id="file-bank"
+      ></div>
+
+
+      <div class="document-actions">
+
+        <button
+          class="btn btn-primary"
+          onclick="openDocumentUpload('bank')"
+        >
+          Upload
+        </button>
+
+        <button
+          class="btn btn-outline"
+          id="view-bank"
+          style="display:none;"
+          onclick="viewDocument('bank')"
+        >
+          View
+        </button>
+
+      </div>
+
+    </article>
+
+
+    <!-- RESIDENCE -->
+
+    <article
+      class="document-card"
+      data-document-card="residence"
+    >
+
+      <div class="document-top">
+
+        <div class="document-icon">
+          R
+        </div>
+
+        <div class="document-title">
+
+          <h3>
+            Proof of Residence
+          </h3>
+
+          <p>
+            Recent document confirming the business or contact address.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="document-status"
+        id="status-residence"
+      >
+
+        <span class="status-pill status-pending">
+          Not uploaded
+        </span>
+
+      </div>
+
+
+      <div
+        class="document-file"
+        id="file-residence"
+      ></div>
+
+
+      <div class="document-actions">
+
+        <button
+          class="btn btn-primary"
+          onclick="openDocumentUpload('residence')"
+        >
+          Upload
+        </button>
+
+        <button
+          class="btn btn-outline"
+          id="view-residence"
+          style="display:none;"
+          onclick="viewDocument('residence')"
+        >
+          View
+        </button>
+
+      </div>
+
+    </article>
+
+
+  </div>
+
+
+  <p class="privacy-note">
+    🔒 Your verification documents are stored securely and are
+    not intended to be publicly accessible. Bank information should
+    only be accessed by authorised Elsati Connect personnel where required.
+  </p>
+
+</section>
+
+
+<!-- =========================================================
+     STATUS TRACKER
+     ========================================================= -->
+
+<section
+  class="page-view"
+  id="view-tracker"
+>
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>
+        Status Tracker
+      </h1>
+
+      <p>
+        Follow your quotation and order journey.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="tracker-card">
+
+    <h2 style="margin:0;font-size:19px;">
+      Supplier Opportunity Journey
+    </h2>
+
+    <p
+      style="
+        color:var(--muted);
+        font-size:12px;
+        margin:7px 0 0;
+      "
+    >
+      Track the typical journey from RFQ invitation to payment.
+    </p>
+
+
+    <div class="tracker">
+
+      <div class="tracker-line"></div>
+
+
+      <div class="tracker-step complete">
+
+        <div class="tracker-dot">
+          ✓
+        </div>
+
+        <strong>
+          RFQ Received
+        </strong>
+
+        <span>
+          Opportunity received
+        </span>
+
+      </div>
+
+
+      <div class="tracker-step complete">
+
+        <div class="tracker-dot">
+          ✓
+        </div>
+
+        <strong>
+          Quote Submitted
+        </strong>
+
+        <span>
+          Your quotation sent
+        </span>
+
+      </div>
+
+
+      <div class="tracker-step current">
+
+        <div class="tracker-dot">
+          3
+        </div>
+
+        <strong>
+          Buyer Review
+        </strong>
+
+        <span>
+          Awaiting decision
+        </span>
+
+      </div>
+
+
+      <div class="tracker-step">
+
+        <div class="tracker-dot">
+          4
+        </div>
+
+        <strong>
+          Award
+        </strong>
+
+        <span>
+          If selected
+        </span>
+
+      </div>
+
+
+      <div class="tracker-step">
+
+        <div class="tracker-dot">
+          5
+        </div>
+
+        <strong>
+          Payment
+        </strong>
+
+        <span>
+          Payment received
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<!-- =========================================================
+     QUOTE MODAL
+     ========================================================= -->
+
+<div
+  class="modal-backdrop"
+  id="quote-modal"
+>
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <div>
+
+        <h2>
+          Submit Your Quotation
+        </h2>
+
+        <p id="quote-modal-subtitle">
+          Respond to the client's request.
+        </p>
+
+      </div>
+
+      <button
+        class="close-modal"
+        onclick="closeModal('quote-modal')"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      class="modal-rfq-summary"
+      id="quote-rfq-summary"
+    ></div>
+
+
+    <form id="quote-form">
+
+      <input
+        type="hidden"
+        id="quote-rfq-id"
+      >
+
+
+      <div class="form-grid">
+
+
+        <div class="form-field">
+
+          <label>
+            Your Price / Total Amount
+          </label>
+
+          <input
+            type="number"
+            id="quote-price"
+            min="0"
+            step="0.01"
+            placeholder="e.g. 25000"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label>
+            Delivery Period
+          </label>
+
+          <input
+            type="text"
+            id="quote-delivery"
+            placeholder="e.g. 5 working days"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label>
+            Payment Terms
+          </label>
+
+          <select id="quote-payment">
+
+            <option value="">
+              Select payment terms
+            </option>
+
+            <option>
+              Cash on delivery
+            </option>
+
+            <option>
+              Payment on delivery
+            </option>
+
+            <option>
+              50% deposit / 50% on delivery
+            </option>
+
+            <option>
+              7 days credit
+            </option>
+
+            <option>
+              14 days credit
+            </option>
+
+            <option>
+              30 days credit
+            </option>
+
+            <option>
+              Other
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label>
+            Quote Validity
+          </label>
+
+          <input
+            type="text"
+            id="quote-validity"
+            placeholder="e.g. 30 days"
+          >
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label>
+            Availability
+          </label>
+
+          <select id="quote-availability">
+
+            <option value="">
+              Select availability
+            </option>
+
+            <option>
+              In stock
+            </option>
+
+            <option>
+              Available to order
+            </option>
+
+            <option>
+              Partial availability
+            </option>
+
+            <option>
+              Made to order
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label>
+            Warranty / Guarantee
+          </label>
+
+          <input
+            type="text"
+            id="quote-warranty"
+            placeholder="e.g. 12 months"
+          >
+
+        </div>
+
+
+        <div class="form-field full">
+
+          <label>
+            Additional Notes
+          </label>
+
+          <textarea
+            id="quote-notes"
+            placeholder="Add any relevant information about your quotation..."
+          ></textarea>
+
+        </div>
+
+      </div>
+
+
+      <label class="confirm-row">
+
+        <input
+          type="checkbox"
+          id="quote-confirm"
+          required
+        >
+
+        <span>
+          By submitting, you confirm that the quotation
+          information provided is accurate and valid.
+        </span>
+
+      </label>
+
+
+      <div
+        class="feedback"
+        id="quote-feedback"
+      ></div>
+
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-outline"
+          onclick="closeModal('quote-modal')"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+        >
+          Submit Quotation
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     DECLINE MODAL
+     ========================================================= -->
+
+<div
+  class="modal-backdrop"
+  id="decline-modal"
+>
+
+  <div class="modal" style="max-width:500px;">
+
+    <div class="modal-header">
+
+      <div>
+
+        <h2>
+          Decline RFQ
+        </h2>
+
+        <p>
+          Let the client know you will not be submitting a quotation.
+        </p>
+
+      </div>
+
+      <button
+        class="close-modal"
+        onclick="closeModal('decline-modal')"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <input
+      type="hidden"
+      id="decline-rfq-id"
+    >
+
+
+    <div class="form-field">
+
+      <label>
+        Reason (optional)
+      </label>
+
+      <textarea
+        id="decline-reason"
+        placeholder="e.g. We are unable to meet the requested delivery period."
+      ></textarea>
+
+    </div>
+
+
+    <div
+      class="feedback"
+      id="decline-feedback"
+    ></div>
+
+
+    <div class="modal-footer">
+
+      <button
+        class="btn btn-outline"
+        onclick="closeModal('decline-modal')"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="btn btn-danger"
+        id="confirm-decline"
+      >
+        Decline RFQ
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     DOCUMENT UPLOAD MODAL
+     ========================================================= -->
+
+<div
+  class="modal-backdrop"
+  id="document-modal"
+>
+
+  <div class="modal" style="max-width:540px;">
+
+    <div class="modal-header">
+
+      <div>
+
+        <h2 id="document-modal-title">
+          Upload Document
+        </h2>
+
+        <p id="document-modal-description">
+          Upload your verification document.
+        </p>
+
+      </div>
+
+      <button
+        class="close-modal"
+        onclick="closeModal('document-modal')"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <form id="document-form">
+
+      <input
+        type="hidden"
+        id="document-type"
+      >
+
+
+      <div class="upload-box">
+
+        <label
+          class="upload-label"
+          for="document-file-input"
+        >
+          Choose File
+        </label>
+
+        <input
+          type="file"
+          id="document-file-input"
+          accept=".pdf,.png,.jpg,.jpeg"
+          required
+        >
+
+        <div class="upload-help">
+          PDF, JPG or PNG. Maximum 10 MB.
+        </div>
+
+        <div
+          class="selected-file"
+          id="selected-document-file"
+        ></div>
+
+      </div>
+
+
+      <div
+        class="feedback"
+        id="document-feedback"
+      ></div>
+
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-outline"
+          onclick="closeModal('document-modal')"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+        >
+          Upload Document
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     SCRIPTS
+     ========================================================= -->
+
+<script src="script.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase-config.js"></script>
+
+
+<script>
+
+  /* =========================================================
+     SUPABASE
+     ========================================================= */
+
+  const supabaseClient = supabase.createClient(
+    window.ELSATI_SUPABASE.url,
+    window.ELSATI_SUPABASE.publishableKey
+  );
+
+
+  /* =========================================================
+     STATE
+     ========================================================= */
+
+  let currentUser = null;
+  let currentProfile = null;
+
+  let rfqs = [];
+  let quotes = [];
+  let documents = {};
+
+  let declinedIds = new Set();
+
+  let currentDocumentType = null;
+
+
+  /* =========================================================
+     DOCUMENT INFORMATION
+     ========================================================= */
+
+  const documentInfo = {
+
+    pacra: {
+      title: "PACRA Certificate",
+      description:
+        "Upload your current PACRA company registration certificate."
+    },
+
+    tax: {
+      title: "Tax Clearance Certificate",
+      description:
+        "Upload your current ZRA Tax Clearance Certificate."
+    },
+
+    bank: {
+      title: "Bank Details",
+      description:
+        "Upload an official bank confirmation letter or bank details document."
+    },
+
+    residence: {
+      title: "Proof of Residence",
+      description:
+        "Upload a recent document confirming your business or contact address."
+    }
+
+  };
+
+
+  /* =========================================================
+     HELPERS
+     ========================================================= */
+
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+
+  function escapeHtml(value) {
+
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+
+  function formatDate(dateValue) {
+
+    if (!dateValue) {
+      return "—";
+    }
+
+    const date = new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) {
+      return "—";
+    }
+
+    return date.toLocaleDateString(
+      undefined,
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }
     );
 
-    let currentSupplierProfile = null;
+  }
 
-    async function loadSupplierProfile() {
-      const { data: userData, error: userError } = await supabaseClient.auth.getUser();
 
-      if (userError || !userData.user) {
-        window.location.href = "supplier-signin.html";
-        return;
+  function formatDateTime(dateValue) {
+
+    if (!dateValue) {
+      return "—";
+    }
+
+    const date = new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) {
+      return "—";
+    }
+
+    return date.toLocaleString(
+      undefined,
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
       }
+    );
 
-      const { data: profile, error: profileError } = await supabaseClient
+  }
+
+
+  function money(value) {
+
+    if (
+      value === null ||
+      value === undefined ||
+      value === ""
+    ) {
+      return "—";
+    }
+
+    const number = Number(value);
+
+    if (Number.isNaN(number)) {
+      return value;
+    }
+
+    return "K" + number.toLocaleString(
+      undefined,
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }
+    );
+
+  }
+
+
+  /* =========================================================
+     NAVIGATION
+     ========================================================= */
+
+  function showView(viewName) {
+
+    document
+      .querySelectorAll(".page-view")
+      .forEach(view => {
+
+        view.classList.toggle(
+          "active",
+          view.id === "view-" + viewName
+        );
+
+      });
+
+
+    document
+      .querySelectorAll("[data-view]")
+      .forEach(item => {
+
+        if (
+          item.classList.contains("nav-item")
+        ) {
+
+          item.classList.toggle(
+            "active",
+            item.dataset.view === viewName
+          );
+
+        }
+
+      });
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+
+  document
+    .querySelectorAll("[data-view]")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        function() {
+
+          const view =
+            this.dataset.view;
+
+          if (view) {
+            showView(view);
+          }
+
+        }
+      );
+
+    });
+
+
+  /* =========================================================
+     PROFILE DROPDOWN
+     ========================================================= */
+
+  $("profile-button")
+    .addEventListener(
+      "click",
+      function(event) {
+
+        event.stopPropagation();
+
+        $("profile-wrapper")
+          .classList.toggle("open");
+
+      }
+    );
+
+
+  document.addEventListener(
+    "click",
+    function() {
+
+      $("profile-wrapper")
+        .classList.remove("open");
+
+    }
+  );
+
+
+  /* =========================================================
+     MODALS
+     ========================================================= */
+
+  function openModal(id) {
+
+    $(id)
+      .classList
+      .add("open");
+
+  }
+
+
+  function closeModal(id) {
+
+    $(id)
+      .classList
+      .remove("open");
+
+  }
+
+
+  document
+    .querySelectorAll(".modal-backdrop")
+    .forEach(backdrop => {
+
+      backdrop.addEventListener(
+        "click",
+        function(event) {
+
+          if (
+            event.target === backdrop
+          ) {
+
+            backdrop.classList.remove("open");
+
+          }
+
+        }
+      );
+
+    });
+
+
+  /* =========================================================
+     INITIAL LOAD
+     ========================================================= */
+
+  async function initialise() {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.getUser();
+
+
+    if (
+      error ||
+      !data ||
+      !data.user
+    ) {
+
+      window.location.href =
+        "supplier-signin.html";
+
+      return;
+
+    }
+
+
+    currentUser = data.user;
+
+
+    await loadProfile();
+
+    await loadRFQs();
+
+    await loadQuotes();
+
+    await loadDocuments();
+
+    renderAll();
+
+  }
+
+
+  /* =========================================================
+     PROFILE
+     ========================================================= */
+
+  async function loadProfile() {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
         .from("profiles")
         .select("*")
-        .eq("id", userData.user.id)
+        .eq("id", currentUser.id)
         .maybeSingle();
 
-      if (profileError || !profile) {
-        await supabaseClient.auth.signOut();
-        window.location.href = "supplier-signin.html";
-        return;
-      }
 
-      if (profile.role !== "supplier") {
-        await supabaseClient.auth.signOut();
-        window.location.href = "signin.html";
-        return;
-      }
+    if (error) {
 
-      currentSupplierProfile = profile;
+      console.error(
+        "Profile error:",
+        error
+      );
 
-      const displayName = profile.company_name || profile.email || "Supplier user";
+      return;
 
-      document.getElementById("dashboard-user-name").textContent = displayName;
-      document.getElementById("dashboard-company-name").textContent = displayName;
-
-      updateVerificationUI(profile);
     }
 
-    function updateVerificationUI(profile) {
-      const warning = document.getElementById("verification-warning");
-      const form = document.getElementById("verification-form");
-      const feedback = document.getElementById("verification-feedback");
-      const quoteForm = document.getElementById("supplier-quote-form");
 
-      const pacraStatus = document.getElementById("pacra-status");
-      const zraStatus = document.getElementById("zra-status");
-      const accountStatus = document.getElementById("account-status");
+    currentProfile = data;
 
-      pacraStatus.textContent = profile.pacra_url
-        ? "PACRA verification: Uploaded"
-        : "PACRA verification: Pending";
 
-      zraStatus.textContent = profile.zra_url
-        ? "ZRA verification: Uploaded"
-        : "ZRA verification: Pending";
-
-      if (profile.verified === true || profile.verification_status === "approved") {
-        warning.textContent = "Verified supplier account ✓";
-        warning.style.background = "#dcfce7";
-        warning.style.color = "#166534";
-
-        form.style.display = "none";
-
-        quoteForm.style.opacity = "1";
-        quoteForm.style.pointerEvents = "auto";
-
-        accountStatus.textContent = "Account status: Verified";
-        feedback.textContent = "";
-        return;
-      }
-
-      if (profile.verification_status === "submitted") {
-        warning.textContent = "Your PDF documents have been submitted and are awaiting ELSATI review.";
-        warning.style.background = "#fef3c7";
-        warning.style.color = "#92400e";
-
-        form.style.display = "none";
-
-        quoteForm.style.opacity = "0.45";
-        quoteForm.style.pointerEvents = "none";
-
-        accountStatus.textContent = "Account status: Awaiting review";
-        feedback.textContent = "You will be able to submit quotations once ELSATI approves your documents.";
-        return;
-      }
-
-      warning.textContent = "Your supplier account is pending verification. Upload your PACRA and ZRA documents as PDF files before you can submit quotations.";
-      warning.style.background = "#fee2e2";
-      warning.style.color = "#991b1b";
-
-      quoteForm.style.opacity = "0.45";
-      quoteForm.style.pointerEvents = "none";
-
-      accountStatus.textContent = "Account status: Pending documents";
-      feedback.textContent = "";
+    if (!currentProfile) {
+      return;
     }
 
-    async function uploadSupplierDocuments(event) {
-      event.preventDefault();
 
-      const feedback = document.getElementById("verification-feedback");
-      const pacraFile = document.getElementById("pacra-file").files[0];
-      const zraFile = document.getElementById("zra-file").files[0];
+    const companyName =
+      currentProfile.company_name ||
+      "Supplier";
 
-      if (!pacraFile || !zraFile) {
-        feedback.textContent = "Please upload both PACRA and ZRA documents.";
-        return;
+
+    $("welcome-name")
+      .textContent =
+      companyName;
+
+
+    $("profile-name")
+      .textContent =
+      companyName;
+
+
+    $("profile-avatar")
+      .textContent =
+      companyName
+        .substring(0, 1)
+        .toUpperCase();
+
+
+    $("profile-company")
+      .textContent =
+      currentProfile.company_name ||
+      "—";
+
+
+    $("profile-category")
+      .textContent =
+      currentProfile.supplier_category ||
+      "—";
+
+
+    $("profile-address")
+      .textContent =
+      currentProfile.business_address ||
+      "—";
+
+
+    $("profile-city")
+      .textContent =
+      currentProfile.city ||
+      "—";
+
+
+    $("profile-contact")
+      .textContent =
+      currentProfile.contact_person ||
+      "—";
+
+
+    $("profile-email")
+      .textContent =
+      currentUser.email ||
+      "—";
+
+
+    $("profile-phone")
+      .textContent =
+      currentProfile.contact_phone ||
+      "—";
+
+
+    $("profile-verification")
+      .textContent =
+      currentProfile.verification_status ||
+      (
+        currentProfile.verified
+          ? "Verified"
+          : "Pending"
+      );
+
+  }
+
+
+  /* =========================================================
+     RFQS
+     ========================================================= */
+
+  async function loadRFQs() {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("rfqs")
+        .select("*")
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        );
+
+
+    if (error) {
+
+      console.error(
+        "RFQ error:",
+        error
+      );
+
+      rfqs = [];
+
+      return;
+
+    }
+
+
+    rfqs = data || [];
+
+  }
+
+
+  /* =========================================================
+     QUOTES
+     ========================================================= */
+
+  async function loadQuotes() {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("quotes")
+        .select("*")
+        .eq(
+          "supplier_user_id",
+          currentUser.id
+        )
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        );
+
+
+    if (error) {
+
+      console.error(
+        "Quotes error:",
+        error
+      );
+
+      quotes = [];
+
+      return;
+
+    }
+
+
+    quotes = data || [];
+
+  }
+
+
+  /* =========================================================
+     DOCUMENTS
+     ========================================================= */
+
+  async function loadDocuments() {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("supplier_documents")
+        .select("*")
+        .eq(
+          "supplier_user_id",
+          currentUser.id
+        );
+
+
+    if (error) {
+
+      console.error(
+        "Documents error:",
+        error
+      );
+
+      documents = {};
+
+      renderDocuments();
+
+      return;
+
+    }
+
+
+    documents = {};
+
+
+    (data || [])
+      .forEach(document => {
+
+        documents[
+          document.document_type
+        ] = document;
+
+      });
+
+
+    renderDocuments();
+
+  }
+
+
+  /* =========================================================
+     RENDER ALL
+     ========================================================= */
+
+  function renderAll() {
+
+    renderStats();
+
+    renderDashboardRFQs();
+
+    renderAllRFQs();
+
+    renderQuotes();
+
+    renderAwards();
+
+    renderCompleted();
+
+    renderDocuments();
+
+  }
+
+
+  /* =========================================================
+     STATS
+     ========================================================= */
+
+  function renderStats() {
+
+    const activeRFQs =
+      rfqs.filter(
+        rfq =>
+          !declinedIds.has(rfq.id) &&
+          rfq.status !== "closed" &&
+          rfq.status !== "completed"
+      );
+
+
+    $("stat-rfqs")
+      .textContent =
+      activeRFQs.length;
+
+
+    $("stat-quotes")
+      .textContent =
+      quotes.length;
+
+
+    const awards =
+      quotes.filter(
+        quote =>
+          quote.status === "awarded" ||
+          quote.status === "accepted" ||
+          quote.status === "won"
+      );
+
+
+    $("stat-awards")
+      .textContent =
+      awards.length;
+
+
+    const submitted =
+      quotes.length;
+
+
+    if (submitted === 0) {
+
+      $("stat-response")
+        .textContent = "—";
+
+    } else {
+
+      const respondedRFQIds =
+        new Set(
+          quotes.map(
+            quote => quote.rfq_id
+          )
+        );
+
+
+      const responseRate =
+        rfqs.length
+          ? Math.round(
+              (
+                respondedRFQIds.size /
+                Math.max(rfqs.length, 1)
+              ) * 100
+            )
+          : 0;
+
+
+      $("stat-response")
+        .textContent =
+        responseRate + "%";
+
+    }
+
+  }
+
+
+  /* =========================================================
+     RFQ CARD
+     ========================================================= */
+
+  function rfqCard(rfq) {
+
+    const isDirect =
+      Boolean(
+        rfq.supplier_profile_id ||
+        rfq.supplier_id ||
+        rfq.target_supplier_id
+      );
+
+
+    const badgeClass =
+      isDirect
+        ? "direct"
+        : "";
+
+
+    const badgeText =
+      isDirect
+        ? "DIRECT REQUEST"
+        : "OPEN TO ALL SUPPLIERS";
+
+
+    return `
+
+      <article
+        class="rfq-card"
+        data-rfq-id="${escapeHtml(rfq.id)}"
+      >
+
+        <div class="rfq-top">
+
+          <span class="rfq-badge ${badgeClass}">
+            ${badgeText}
+          </span>
+
+          <span class="rfq-time">
+            ${formatDateTime(rfq.created_at)}
+          </span>
+
+        </div>
+
+
+        <h3 class="rfq-title">
+          ${escapeHtml(
+            rfq.title ||
+            "Procurement Request"
+          )}
+        </h3>
+
+
+        <div class="company-line">
+
+          <span>
+            ${escapeHtml(
+              rfq.business_name ||
+              "Business Client"
+            )}
+          </span>
+
+          <span class="verified-check">
+            ✓
+          </span>
+
+        </div>
+
+
+        <div class="rfq-details">
+
+
+          <div class="detail-box">
+
+            <span class="detail-label">
+              Quantity
+            </span>
+
+            <span class="detail-value">
+              ${escapeHtml(
+                rfq.quantity ||
+                "—"
+              )}
+            </span>
+
+          </div>
+
+
+          <div class="detail-box">
+
+            <span class="detail-label">
+              Required Date
+            </span>
+
+            <span class="detail-value">
+              ${formatDate(
+                rfq.deadline
+              )}
+            </span>
+
+          </div>
+
+
+          <div class="detail-box">
+
+            <span class="detail-label">
+              Delivery
+            </span>
+
+            <span class="detail-value">
+              ${escapeHtml(
+                rfq.delivery_location ||
+                "—"
+              )}
+            </span>
+
+          </div>
+
+
+          <div class="detail-box">
+
+            <span class="detail-label">
+              Budget
+            </span>
+
+            <span class="detail-value">
+              ${money(
+                rfq.estimated_budget
+              )}
+            </span>
+
+          </div>
+
+
+        </div>
+
+
+        <div class="rfq-bottom">
+
+          <span class="rfq-category">
+
+            ${escapeHtml(
+              rfq.category ||
+              "General Procurement"
+            )}
+
+          </span>
+
+
+          <div class="rfq-actions">
+
+            <button
+              class="btn btn-danger small-btn"
+              onclick="openDecline('${escapeHtml(rfq.id)}')"
+            >
+              Decline
+            </button>
+
+            <button
+              class="btn btn-primary small-btn"
+              onclick="openQuote('${escapeHtml(rfq.id)}')"
+            >
+              View & Submit Quote
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    `;
+
+  }
+
+
+  /* =========================================================
+     DASHBOARD RFQS
+     ========================================================= */
+
+  function renderDashboardRFQs() {
+
+    const container =
+      $("dashboard-rfqs");
+
+
+    const active =
+      rfqs
+        .filter(
+          rfq =>
+            !declinedIds.has(rfq.id) &&
+            rfq.status !== "closed" &&
+            rfq.status !== "completed"
+        )
+        .slice(0, 4);
+
+
+    if (!active.length) {
+
+      container.innerHTML = `
+
+        <div class="empty-state">
+
+          <h3>
+            No open RFQs
+          </h3>
+
+          <p>
+            New supplier opportunities will appear here.
+          </p>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    container.innerHTML =
+      active
+        .map(rfqCard)
+        .join("");
+
+  }
+
+
+  /* =========================================================
+     ALL RFQS
+     ========================================================= */
+
+  function renderAllRFQs() {
+
+    const container =
+      $("all-rfqs");
+
+
+    const active =
+      rfqs.filter(
+        rfq =>
+          !declinedIds.has(rfq.id) &&
+          rfq.status !== "closed" &&
+          rfq.status !== "completed"
+      );
+
+
+    if (!active.length) {
+
+      container.innerHTML = `
+
+        <div class="empty-state">
+
+          <h3>
+            No open RFQs
+          </h3>
+
+          <p>
+            There are currently no RFQs available for you.
+          </p>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    container.innerHTML =
+      active
+        .map(rfqCard)
+        .join("");
+
+  }
+
+
+  /* =========================================================
+     COMPLETED
+     ========================================================= */
+
+  function renderCompleted() {
+
+    const container =
+      $("completed-content");
+
+
+    const completed =
+      rfqs.filter(
+        rfq =>
+          declinedIds.has(rfq.id) ||
+          rfq.status === "closed" ||
+          rfq.status === "completed"
+      );
+
+
+    if (!completed.length) {
+
+      container.innerHTML = `
+
+        <div
+          style="
+            padding:20px;
+            color:var(--muted);
+            font-size:12px;
+          "
+        >
+          No reviewed or completed RFQs yet.
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    container.innerHTML =
+      completed
+        .map(
+          rfq => `
+
+            <div class="completed-row">
+
+              <div>
+
+                <strong>
+                  ${escapeHtml(
+                    rfq.title ||
+                    "RFQ"
+                  )}
+                </strong>
+
+                <small>
+                  ${
+                    escapeHtml(
+                      rfq.business_name ||
+                      "Business"
+                    )
+                  }
+                </small>
+
+              </div>
+
+              <span>
+                ${formatDateTime(
+                  rfq.created_at
+                )}
+              </span>
+
+            </div>
+
+          `
+        )
+        .join("");
+
+  }
+
+
+  $("completed-toggle")
+    .addEventListener(
+      "click",
+      function() {
+
+        const list =
+          $("completed-list");
+
+        list.classList.toggle("open");
+
+        $("completed-arrow")
+          .textContent =
+          list.classList.contains("open")
+            ? "−"
+            : "+";
+
       }
+    );
 
-      if (pacraFile.type !== "application/pdf") {
-        feedback.textContent = "PACRA document must be uploaded as a PDF.";
-        return;
+
+  /* =========================================================
+     OPEN QUOTE MODAL
+     ========================================================= */
+
+  function openQuote(rfqId) {
+
+    const rfq =
+      rfqs.find(
+        item =>
+          String(item.id) ===
+          String(rfqId)
+      );
+
+
+    if (!rfq) {
+      return;
+    }
+
+
+    $("quote-rfq-id")
+      .value =
+      rfq.id;
+
+
+    $("quote-modal-subtitle")
+      .textContent =
+      "Submit a quotation to " +
+      (
+        rfq.business_name ||
+        "the client"
+      );
+
+
+    $("quote-rfq-summary")
+      .innerHTML = `
+
+        <div class="summary-grid">
+
+          <div class="summary-item">
+
+            <label>
+              RFQ
+            </label>
+
+            <strong>
+              ${escapeHtml(
+                rfq.code ||
+                rfq.id
+              )}
+            </strong>
+
+          </div>
+
+
+          <div class="summary-item">
+
+            <label>
+              Customer
+            </label>
+
+            <strong>
+              ${escapeHtml(
+                rfq.business_name ||
+                "—"
+              )}
+            </strong>
+
+          </div>
+
+
+          <div class="summary-item">
+
+            <label>
+              Request
+            </label>
+
+            <strong>
+              ${escapeHtml(
+                rfq.title ||
+                "—"
+              )}
+            </strong>
+
+          </div>
+
+
+          <div class="summary-item">
+
+            <label>
+              Required Date
+            </label>
+
+            <strong>
+              ${formatDate(
+                rfq.deadline
+              )}
+            </strong>
+
+          </div>
+
+        </div>
+
+      `;
+
+
+    $("quote-feedback")
+      .textContent = "";
+
+
+    $("quote-form")
+      .reset();
+
+
+    $("quote-rfq-id")
+      .value =
+      rfq.id;
+
+
+    openModal("quote-modal");
+
+  }
+
+
+  /* =========================================================
+     SUBMIT QUOTE
+     ========================================================= */
+
+  $("quote-form")
+    .addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+
+        const feedback =
+          $("quote-feedback");
+
+
+        feedback
+          .className =
+          "feedback";
+
+
+        feedback
+          .textContent =
+          "Submitting quotation...";
+
+
+        const rfqId =
+          $("quote-rfq-id").value;
+
+
+        const price =
+          $("quote-price").value;
+
+
+        const delivery =
+          $("quote-delivery").value;
+
+
+        const payment =
+          $("quote-payment").value;
+
+
+        const validity =
+          $("quote-validity").value;
+
+
+        const availability =
+          $("quote-availability").value;
+
+
+        const warranty =
+          $("quote-warranty").value;
+
+
+        const notes =
+          $("quote-notes").value;
+
+
+        const combinedNotes = [
+
+          payment
+            ? "Payment Terms: " + payment
+            : "",
+
+          validity
+            ? "Quote Validity: " + validity
+            : "",
+
+          availability
+            ? "Availability: " + availability
+            : "",
+
+          warranty
+            ? "Warranty/Guarantee: " + warranty
+            : "",
+
+          notes
+            ? "Additional Notes: " + notes
+            : ""
+
+        ]
+          .filter(Boolean)
+          .join("\n");
+
+
+        const payload = {
+
+          rfq_id: rfqId,
+
+          supplier_user_id:
+            currentUser.id,
+
+          supplier_company:
+            currentProfile?.company_name ||
+            "Supplier",
+
+          price:
+            Number(price),
+
+          delivery:
+            delivery,
+
+          notes:
+            combinedNotes
+
+        };
+
+
+        const {
+          data,
+          error
+        } =
+          await supabaseClient
+            .from("quotes")
+            .insert(payload)
+            .select()
+            .single();
+
+
+        if (error) {
+
+          console.error(
+            "Quote submission error:",
+            error
+          );
+
+
+          feedback
+            .className =
+            "feedback error";
+
+
+          feedback
+            .textContent =
+            error.message ||
+            "Unable to submit quotation.";
+
+          return;
+
+        }
+
+
+        feedback
+          .className =
+          "feedback success";
+
+
+        feedback
+          .textContent =
+          "Quotation submitted successfully.";
+
+
+        await loadQuotes();
+
+        renderAll();
+
+
+        setTimeout(
+          function() {
+
+            closeModal(
+              "quote-modal"
+            );
+
+          },
+          900
+        );
+
       }
+    );
 
-      if (zraFile.type !== "application/pdf") {
-        feedback.textContent = "ZRA Tax Clearance must be uploaded as a PDF.";
-        return;
+
+  /* =========================================================
+     DECLINE
+     ========================================================= */
+
+  function openDecline(rfqId) {
+
+    $("decline-rfq-id")
+      .value =
+      rfqId;
+
+
+    $("decline-reason")
+      .value = "";
+
+
+    $("decline-feedback")
+      .textContent = "";
+
+
+    openModal(
+      "decline-modal"
+    );
+
+  }
+
+
+  $("confirm-decline")
+    .addEventListener(
+      "click",
+      async function() {
+
+        const rfqId =
+          $("decline-rfq-id").value;
+
+
+        const reason =
+          $("decline-reason").value;
+
+
+        /*
+          The current confirmed schema does not contain
+          a supplier-specific RFQ response/decline table.
+
+          Therefore this is kept in the current browser session
+          until the response table is added.
+        */
+
+        declinedIds.add(rfqId);
+
+
+        console.log(
+          "RFQ declined:",
+          rfqId,
+          reason
+        );
+
+
+        $("decline-feedback")
+          .className =
+          "feedback success";
+
+
+        $("decline-feedback")
+          .textContent =
+          "RFQ declined.";
+
+
+        renderAll();
+
+
+        setTimeout(
+          function() {
+
+            closeModal(
+              "decline-modal"
+            );
+
+          },
+          700
+        );
+
       }
+    );
 
-      const { data: userData } = await supabaseClient.auth.getUser();
 
-      if (!userData.user) {
-        window.location.href = "supplier-signin.html";
-        return;
+  /* =========================================================
+     DOCUMENT UPLOAD
+     ========================================================= */
+
+  function openDocumentUpload(type) {
+
+    currentDocumentType =
+      type;
+
+
+    const info =
+      documentInfo[type];
+
+
+    $("document-type")
+      .value =
+      type;
+
+
+    $("document-modal-title")
+      .textContent =
+      info.title;
+
+
+    $("document-modal-description")
+      .textContent =
+      info.description;
+
+
+    $("document-file-input")
+      .value = "";
+
+
+    $("selected-document-file")
+      .textContent = "";
+
+
+    $("document-feedback")
+      .textContent = "";
+
+
+    openModal(
+      "document-modal"
+    );
+
+  }
+
+
+  $("document-file-input")
+    .addEventListener(
+      "change",
+      function() {
+
+        const file =
+          this.files[0];
+
+
+        if (!file) {
+
+          $("selected-document-file")
+            .textContent = "";
+
+          return;
+
+        }
+
+
+        $("selected-document-file")
+          .textContent =
+          "Selected: " +
+          file.name;
+
       }
+    );
 
-      const userId = userData.user.id;
 
-      feedback.textContent = "Uploading PDF documents...";
+  /* =========================================================
+     UPLOAD DOCUMENT TO SUPABASE
+     ========================================================= */
 
-      const pacraPath = `${userId}/pacra-${Date.now()}-${pacraFile.name}`;
-      const zraPath = `${userId}/zra-${Date.now()}-${zraFile.name}`;
+  $("document-form")
+    .addEventListener(
+      "submit",
+      async function(event) {
 
-      const { error: pacraError } = await supabaseClient.storage
+        event.preventDefault();
+
+
+        const feedback =
+          $("document-feedback");
+
+
+        feedback
+          .className =
+          "feedback";
+
+
+        const type =
+          $("document-type").value;
+
+
+        const file =
+          $("document-file-input").files[0];
+
+
+        if (!file) {
+
+          feedback
+            .className =
+            "feedback error";
+
+
+          feedback
+            .textContent =
+            "Please choose a document.";
+
+          return;
+
+        }
+
+
+        if (
+          file.size >
+          10 * 1024 * 1024
+        ) {
+
+          feedback
+            .className =
+            "feedback error";
+
+
+          feedback
+            .textContent =
+            "The file is larger than 10 MB.";
+
+          return;
+
+        }
+
+
+        const allowedTypes = [
+
+          "application/pdf",
+
+          "image/png",
+
+          "image/jpeg"
+
+        ];
+
+
+        if (
+          !allowedTypes.includes(
+            file.type
+          )
+        ) {
+
+          feedback
+            .className =
+            "feedback error";
+
+
+          feedback
+            .textContent =
+            "Please upload a PDF, JPG or PNG file.";
+
+          return;
+
+        }
+
+
+        feedback
+          .textContent =
+          "Uploading securely...";
+
+
+        const extension =
+          file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+        const safeName =
+          file.name
+            .replace(
+              /[^a-zA-Z0-9._-]/g,
+              "_"
+            );
+
+
+        const filePath =
+          currentUser.id +
+          "/" +
+          type +
+          "/" +
+          Date.now() +
+          "-" +
+          safeName;
+
+
+        /*
+          Upload to private bucket.
+        */
+
+        const {
+          error:
+            uploadError
+        } =
+          await supabaseClient
+            .storage
+            .from("supplier-documents")
+            .upload(
+              filePath,
+              file,
+              {
+                upsert: false,
+                contentType:
+                  file.type
+              }
+            );
+
+
+        if (uploadError) {
+
+          console.error(
+            uploadError
+          );
+
+
+          feedback
+            .className =
+            "feedback error";
+
+
+          feedback
+            .textContent =
+            uploadError.message ||
+            "Unable to upload document.";
+
+          return;
+
+        }
+
+
+        /*
+          If an older document exists,
+          replace its database record.
+        */
+
+        const existing =
+          documents[type];
+
+
+        let databaseError =
+          null;
+
+
+        if (existing) {
+
+          const {
+            error
+          } =
+            await supabaseClient
+              .from("supplier_documents")
+              .update({
+
+                file_name:
+                  file.name,
+
+                file_path:
+                  filePath,
+
+                status:
+                  "pending",
+
+                uploaded_at:
+                  new Date().toISOString(),
+
+                verified_at:
+                  null,
+
+                verification_notes:
+                  null
+
+              })
+              .eq(
+                "id",
+                existing.id
+              );
+
+
+          databaseError =
+            error;
+
+        } else {
+
+          const {
+            error
+          } =
+            await supabaseClient
+              .from("supplier_documents")
+              .insert({
+
+                supplier_user_id:
+                  currentUser.id,
+
+                document_type:
+                  type,
+
+                file_name:
+                  file.name,
+
+                file_path:
+                  filePath,
+
+                status:
+                  "pending",
+
+                uploaded_at:
+                  new Date().toISOString()
+
+              });
+
+
+          databaseError =
+            error;
+
+        }
+
+
+        if (databaseError) {
+
+          console.error(
+            databaseError
+          );
+
+
+          /*
+            Clean up uploaded file
+            if database record fails.
+          */
+
+          await supabaseClient
+            .storage
+            .from("supplier-documents")
+            .remove([
+              filePath
+            ]);
+
+
+          feedback
+            .className =
+            "feedback error";
+
+
+          feedback
+            .textContent =
+            databaseError.message ||
+            "Document record could not be saved.";
+
+          return;
+
+        }
+
+
+        feedback
+          .className =
+          "feedback success";
+
+
+        feedback
+          .textContent =
+          "Document uploaded successfully and is pending verification.";
+
+
+        await loadDocuments();
+
+
+        setTimeout(
+          function() {
+
+            closeModal(
+              "document-modal"
+            );
+
+          },
+          900
+        );
+
+      }
+    );
+
+
+  /* =========================================================
+     RENDER DOCUMENTS
+     ========================================================= */
+
+  function renderDocuments() {
+
+    const types = [
+
+      "pacra",
+      "tax",
+      "bank",
+      "residence"
+
+    ];
+
+
+    let completed = 0;
+
+
+    types.forEach(
+      type => {
+
+        const document =
+          documents[type];
+
+
+        const statusElement =
+          $("status-" + type);
+
+
+        const fileElement =
+          $("file-" + type);
+
+
+        const viewButton =
+          $("view-" + type);
+
+
+        if (!document) {
+
+          statusElement.innerHTML = `
+
+            <span class="status-pill status-pending">
+              Not uploaded
+            </span>
+
+          `;
+
+
+          fileElement
+            .classList
+            .remove("visible");
+
+
+          viewButton.style.display =
+            "none";
+
+
+          return;
+
+        }
+
+
+        if (
+          document.status ===
+          "verified"
+        ) {
+
+          completed++;
+
+
+          statusElement.innerHTML = `
+
+            <span class="status-pill status-success">
+              ✓ Verified
+            </span>
+
+          `;
+
+        } else if (
+          document.status ===
+          "rejected"
+        ) {
+
+          statusElement.innerHTML = `
+
+            <span class="status-pill status-danger">
+              Rejected – Please re-upload
+            </span>
+
+          `;
+
+        } else {
+
+          statusElement.innerHTML = `
+
+            <span class="status-pill status-pending">
+              Uploaded – Pending Verification
+            </span>
+
+          `;
+
+        }
+
+
+        fileElement
+          .classList
+          .add("visible");
+
+
+        fileElement
+          .textContent =
+          document.file_name ||
+          "Uploaded document";
+
+
+        viewButton.style.display =
+          "block";
+
+      }
+    );
+
+
+    $("document-progress-text")
+      .textContent =
+      completed +
+      " of 4 verified";
+
+
+    $("document-progress-fill")
+      .style.width =
+      (
+        completed / 4 * 100
+      ) + "%";
+
+  }
+
+
+  /* =========================================================
+     VIEW DOCUMENT
+     ========================================================= */
+
+  async function viewDocument(type) {
+
+    const document =
+      documents[type];
+
+
+    if (
+      !document ||
+      !document.file_path
+    ) {
+
+      alert(
+        "Document not found."
+      );
+
+      return;
+
+    }
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .storage
         .from("supplier-documents")
-        .upload(pacraPath, pacraFile, {
-          cacheControl: "3600",
-          upsert: true,
-          contentType: "application/pdf"
-        });
+        .createSignedUrl(
+          document.file_path,
+          300
+        );
 
-      if (pacraError) {
-        feedback.textContent = "PACRA upload failed: " + pacraError.message;
-        return;
-      }
 
-      const { error: zraError } = await supabaseClient.storage
-        .from("supplier-documents")
-        .upload(zraPath, zraFile, {
-          cacheControl: "3600",
-          upsert: true,
-          contentType: "application/pdf"
-        });
+    if (error) {
 
-      if (zraError) {
-        feedback.textContent = "ZRA upload failed: " + zraError.message;
-        return;
-      }
+      console.error(
+        error
+      );
 
-      const { error: updateError } = await supabaseClient
-        .from("profiles")
-        .update({
-          pacra_url: pacraPath,
-          zra_url: zraPath,
-          documents_uploaded: true,
-          verification_status: "submitted",
-          verified: false
-        })
-        .eq("id", userId);
 
-      if (updateError) {
-        feedback.textContent = "Profile update failed: " + updateError.message;
-        return;
-      }
+      alert(
+        "Unable to open the document."
+      );
 
-      feedback.textContent = "PDF documents uploaded successfully. Awaiting ELSATI review.";
+      return;
 
-      await loadSupplierProfile();
     }
 
-    async function logoutUser() {
-      await supabaseClient.auth.signOut();
-      window.location.href = "supplier-signin.html";
+
+    window.open(
+      data.signedUrl,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+  }
+
+
+  /* =========================================================
+     QUOTES TABLE
+     ========================================================= */
+
+  function renderQuotes() {
+
+    const body =
+      $("quotes-table-body");
+
+
+    if (!quotes.length) {
+
+      body.innerHTML = `
+
+        <tr>
+
+          <td
+            colspan="5"
+            style="
+              text-align:center;
+              padding:35px;
+              color:var(--muted);
+            "
+          >
+            No quotations submitted yet.
+          </td>
+
+        </tr>
+
+      `;
+
+      return;
+
     }
 
-    document.getElementById("logout-button").addEventListener("click", logoutUser);
-    document.getElementById("verification-form").addEventListener("submit", uploadSupplierDocuments);
 
-    loadSupplierProfile();
-  </script>
+    body.innerHTML =
+      quotes
+        .map(
+          quote => {
 
-  <script src="dashboard.js"></script>
+            const rfq =
+              rfqs.find(
+                item =>
+                  String(item.id) ===
+                  String(quote.rfq_id)
+              );
+
+
+            const status =
+              quote.status ||
+              "pending";
+
+
+            const statusClass =
+              (
+                status === "awarded" ||
+                status === "accepted" ||
+                status === "won"
+              )
+                ? "status-success"
+                : (
+                    status === "rejected"
+                      ? "status-danger"
+                      : "status-pending"
+                  );
+
+
+            return `
+
+              <tr>
+
+                <td>
+
+                  <strong>
+                    ${escapeHtml(
+                      rfq?.title ||
+                      quote.rfq_id
+                    )}
+                  </strong>
+
+                </td>
+
+
+                <td>
+                  ${escapeHtml(
+                    rfq?.business_name ||
+                    "—"
+                  )}
+                </td>
+
+
+                <td>
+                  ${money(
+                    quote.price
+                  )}
+                </td>
+
+
+                <td>
+                  ${formatDateTime(
+                    quote.created_at
+                  )}
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="status-pill ${statusClass}"
+                  >
+                    ${escapeHtml(
+                      status
+                    )}
+                  </span>
+
+                </td>
+
+              </tr>
+
+            `;
+
+          }
+        )
+        .join("");
+
+  }
+
+
+  /* =========================================================
+     AWARDS
+     ========================================================= */
+
+  function renderAwards() {
+
+    const body =
+      $("awards-table-body");
+
+
+    const awards =
+      quotes.filter(
+        quote =>
+          quote.status === "awarded" ||
+          quote.status === "accepted" ||
+          quote.status === "won"
+      );
+
+
+    if (!awards.length) {
+
+      body.innerHTML = `
+
+        <tr>
+
+          <td
+            colspan="4"
+            style="
+              text-align:center;
+              padding:35px;
+              color:var(--muted);
+            "
+          >
+            No awards yet.
+          </td>
+
+        </tr>
+
+      `;
+
+      return;
+
+    }
+
+
+    body.innerHTML =
+      awards
+        .map(
+          quote => {
+
+            const rfq =
+              rfqs.find(
+                item =>
+                  String(item.id) ===
+                  String(quote.rfq_id)
+              );
+
+
+            return `
+
+              <tr>
+
+                <td>
+
+                  <strong>
+                    ${escapeHtml(
+                      rfq?.title ||
+                      quote.rfq_id
+                    )}
+                  </strong>
+
+                </td>
+
+
+                <td>
+                  ${escapeHtml(
+                    rfq?.business_name ||
+                    "—"
+                  )}
+                </td>
+
+
+                <td>
+                  ${formatDate(
+                    quote.created_at
+                  )}
+                </td>
+
+
+                <td>
+
+                  <span class="status-pill status-success">
+                    Awarded
+                  </span>
+
+                </td>
+
+              </tr>
+
+            `;
+
+          }
+        )
+        .join("");
+
+  }
+
+
+  /* =========================================================
+     LOGOUT
+     ========================================================= */
+
+  $("logout-button")
+    .addEventListener(
+      "click",
+      async function() {
+
+        await supabaseClient
+          .auth
+          .signOut();
+
+
+        window.location.href =
+          "supplier-signin.html";
+
+      }
+    );
+
+
+  /* =========================================================
+     START
+     ========================================================= */
+
+  initialise();
+
+</script>
+
 </body>
 </html>
