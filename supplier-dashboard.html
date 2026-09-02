@@ -1,1822 +1,1902 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Supplier Dashboard | Elsati Connect</title>
+<title>Supplier Dashboard | Elsati Connect</title>
 
-  <meta
-    name="description"
-    content="Supplier dashboard for Elsati Connect."
-  >
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  >
+<link rel="stylesheet" href="styles.css">
 
-  <link rel="stylesheet" href="styles.css">
+<style>
 
-  <style>
+/* =========================================================
+   ELSATI CONNECT SUPPLIER DASHBOARD
+   ========================================================= */
 
-    /* =========================================================
-       ELSATI SUPPLIER DASHBOARD V4
-       ========================================================= */
+:root {
+    --green: #168b55;
+    --green-dark: #08733f;
+    --green-light: #eaf8f0;
+    --green-soft: #f4fbf7;
 
-    :root {
-      --green: #168b55;
-      --green-dark: #08733f;
-      --green-light: #eaf8f0;
-      --green-soft: #f4fbf7;
+    --text: #18352b;
+    --muted: #71847c;
 
-      --text: #18352b;
-      --muted: #71847c;
+    --border: #e5eee9;
+    --background: #f7faf8;
+    --white: #ffffff;
 
-      --border: #e5eee9;
-      --background: #f7faf8;
-      --white: #ffffff;
+    --danger: #c94747;
+    --danger-bg: #fff2f2;
 
-      --danger: #c94747;
-      --danger-bg: #fff2f2;
+    --warning: #a76c00;
+    --warning-bg: #fff8e7;
 
-      --warning: #a76c00;
-      --warning-bg: #fff8e7;
+    --shadow-sm: 0 4px 16px rgba(21,52,39,.06);
+    --shadow-md: 0 12px 30px rgba(21,52,39,.10);
+    --shadow-hover: 0 12px 28px rgba(21,52,39,.13);
 
-      --shadow-sm:
-        0 4px 16px rgba(21, 52, 39, 0.06);
+    --radius: 18px;
+}
 
-      --shadow-md:
-        0 12px 30px rgba(21, 52, 39, 0.10);
+* {
+    box-sizing: border-box;
+}
 
-      --shadow-hover:
-        0 12px 28px rgba(21, 52, 39, 0.13);
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text);
+    font-family: "Manrope", sans-serif;
+}
 
-      --radius: 18px;
-    }
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
 
-    * {
-      box-sizing: border-box;
-    }
+button {
+    cursor: pointer;
+}
 
-    body {
-      margin: 0;
-      background: var(--background);
-      color: var(--text);
-      font-family: "Manrope", sans-serif;
-    }
+a {
+    text-decoration: none;
+    color: inherit;
+}
 
-    button,
-    input,
-    select,
-    textarea {
-      font: inherit;
-    }
+/* =========================================================
+   TOP BAR
+   ========================================================= */
 
-    button {
-      cursor: pointer;
-    }
+.supplier-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    height: 76px;
 
-    /* =========================================================
-       TOP BAR
-       ========================================================= */
+    background: rgba(255,255,255,.96);
+    backdrop-filter: blur(15px);
 
-    .supplier-topbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+    border-bottom: 1px solid var(--border);
 
-      height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-      background: rgba(255,255,255,0.96);
-      backdrop-filter: blur(15px);
+    padding: 0 34px;
+}
 
-      border-bottom: 1px solid var(--border);
+.supplier-brand {
+    display: flex;
+    align-items: center;
+    min-width: 180px;
+}
 
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+.supplier-brand img {
+    width: 145px;
+    height: auto;
+}
 
-      padding: 0 34px;
-    }
+/* =========================================================
+   FLOATING NAVIGATION
+   ========================================================= */
 
-    .supplier-brand {
-      display: flex;
-      align-items: center;
-      min-width: 180px;
-    }
+.floating-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 
-    .supplier-brand img {
-      width: 145px;
-      height: auto;
-      display: block;
-    }
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
 
-    /* =========================================================
-       FLOATING NAVIGATION
-       ========================================================= */
+.nav-item {
+    position: relative;
 
-    .floating-nav {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
+    border: none;
+    background: transparent;
 
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-    }
+    color: #657871;
 
-    .nav-item {
-      position: relative;
+    padding: 10px 14px;
 
-      border: 0;
-      background: transparent;
+    border-radius: 12px;
 
-      color: #657871;
+    font-size: 13px;
+    font-weight: 700;
 
-      padding: 10px 14px;
-
-      border-radius: 12px;
-
-      font-size: 13px;
-      font-weight: 700;
-
-      transition:
+    transition:
         transform .18s ease,
         background .18s ease,
         color .18s ease,
         box-shadow .18s ease;
-    }
+}
 
-    .nav-item:hover {
-      color: var(--green);
-      background: var(--green-light);
+.nav-item:hover {
+    color: var(--green);
+    background: var(--green-light);
 
-      transform: translateY(-3px);
+    transform: translateY(-3px);
 
-      box-shadow:
+    box-shadow:
         0 7px 18px rgba(22,139,85,.12);
-    }
+}
 
-    .nav-item.active {
-      color: var(--green);
-      background: var(--green-light);
-    }
+.nav-item.active {
+    color: var(--green);
+    background: var(--green-light);
+}
 
-    .nav-item:active {
-      transform: translateY(-1px);
-    }
+.nav-item:active {
+    transform: translateY(-1px);
+}
 
-    /* =========================================================
-       PROFILE NAV
-       ========================================================= */
+/* =========================================================
+   PROFILE
+   ========================================================= */
 
-    .profile-wrapper {
-      position: relative;
-    }
+.profile-wrapper {
+    position: relative;
+}
 
-    .profile-button {
-      border: 0;
-      background: transparent;
+.profile-button {
+    border: none;
+    background: transparent;
 
-      display: flex;
-      align-items: center;
-      gap: 9px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
 
-      padding: 7px 10px;
+    padding: 7px 10px;
 
-      border-radius: 13px;
+    border-radius: 13px;
 
-      transition: .18s ease;
-    }
+    transition: .18s ease;
+}
 
-    .profile-button:hover {
-      background: var(--green-light);
-      transform: translateY(-3px);
-      box-shadow: 0 7px 18px rgba(22,139,85,.12);
-    }
+.profile-button:hover {
+    background: var(--green-light);
 
-    .profile-avatar {
-      width: 37px;
-      height: 37px;
+    transform: translateY(-3px);
 
-      border-radius: 50%;
+    box-shadow:
+        0 7px 18px rgba(22,139,85,.12);
+}
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+.profile-avatar {
+    width: 37px;
+    height: 37px;
 
-      background: var(--green-light);
-      color: var(--green);
+    border-radius: 50%;
 
-      font-weight: 800;
-      font-size: 13px;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    .profile-name {
-      max-width: 110px;
+    background: var(--green-light);
+    color: var(--green);
 
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    font-weight: 800;
+    font-size: 13px;
+}
 
-      font-size: 12px;
-      font-weight: 800;
-    }
+.profile-name {
+    max-width: 110px;
 
-    .profile-arrow {
-      font-size: 10px;
-      color: var(--muted);
-    }
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
-    .profile-dropdown {
-      position: absolute;
+    font-size: 12px;
+    font-weight: 800;
+}
 
-      right: 0;
-      top: calc(100% + 12px);
+.profile-arrow {
+    font-size: 10px;
+    color: var(--muted);
+}
 
-      width: 220px;
+.profile-dropdown {
+    position: absolute;
 
-      background: white;
+    right: 0;
+    top: calc(100% + 12px);
 
-      border: 1px solid var(--border);
-      border-radius: 16px;
+    width: 220px;
 
-      box-shadow: var(--shadow-md);
+    background: white;
 
-      padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
 
-      display: none;
+    box-shadow: var(--shadow-md);
 
-      animation: dropdownIn .18s ease;
-    }
+    padding: 8px;
 
-    .profile-wrapper:hover .profile-dropdown,
-    .profile-wrapper.open .profile-dropdown {
-      display: block;
-    }
+    display: none;
 
-    @keyframes dropdownIn {
-      from {
+    animation: dropdownIn .18s ease;
+}
+
+.profile-wrapper:hover .profile-dropdown,
+.profile-wrapper.open .profile-dropdown {
+    display: block;
+}
+
+@keyframes dropdownIn {
+    from {
         opacity: 0;
         transform: translateY(-5px);
-      }
+    }
 
-      to {
+    to {
         opacity: 1;
         transform: translateY(0);
-      }
     }
+}
 
-    .dropdown-item {
-      width: 100%;
+.dropdown-item {
+    width: 100%;
 
-      border: 0;
-      background: transparent;
+    border: none;
+    background: transparent;
 
-      display: flex;
-      align-items: center;
+    display: flex;
+    align-items: center;
 
-      gap: 10px;
+    gap: 10px;
 
-      text-align: left;
+    text-align: left;
 
-      padding: 11px 12px;
+    padding: 11px 12px;
 
-      border-radius: 11px;
+    border-radius: 11px;
 
-      color: #53675f;
+    color: #53675f;
 
-      font-size: 13px;
-      font-weight: 700;
+    font-size: 13px;
+    font-weight: 700;
 
-      transition: .16s ease;
-    }
+    transition: .16s ease;
+}
 
-    .dropdown-item:hover {
-      background: var(--green-light);
-      color: var(--green);
+.dropdown-item:hover {
+    background: var(--green-light);
+    color: var(--green);
 
-      transform: translateX(3px);
-    }
+    transform: translateX(3px);
+}
 
-    .dropdown-divider {
-      height: 1px;
-      background: var(--border);
-      margin: 6px 4px;
-    }
+.dropdown-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 6px 4px;
+}
 
-    /* =========================================================
-       PAGE
-       ========================================================= */
+/* =========================================================
+   PAGE
+   ========================================================= */
 
-    .supplier-page {
-      max-width: 1440px;
-      margin: 0 auto;
+.supplier-page {
+    max-width: 1440px;
 
-      padding: 34px 38px 60px;
-    }
+    margin: 0 auto;
 
-    .page-view {
-      display: none;
-    }
+    padding: 34px 38px 60px;
+}
 
-    .page-view.active {
-      display: block;
-      animation: pageFade .22s ease;
-    }
+.page-view {
+    display: none;
+}
 
-    @keyframes pageFade {
-      from {
+.page-view.active {
+    display: block;
+
+    animation: pageFade .22s ease;
+}
+
+@keyframes pageFade {
+
+    from {
         opacity: 0;
         transform: translateY(5px);
-      }
+    }
 
-      to {
+    to {
         opacity: 1;
         transform: translateY(0);
-      }
     }
 
-    /* =========================================================
-       PAGE HEADER
-       ========================================================= */
+}
 
-    .page-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
 
-      margin-bottom: 26px;
-    }
+.page-header {
+    display: flex;
 
-    .page-header h1 {
-      margin: 0 0 7px;
+    align-items: flex-start;
 
-      font-family: "Plus Jakarta Sans", sans-serif;
+    justify-content: space-between;
 
-      font-size: 30px;
-      line-height: 1.15;
+    margin-bottom: 26px;
+}
 
-      letter-spacing: -0.7px;
-    }
+.page-header h1 {
+    margin: 0 0 7px;
 
-    .page-header p {
-      margin: 0;
+    font-family: "Plus Jakarta Sans", sans-serif;
 
-      color: var(--muted);
+    font-size: 30px;
 
-      font-size: 14px;
-    }
+    line-height: 1.15;
 
-    .header-actions {
-      display: flex;
-      gap: 10px;
-    }
+    letter-spacing: -.7px;
+}
 
-    /* =========================================================
-       BUTTONS
-       ========================================================= */
+.page-header p {
+    margin: 0;
 
-    .btn {
-      border: 0;
+    color: var(--muted);
 
-      min-height: 42px;
+    font-size: 14px;
+}
 
-      padding: 0 17px;
+.header-actions {
+    display: flex;
 
-      border-radius: 11px;
+    gap: 10px;
+}
 
-      font-weight: 800;
-      font-size: 13px;
+/* =========================================================
+   BUTTONS
+   ========================================================= */
 
-      transition:
+.btn {
+    border: none;
+
+    min-height: 42px;
+
+    padding: 0 17px;
+
+    border-radius: 11px;
+
+    font-weight: 800;
+
+    font-size: 13px;
+
+    transition:
         transform .16s ease,
         box-shadow .16s ease,
         background .16s ease;
-    }
+}
 
-    .btn:hover {
-      transform: translateY(-2px);
-    }
+.btn:hover {
+    transform: translateY(-2px);
+}
 
-    .btn-primary {
-      color: white;
-      background: var(--green);
+.btn-primary {
+    color: white;
 
-      box-shadow:
+    background: var(--green);
+
+    box-shadow:
         0 7px 16px rgba(22,139,85,.16);
-    }
+}
 
-    .btn-primary:hover {
-      background: var(--green-dark);
-      box-shadow:
+.btn-primary:hover {
+    background: var(--green-dark);
+
+    box-shadow:
         0 10px 20px rgba(22,139,85,.20);
-    }
+}
 
-    .btn-secondary {
-      color: var(--green);
-      background: var(--green-light);
-    }
+.btn-secondary {
+    color: var(--green);
 
-    .btn-outline {
-      color: var(--text);
-      background: white;
+    background: var(--green-light);
+}
 
-      border: 1px solid var(--border);
-    }
+.btn-outline {
+    color: var(--text);
 
-    .btn-danger {
-      color: var(--danger);
-      background: var(--danger-bg);
-    }
+    background: white;
 
-    /* =========================================================
-       STATS
-       ========================================================= */
+    border: 1px solid var(--border);
+}
 
-    .stats-grid {
-      display: grid;
+.btn-danger {
+    color: var(--danger);
 
-      grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+    background: var(--danger-bg);
+}
 
-      gap: 16px;
+/* =========================================================
+   STATS
+   ========================================================= */
 
-      margin-bottom: 28px;
-    }
+.stats-grid {
+    display: grid;
 
-    .stat-card {
-      background: white;
+    grid-template-columns:
+        repeat(4,minmax(0,1fr));
 
-      border: 1px solid var(--border);
+    gap: 16px;
 
-      border-radius: var(--radius);
+    margin-bottom: 28px;
+}
 
-      padding: 21px;
+.stat-card {
+    background: white;
 
-      box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
 
-      transition: .18s ease;
-    }
+    border-radius: var(--radius);
 
-    .stat-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-hover);
-    }
+    padding: 21px;
 
-    .stat-label {
-      color: var(--muted);
+    box-shadow: var(--shadow-sm);
 
-      font-size: 12px;
-      font-weight: 700;
+    transition: .18s ease;
+}
 
-      margin-bottom: 9px;
-    }
+.stat-card:hover {
+    transform: translateY(-3px);
 
-    .stat-number {
-      font-size: 28px;
-      font-weight: 800;
+    box-shadow: var(--shadow-hover);
+}
 
-      font-family: "Plus Jakarta Sans", sans-serif;
-    }
+.stat-label {
+    color: var(--muted);
 
-    .stat-sub {
-      color: var(--green);
+    font-size: 12px;
 
-      font-size: 11px;
-      font-weight: 700;
+    font-weight: 700;
 
-      margin-top: 4px;
-    }
+    margin-bottom: 9px;
+}
 
-    /* =========================================================
-       SECTION
-       ========================================================= */
+.stat-number {
+    font-size: 28px;
 
-    .section {
-      margin-top: 30px;
-    }
+    font-weight: 800;
 
-    .section-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    font-family: "Plus Jakarta Sans", sans-serif;
+}
 
-      margin-bottom: 15px;
-    }
+.stat-sub {
+    color: var(--green);
 
-    .section-title h2 {
-      margin: 0;
+    font-size: 11px;
 
-      font-size: 18px;
+    font-weight: 700;
 
-      font-family: "Plus Jakarta Sans", sans-serif;
-    }
+    margin-top: 4px;
+}
 
-    .section-title span {
-      color: var(--muted);
-      font-size: 12px;
-    }
+/* =========================================================
+   SECTION
+   ========================================================= */
 
-    /* =========================================================
-       RFQ CARD
-       ========================================================= */
+.section {
+    margin-top: 30px;
+}
 
-    .rfq-grid {
-      display: grid;
+.section-title {
+    display: flex;
 
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+    align-items: center;
 
-      gap: 18px;
-    }
+    justify-content: space-between;
 
-    .rfq-card {
-      background: white;
+    margin-bottom: 15px;
+}
 
-      border: 1px solid var(--border);
+.section-title h2 {
+    margin: 0;
 
-      border-radius: 19px;
+    font-size: 18px;
 
-      padding: 21px;
+    font-family: "Plus Jakarta Sans",sans-serif;
+}
 
-      box-shadow: var(--shadow-sm);
+.section-title span {
+    color: var(--muted);
 
-      transition:
+    font-size: 12px;
+}
+
+/* =========================================================
+   RFQ
+   ========================================================= */
+
+.rfq-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap: 18px;
+}
+
+.rfq-card {
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 19px;
+
+    padding: 21px;
+
+    box-shadow: var(--shadow-sm);
+
+    transition:
         transform .18s ease,
         box-shadow .18s ease,
         border-color .18s ease;
-    }
+}
 
-    .rfq-card:hover {
-      transform: translateY(-4px);
+.rfq-card:hover {
+    transform: translateY(-4px);
 
-      box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-hover);
 
-      border-color: #d5e9df;
-    }
+    border-color: #d5e9df;
+}
 
-    .rfq-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
+.rfq-top {
+    display: flex;
 
-      gap: 12px;
+    align-items: flex-start;
 
-      margin-bottom: 15px;
-    }
+    justify-content: space-between;
 
-    .rfq-badge {
-      display: inline-flex;
-      align-items: center;
+    gap: 12px;
 
-      padding: 6px 9px;
+    margin-bottom: 15px;
+}
 
-      border-radius: 8px;
+.rfq-badge {
+    display: inline-flex;
 
-      background: var(--green-light);
-      color: var(--green);
+    align-items: center;
 
-      font-size: 9px;
-      font-weight: 800;
+    padding: 6px 9px;
 
-      letter-spacing: .35px;
-    }
+    border-radius: 8px;
 
-    .rfq-badge.direct {
-      background: #edf3ff;
-      color: #4269a8;
-    }
+    background: var(--green-light);
 
-    .rfq-time {
-      color: #8a9993;
-      font-size: 10px;
-      white-space: nowrap;
-    }
+    color: var(--green);
 
-    .rfq-title {
-      margin: 0 0 8px;
+    font-size: 9px;
 
-      font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 800;
 
-      font-size: 18px;
-      line-height: 1.3;
-    }
+    letter-spacing: .35px;
+}
 
-    .company-line {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+.rfq-badge.direct {
+    background: #edf3ff;
 
-      color: #53675f;
+    color: #4269a8;
+}
 
-      font-size: 12px;
-      font-weight: 700;
+.rfq-time {
+    color: #8a9993;
 
-      margin-bottom: 17px;
-    }
+    font-size: 10px;
 
-    .verified-check {
-      width: 16px;
-      height: 16px;
+    white-space: nowrap;
+}
 
-      border-radius: 50%;
+.rfq-title {
+    margin: 0 0 8px;
 
-      background: var(--green);
+    font-family: "Plus Jakarta Sans",sans-serif;
 
-      color: white;
+    font-size: 18px;
 
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    line-height: 1.3;
+}
 
-      font-size: 9px;
-      font-weight: 900;
-    }
+.company-line {
+    display: flex;
 
-    .rfq-details {
-      display: grid;
+    align-items: center;
 
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+    gap: 6px;
 
-      gap: 12px;
+    color: #53675f;
 
-      margin-bottom: 19px;
-    }
+    font-size: 12px;
 
-    .detail-box {
-      padding: 11px;
+    font-weight: 700;
 
-      background: var(--green-soft);
+    margin-bottom: 17px;
+}
 
-      border-radius: 11px;
-    }
+.verified-check {
+    width: 16px;
+    height: 16px;
 
-    .detail-label {
-      display: block;
+    border-radius: 50%;
 
-      color: #84938d;
+    background: var(--green);
 
-      font-size: 9px;
-      font-weight: 700;
+    color: white;
 
-      margin-bottom: 4px;
-    }
+    display: inline-flex;
 
-    .detail-value {
-      display: block;
+    align-items: center;
 
-      color: var(--text);
+    justify-content: center;
 
-      font-size: 12px;
-      font-weight: 800;
-    }
+    font-size: 9px;
 
-    .rfq-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    font-weight: 900;
+}
 
-      gap: 10px;
-    }
+.rfq-details {
+    display: grid;
 
-    .rfq-category {
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 700;
-    }
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
 
-    .rfq-actions {
-      display: flex;
-      gap: 8px;
-    }
+    gap: 12px;
 
-    .small-btn {
-      min-height: 37px;
+    margin-bottom: 19px;
+}
 
-      padding: 0 12px;
+.detail-box {
+    padding: 11px;
 
-      border-radius: 9px;
+    background: var(--green-soft);
 
-      font-size: 11px;
-    }
+    border-radius: 11px;
+}
 
-    /* =========================================================
-       COMPLETED
-       ========================================================= */
+.detail-label {
+    display: block;
 
-    .completed-panel {
-      background: white;
+    color: #84938d;
 
-      border: 1px solid var(--border);
+    font-size: 9px;
 
-      border-radius: 17px;
+    font-weight: 700;
 
-      overflow: hidden;
-    }
+    margin-bottom: 4px;
+}
 
-    .completed-header {
-      width: 100%;
+.detail-value {
+    display: block;
 
-      background: white;
+    color: var(--text);
 
-      border: 0;
+    font-size: 12px;
 
-      padding: 17px 20px;
+    font-weight: 800;
+}
 
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+.rfq-bottom {
+    display: flex;
 
-      color: var(--text);
+    align-items: center;
 
-      font-weight: 800;
-      font-size: 13px;
-    }
+    justify-content: space-between;
 
-    .completed-list {
-      display: none;
+    gap: 10px;
+}
 
-      border-top: 1px solid var(--border);
-    }
+.rfq-category {
+    color: var(--muted);
 
-    .completed-list.open {
-      display: block;
-    }
+    font-size: 11px;
 
-    .completed-row {
-      padding: 14px 20px;
+    font-weight: 700;
+}
 
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+.rfq-actions {
+    display: flex;
 
-      border-bottom: 1px solid var(--border);
+    gap: 8px;
+}
 
-      font-size: 12px;
-    }
+.small-btn {
+    min-height: 37px;
 
-    .completed-row:last-child {
-      border-bottom: 0;
-    }
+    padding: 0 12px;
 
-    .completed-row small {
-      display: block;
-      color: var(--muted);
-      margin-top: 3px;
-    }
+    border-radius: 9px;
 
-    /* =========================================================
-       TABLE
-       ========================================================= */
+    font-size: 11px;
+}
 
-    .table-card {
-      background: white;
+/* =========================================================
+   COMPLETED
+   ========================================================= */
 
-      border: 1px solid var(--border);
+.completed-panel {
+    background: white;
 
-      border-radius: 18px;
+    border: 1px solid var(--border);
 
-      overflow: hidden;
+    border-radius: 17px;
 
-      box-shadow: var(--shadow-sm);
-    }
+    overflow: hidden;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+.completed-header {
+    width: 100%;
 
-    th {
-      text-align: left;
+    background: white;
 
-      padding: 14px 17px;
+    border: none;
 
-      background: var(--green-soft);
+    padding: 17px 20px;
 
-      color: #71817b;
+    display: flex;
 
-      font-size: 10px;
+    align-items: center;
 
-      text-transform: uppercase;
-      letter-spacing: .4px;
-    }
+    justify-content: space-between;
 
-    td {
-      padding: 15px 17px;
+    color: var(--text);
 
-      border-top: 1px solid var(--border);
+    font-weight: 800;
 
-      font-size: 12px;
-      font-weight: 600;
-    }
+    font-size: 13px;
+}
 
-    .status-pill {
-      display: inline-flex;
+.completed-list {
+    display: none;
 
-      padding: 6px 9px;
+    border-top: 1px solid var(--border);
+}
 
-      border-radius: 20px;
+.completed-list.open {
+    display: block;
+}
 
-      font-size: 10px;
-      font-weight: 800;
-    }
+.completed-row {
+    padding: 14px 20px;
 
-    .status-pending {
-      background: var(--warning-bg);
-      color: var(--warning);
-    }
+    display: flex;
 
-    .status-success {
-      background: var(--green-light);
-      color: var(--green);
-    }
+    align-items: center;
 
-    .status-danger {
-      background: var(--danger-bg);
-      color: var(--danger);
-    }
+    justify-content: space-between;
 
-    /* =========================================================
-       DOCUMENTS
-       ========================================================= */
+    border-bottom: 1px solid var(--border);
 
-    .documents-intro {
-      background: linear-gradient(
+    font-size: 12px;
+}
+
+.completed-row:last-child {
+    border-bottom: none;
+}
+
+.completed-row small {
+    display: block;
+
+    color: var(--muted);
+
+    margin-top: 3px;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.table-card {
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    box-shadow: var(--shadow-sm);
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+
+    padding: 14px 17px;
+
+    background: var(--green-soft);
+
+    color: #71817b;
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: .4px;
+}
+
+td {
+    padding: 15px 17px;
+
+    border-top: 1px solid var(--border);
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.status-pill {
+    display: inline-flex;
+
+    padding: 6px 9px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+.status-pending {
+    background: var(--warning-bg);
+
+    color: var(--warning);
+}
+
+.status-success {
+    background: var(--green-light);
+
+    color: var(--green);
+}
+
+.status-danger {
+    background: var(--danger-bg);
+
+    color: var(--danger);
+}
+
+/* =========================================================
+   DOCUMENTS
+   ========================================================= */
+
+.documents-intro {
+    background: linear-gradient(
         135deg,
         #eef9f3,
         #f8fcfa
-      );
+    );
 
-      border: 1px solid #dceee4;
+    border: 1px solid #dceee4;
 
-      border-radius: 18px;
+    border-radius: 18px;
 
-      padding: 22px;
+    padding: 22px;
 
-      margin-bottom: 20px;
-    }
+    margin-bottom: 20px;
+}
 
-    .documents-intro h2 {
-      margin: 0 0 6px;
+.documents-intro h2 {
+    margin: 0 0 6px;
 
-      font-size: 18px;
-    }
+    font-size: 18px;
+}
 
-    .documents-intro p {
-      margin: 0;
+.documents-intro p {
+    margin: 0;
 
-      color: var(--muted);
+    color: var(--muted);
 
-      font-size: 12px;
+    font-size: 12px;
 
-      line-height: 1.6;
-    }
+    line-height: 1.6;
+}
 
-    .progress-wrap {
-      margin-top: 18px;
-    }
+.progress-wrap {
+    margin-top: 18px;
+}
 
-    .progress-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+.progress-header {
+    display: flex;
 
-      font-size: 11px;
-      font-weight: 800;
+    align-items: center;
 
-      margin-bottom: 7px;
-    }
+    justify-content: space-between;
 
-    .progress-bar {
-      width: 100%;
-      height: 8px;
+    font-size: 11px;
 
-      border-radius: 10px;
+    font-weight: 800;
 
-      background: #dfece5;
+    margin-bottom: 7px;
+}
 
-      overflow: hidden;
-    }
+.progress-bar {
+    width: 100%;
 
-    .progress-fill {
-      height: 100%;
+    height: 8px;
 
-      background: var(--green);
+    border-radius: 10px;
 
-      width: 0%;
+    background: #dfece5;
 
-      transition: width .3s ease;
-    }
+    overflow: hidden;
+}
 
-    .documents-grid {
-      display: grid;
+.progress-fill {
+    height: 100%;
 
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+    background: var(--green);
 
-      gap: 17px;
-    }
+    width: 0%;
 
-    .document-card {
-      background: white;
+    transition: width .3s ease;
+}
 
-      border: 1px solid var(--border);
+.documents-grid {
+    display: grid;
 
-      border-radius: 17px;
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
 
-      padding: 19px;
+    gap: 17px;
+}
 
-      box-shadow: var(--shadow-sm);
+.document-card {
+    background: white;
 
-      transition: .18s ease;
-    }
+    border: 1px solid var(--border);
 
-    .document-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-hover);
-    }
+    border-radius: 17px;
 
-    .document-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
+    padding: 19px;
 
-      gap: 10px;
-    }
+    box-shadow: var(--shadow-sm);
 
-    .document-icon {
-      width: 42px;
-      height: 42px;
+    transition: .18s ease;
+}
 
-      border-radius: 12px;
+.document-card:hover {
+    transform: translateY(-3px);
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    box-shadow: var(--shadow-hover);
+}
 
-      background: var(--green-light);
+.document-top {
+    display: flex;
 
-      color: var(--green);
+    align-items: flex-start;
 
-      font-weight: 900;
-      font-size: 15px;
-    }
+    justify-content: space-between;
 
-    .document-title {
-      flex: 1;
-    }
+    gap: 10px;
+}
 
-    .document-title h3 {
-      margin: 0 0 4px;
+.document-icon {
+    width: 42px;
+    height: 42px;
 
-      font-size: 14px;
-    }
+    border-radius: 12px;
 
-    .document-title p {
-      margin: 0;
+    display: flex;
 
-      color: var(--muted);
+    align-items: center;
 
-      font-size: 10px;
+    justify-content: center;
 
-      line-height: 1.5;
-    }
+    background: var(--green-light);
 
-    .document-status {
-      margin-top: 15px;
-    }
+    color: var(--green);
 
-    .document-file {
-      display: none;
+    font-weight: 900;
 
-      margin-top: 13px;
+    font-size: 15px;
+}
 
-      padding: 10px;
+.document-title {
+    flex: 1;
+}
 
-      background: var(--green-soft);
+.document-title h3 {
+    margin: 0 0 4px;
 
-      border-radius: 10px;
+    font-size: 14px;
+}
 
-      font-size: 10px;
+.document-title p {
+    margin: 0;
 
-      color: #50645c;
-    }
+    color: var(--muted);
 
-    .document-file.visible {
-      display: block;
-    }
+    font-size: 10px;
 
-    .document-actions {
-      display: flex;
-      gap: 8px;
+    line-height: 1.5;
+}
 
-      margin-top: 14px;
-    }
+.document-status {
+    margin-top: 15px;
+}
 
-    .document-actions .btn {
-      flex: 1;
-    }
+.document-file {
+    display: none;
 
-    .privacy-note {
-      margin-top: 18px;
+    margin-top: 13px;
 
-      color: var(--muted);
+    padding: 10px;
 
-      font-size: 10px;
+    background: var(--green-soft);
 
-      line-height: 1.6;
-    }
+    border-radius: 10px;
 
-    /* =========================================================
-       PROFILE
-       ========================================================= */
+    font-size: 10px;
 
-    .profile-grid {
-      display: grid;
+    color: #50645c;
+}
 
-      grid-template-columns:
-        1fr 1fr;
+.document-file.visible {
+    display: block;
+}
 
-      gap: 18px;
-    }
+.document-actions {
+    display: flex;
 
-    .profile-card {
-      background: white;
+    gap: 8px;
 
-      border: 1px solid var(--border);
+    margin-top: 14px;
+}
 
-      border-radius: 18px;
+.document-actions .btn {
+    flex: 1;
+}
 
-      padding: 22px;
+.privacy-note {
+    margin-top: 18px;
 
-      box-shadow: var(--shadow-sm);
-    }
+    color: var(--muted);
 
-    .profile-card h3 {
-      margin: 0 0 18px;
+    font-size: 10px;
 
-      font-size: 16px;
-    }
+    line-height: 1.6;
+}
 
-    .profile-field {
-      margin-bottom: 15px;
-    }
+/* =========================================================
+   PROFILE
+   ========================================================= */
 
-    .profile-field:last-child {
-      margin-bottom: 0;
-    }
+.profile-grid {
+    display: grid;
 
-    .profile-field label {
-      display: block;
+    grid-template-columns: 1fr 1fr;
 
-      color: var(--muted);
+    gap: 18px;
+}
 
-      font-size: 10px;
-      font-weight: 800;
+.profile-card {
+    background: white;
 
-      margin-bottom: 5px;
-    }
+    border: 1px solid var(--border);
 
-    .profile-field div {
-      padding: 11px 12px;
+    border-radius: 18px;
 
-      background: var(--green-soft);
+    padding: 22px;
 
-      border-radius: 10px;
+    box-shadow: var(--shadow-sm);
+}
 
-      font-size: 12px;
+.profile-card h3 {
+    margin: 0 0 18px;
 
-      min-height: 38px;
-    }
+    font-size: 16px;
+}
 
-    /* =========================================================
-       STATUS TRACKER
-       ========================================================= */
+.profile-field {
+    margin-bottom: 15px;
+}
 
-    .tracker-card {
-      background: white;
+.profile-field:last-child {
+    margin-bottom: 0;
+}
 
-      border: 1px solid var(--border);
+.profile-field label {
+    display: block;
 
-      border-radius: 18px;
+    color: var(--muted);
 
-      padding: 25px;
+    font-size: 10px;
 
-      box-shadow: var(--shadow-sm);
-    }
+    font-weight: 800;
 
-    .tracker {
-      position: relative;
+    margin-bottom: 5px;
+}
 
-      display: grid;
+.profile-field div {
+    padding: 11px 12px;
 
-      grid-template-columns:
-        repeat(5, 1fr);
+    background: var(--green-soft);
 
-      gap: 0;
+    border-radius: 10px;
 
-      margin-top: 25px;
-    }
+    font-size: 12px;
 
-    .tracker-line {
-      position: absolute;
+    min-height: 38px;
+}
 
-      top: 20px;
-      left: 10%;
+/* =========================================================
+   STATUS TRACKER
+   ========================================================= */
 
-      width: 80%;
+.tracker-card {
+    background: white;
 
-      height: 3px;
+    border: 1px solid var(--border);
 
-      background: #dfe9e4;
+    border-radius: 18px;
 
-      z-index: 0;
-    }
+    padding: 25px;
 
-    .tracker-step {
-      position: relative;
+    box-shadow: var(--shadow-sm);
+}
 
-      z-index: 1;
+.tracker {
+    position: relative;
 
-      text-align: center;
-    }
+    display: grid;
 
-    .tracker-dot {
-      width: 40px;
-      height: 40px;
+    grid-template-columns:
+        repeat(5,1fr);
 
-      border-radius: 50%;
+    gap: 0;
 
-      margin: 0 auto 10px;
+    margin-top: 25px;
+}
 
-      background: #e8efeb;
+.tracker-line {
+    position: absolute;
 
-      color: #7d8e87;
+    top: 20px;
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    left: 10%;
 
-      font-size: 13px;
-      font-weight: 900;
+    width: 80%;
 
-      border: 5px solid white;
-    }
+    height: 3px;
 
-    .tracker-step.complete .tracker-dot {
-      background: var(--green);
-      color: white;
-    }
+    background: #dfe9e4;
 
-    .tracker-step.current .tracker-dot {
-      background: var(--green-light);
-      color: var(--green);
+    z-index: 0;
+}
 
-      box-shadow:
+.tracker-step {
+    position: relative;
+
+    z-index: 1;
+
+    text-align: center;
+}
+
+.tracker-dot {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    margin: 0 auto 10px;
+
+    background: #e8efeb;
+
+    color: #7d8e87;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 13px;
+
+    font-weight: 900;
+
+    border: 5px solid white;
+}
+
+.tracker-step.complete .tracker-dot {
+    background: var(--green);
+
+    color: white;
+}
+
+.tracker-step.current .tracker-dot {
+    background: var(--green-light);
+
+    color: var(--green);
+
+    box-shadow:
         0 0 0 4px rgba(22,139,85,.10);
-    }
+}
 
-    .tracker-step strong {
-      display: block;
+.tracker-step strong {
+    display: block;
 
-      font-size: 11px;
+    font-size: 11px;
 
-      margin-bottom: 3px;
-    }
+    margin-bottom: 3px;
+}
 
-    .tracker-step span {
-      color: var(--muted);
+.tracker-step span {
+    color: var(--muted);
 
-      font-size: 9px;
-    }
+    font-size: 9px;
+}
 
-    /* =========================================================
-       EMPTY STATE
-       ========================================================= */
+/* =========================================================
+   EMPTY
+   ========================================================= */
 
-    .empty-state {
-      background: white;
+.empty-state {
+    background: white;
 
-      border: 1px dashed #d7e5df;
+    border: 1px dashed #d7e5df;
 
-      border-radius: 17px;
+    border-radius: 17px;
 
-      padding: 45px 20px;
+    padding: 45px 20px;
 
-      text-align: center;
+    text-align: center;
 
-      color: var(--muted);
-    }
+    color: var(--muted);
+}
 
-    .empty-state h3 {
-      margin: 0 0 6px;
+.empty-state h3 {
+    margin: 0 0 6px;
 
-      color: var(--text);
+    color: var(--text);
 
-      font-size: 16px;
-    }
+    font-size: 16px;
+}
 
-    .empty-state p {
-      margin: 0;
+.empty-state p {
+    margin: 0;
 
-      font-size: 12px;
-    }
+    font-size: 12px;
+}
 
-    /* =========================================================
-       MODALS
-       ========================================================= */
+/* =========================================================
+   MODALS
+   ========================================================= */
 
-    .modal-backdrop {
-      position: fixed;
+.modal-backdrop {
+    position: fixed;
 
-      inset: 0;
+    inset: 0;
 
-      background: rgba(12, 31, 23, .48);
+    background: rgba(12,31,23,.48);
 
-      z-index: 3000;
+    z-index: 3000;
 
-      display: none;
+    display: none;
 
-      align-items: center;
-      justify-content: center;
+    align-items: center;
 
-      padding: 20px;
-    }
+    justify-content: center;
 
-    .modal-backdrop.open {
-      display: flex;
-    }
+    padding: 20px;
+}
 
-    .modal {
-      width: min(680px, 100%);
+.modal-backdrop.open {
+    display: flex;
+}
 
-      max-height: 90vh;
+.modal {
+    width: min(680px,100%);
 
-      overflow-y: auto;
+    max-height: 90vh;
 
-      background: white;
+    overflow-y: auto;
 
-      border-radius: 20px;
+    background: white;
 
-      box-shadow:
+    border-radius: 20px;
+
+    box-shadow:
         0 25px 80px rgba(0,0,0,.22);
 
-      padding: 25px;
+    padding: 25px;
 
-      animation: modalIn .2s ease;
-    }
+    animation: modalIn .2s ease;
+}
 
-    @keyframes modalIn {
-      from {
+@keyframes modalIn {
+
+    from {
         opacity: 0;
         transform: translateY(12px) scale(.98);
-      }
+    }
 
-      to {
+    to {
         opacity: 1;
         transform: translateY(0) scale(1);
-      }
     }
 
-    .modal-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
+}
 
-      gap: 15px;
+.modal-header {
+    display: flex;
 
-      margin-bottom: 20px;
-    }
+    align-items: flex-start;
 
-    .modal-header h2 {
-      margin: 0 0 5px;
+    justify-content: space-between;
 
-      font-family: "Plus Jakarta Sans", sans-serif;
+    gap: 15px;
 
-      font-size: 21px;
-    }
+    margin-bottom: 20px;
+}
 
-    .modal-header p {
-      margin: 0;
+.modal-header h2 {
+    margin: 0 0 5px;
 
-      color: var(--muted);
+    font-family: "Plus Jakarta Sans",sans-serif;
 
-      font-size: 11px;
-    }
+    font-size: 21px;
+}
 
-    .close-modal {
-      width: 34px;
-      height: 34px;
+.modal-header p {
+    margin: 0;
 
-      border: 0;
+    color: var(--muted);
 
-      border-radius: 50%;
+    font-size: 11px;
+}
 
-      background: #f1f5f3;
+.close-modal {
+    width: 34px;
+    height: 34px;
 
-      color: #63746d;
+    border: none;
 
-      font-size: 17px;
-    }
+    border-radius: 50%;
 
-    /* =========================================================
-       RFQ MODAL DETAILS
-       ========================================================= */
+    background: #f1f5f3;
 
-    .modal-rfq-summary {
-      padding: 16px;
+    color: #63746d;
 
-      border-radius: 13px;
+    font-size: 17px;
+}
 
-      background: var(--green-soft);
+.modal-rfq-summary {
+    padding: 16px;
 
-      margin-bottom: 20px;
-    }
+    border-radius: 13px;
 
-    .summary-grid {
-      display: grid;
+    background: var(--green-soft);
 
-      grid-template-columns:
-        repeat(2, 1fr);
+    margin-bottom: 20px;
+}
 
-      gap: 10px;
-    }
+.summary-grid {
+    display: grid;
 
-    .summary-item label {
-      display: block;
+    grid-template-columns:
+        repeat(2,1fr);
 
-      color: var(--muted);
+    gap: 10px;
+}
 
-      font-size: 9px;
+.summary-item label {
+    display: block;
 
-      margin-bottom: 3px;
-    }
+    color: var(--muted);
 
-    .summary-item strong {
-      font-size: 11px;
-    }
+    font-size: 9px;
 
-    /* =========================================================
-       FORMS
-       ========================================================= */
+    margin-bottom: 3px;
+}
 
-    .form-grid {
-      display: grid;
+.summary-item strong {
+    font-size: 11px;
+}
 
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+/* =========================================================
+   FORM
+   ========================================================= */
 
-      gap: 15px;
-    }
+.form-grid {
+    display: grid;
 
-    .form-field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
 
-    .form-field.full {
-      grid-column: 1 / -1;
-    }
+    gap: 15px;
+}
 
-    .form-field label {
-      font-size: 10px;
-      font-weight: 800;
+.form-field {
+    display: flex;
 
-      color: #52655d;
-    }
+    flex-direction: column;
 
-    .form-field input,
-    .form-field select,
-    .form-field textarea {
-      width: 100%;
+    gap: 6px;
+}
 
-      border: 1px solid #dce7e2;
+.form-field.full {
+    grid-column: 1 / -1;
+}
 
-      background: white;
+.form-field label {
+    font-size: 10px;
 
-      border-radius: 10px;
+    font-weight: 800;
 
-      padding: 11px 12px;
+    color: #52655d;
+}
 
-      outline: none;
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
 
-      color: var(--text);
+    border: 1px solid #dce7e2;
 
-      font-size: 12px;
+    background: white;
 
-      transition: .15s ease;
-    }
+    border-radius: 10px;
 
-    .form-field input:focus,
-    .form-field select:focus,
-    .form-field textarea:focus {
-      border-color: var(--green);
+    padding: 11px 12px;
 
-      box-shadow:
+    outline: none;
+
+    color: var(--text);
+
+    font-size: 12px;
+
+    transition: .15s ease;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    border-color: var(--green);
+
+    box-shadow:
         0 0 0 3px rgba(22,139,85,.08);
-    }
+}
 
-    .form-field textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
+.form-field textarea {
+    min-height: 90px;
 
-    .confirm-row {
-      margin-top: 15px;
+    resize: vertical;
+}
 
-      padding: 12px;
+.confirm-row {
+    margin-top: 15px;
 
-      border-radius: 10px;
+    padding: 12px;
 
-      background: var(--green-soft);
+    border-radius: 10px;
 
-      display: flex;
-      align-items: flex-start;
+    background: var(--green-soft);
 
-      gap: 8px;
+    display: flex;
 
-      font-size: 10px;
+    align-items: flex-start;
 
-      color: #52655d;
-    }
+    gap: 8px;
 
-    .modal-footer {
-      display: flex;
-      justify-content: flex-end;
+    font-size: 10px;
 
-      gap: 9px;
+    color: #52655d;
+}
 
-      margin-top: 20px;
-    }
+.modal-footer {
+    display: flex;
 
-    /* =========================================================
-       UPLOAD
-       ========================================================= */
+    justify-content: flex-end;
 
-    .upload-box {
-      border: 1px dashed #cbded4;
+    gap: 9px;
 
-      background: var(--green-soft);
+    margin-top: 20px;
+}
 
-      border-radius: 13px;
+/* =========================================================
+   UPLOAD
+   ========================================================= */
 
-      padding: 18px;
+.upload-box {
+    border: 1px dashed #cbded4;
 
-      text-align: center;
+    background: var(--green-soft);
 
-      margin-top: 10px;
-    }
+    border-radius: 13px;
 
-    .upload-box input {
-      display: none;
-    }
+    padding: 18px;
 
-    .upload-label {
-      display: inline-flex;
+    text-align: center;
 
-      align-items: center;
+    margin-top: 10px;
+}
 
-      justify-content: center;
+.upload-box input {
+    display: none;
+}
 
-      min-height: 40px;
+.upload-label {
+    display: inline-flex;
 
-      padding: 0 15px;
+    align-items: center;
 
-      background: var(--green);
+    justify-content: center;
 
-      color: white;
+    min-height: 40px;
 
-      border-radius: 9px;
+    padding: 0 15px;
 
-      font-size: 11px;
+    background: var(--green);
 
-      font-weight: 800;
+    color: white;
 
-      cursor: pointer;
-    }
+    border-radius: 9px;
 
-    .upload-help {
-      margin-top: 9px;
+    font-size: 11px;
 
-      color: var(--muted);
+    font-weight: 800;
 
-      font-size: 9px;
-    }
+    cursor: pointer;
+}
 
-    .selected-file {
-      margin-top: 10px;
+.upload-help {
+    margin-top: 9px;
 
-      font-size: 10px;
+    color: var(--muted);
 
-      color: var(--green);
+    font-size: 9px;
+}
 
-      font-weight: 800;
-    }
+.selected-file {
+    margin-top: 10px;
 
-    /* =========================================================
-       FEEDBACK
-       ========================================================= */
+    font-size: 10px;
 
-    .feedback {
-      margin-top: 12px;
+    color: var(--green);
 
-      font-size: 11px;
+    font-weight: 800;
+}
 
-      font-weight: 700;
-    }
+.feedback {
+    margin-top: 12px;
 
-    .feedback.success {
-      color: var(--green);
-    }
+    font-size: 11px;
 
-    .feedback.error {
-      color: var(--danger);
-    }
+    font-weight: 700;
+}
 
-    /* =========================================================
-       RESPONSIVE
-       ========================================================= */
+.feedback.success {
+    color: var(--green);
+}
 
-    @media (max-width: 1200px) {
+.feedback.error {
+    color: var(--danger);
+}
 
-      .floating-nav {
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:1200px) {
+
+    .floating-nav {
         position: static;
 
         transform: none;
 
         margin-left: auto;
+
         margin-right: 15px;
-      }
-
-      .nav-item {
-        padding: 9px 9px;
-      }
-
-      .nav-item:nth-child(n+5) {
-        display: none;
-      }
     }
 
-    @media (max-width: 900px) {
+    .nav-item {
+        padding: 9px;
+    }
 
-      .supplier-topbar {
-        padding: 0 18px;
-      }
-
-      .supplier-brand img {
-        width: 125px;
-      }
-
-      .floating-nav {
+    .nav-item:nth-child(n+5) {
         display: none;
-      }
+    }
 
-      .supplier-page {
+}
+
+@media(max-width:900px) {
+
+    .supplier-topbar {
+        padding: 0 18px;
+    }
+
+    .supplier-brand img {
+        width: 125px;
+    }
+
+    .floating-nav {
+        display: none;
+    }
+
+    .supplier-page {
         padding: 25px 18px 45px;
-      }
+    }
 
-      .stats-grid {
+    .stats-grid {
         grid-template-columns:
-          repeat(2, 1fr);
-      }
+            repeat(2,1fr);
+    }
 
-      .rfq-grid,
-      .documents-grid,
-      .profile-grid {
+    .rfq-grid,
+    .documents-grid,
+    .profile-grid {
         grid-template-columns: 1fr;
-      }
+    }
 
-      .tracker {
+    .tracker {
         grid-template-columns:
-          repeat(5, 100px);
+            repeat(5,100px);
 
         overflow-x: auto;
 
         padding-bottom: 10px;
-      }
-
-      .tracker-line {
-        display: none;
-      }
     }
 
-    @media (max-width: 600px) {
+    .tracker-line {
+        display: none;
+    }
 
-      .supplier-topbar {
+}
+
+@media(max-width:600px) {
+
+    .supplier-topbar {
         height: 66px;
-      }
-
-      .profile-name {
-        display: none;
-      }
-
-      .supplier-page {
-        padding: 22px 14px 40px;
-      }
-
-      .page-header {
-        flex-direction: column;
-        gap: 15px;
-      }
-
-      .page-header h1 {
-        font-size: 25px;
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-
-      .stat-card {
-        padding: 15px;
-      }
-
-      .stat-number {
-        font-size: 23px;
-      }
-
-      .rfq-card {
-        padding: 17px;
-      }
-
-      .rfq-bottom {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .rfq-actions {
-        width: 100%;
-      }
-
-      .rfq-actions .btn {
-        flex: 1;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .form-field.full {
-        grid-column: auto;
-      }
-
-      .modal {
-        padding: 18px;
-      }
-
-      .summary-grid {
-        grid-template-columns: 1fr 1fr;
-      }
     }
 
-  </style>
+    .profile-name {
+        display: none;
+    }
+
+    .supplier-page {
+        padding: 22px 14px 40px;
+    }
+
+    .page-header {
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .page-header h1 {
+        font-size: 25px;
+    }
+
+    .stats-grid {
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-number {
+        font-size: 23px;
+    }
+
+    .rfq-card {
+        padding: 17px;
+    }
+
+    .rfq-bottom {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .rfq-actions {
+        width: 100%;
+    }
+
+    .rfq-actions .btn {
+        flex: 1;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-field.full {
+        grid-column: auto;
+    }
+
+    .modal {
+        padding: 18px;
+    }
+
+    .summary-grid {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+}
+
+</style>
 </head>
 
 <body>
 
+
 <!-- =========================================================
-     TOP NAVIGATION
+     TOP BAR
      ========================================================= -->
 
 <header class="supplier-topbar">
 
-  <a
-    href="index.html"
-    class="supplier-brand"
-    aria-label="Elsati Connect Home"
-  >
-    <img
-      src="elsati.png"
-      alt="Elsati Connect"
-    >
-  </a>
-
-
-  <nav class="floating-nav">
-
-    <button
-      class="nav-item active"
-      data-view="dashboard"
-    >
-      Dashboard
-    </button>
-
-    <button
-      class="nav-item"
-      data-view="rfqs"
-    >
-      Open RFQs
-    </button>
-
-    <button
-      class="nav-item"
-      data-view="quotes"
-    >
-      My Quotes
-    </button>
-
-    <button
-      class="nav-item"
-      data-view="awards"
-    >
-      Awards
-    </button>
-
-    <button
-      class="nav-item"
-      data-view="orders"
-    >
-      Orders
-    </button>
-
-    <button
-      class="nav-item"
-      data-view="invoices"
-    >
-      Invoices
-    </button>
-
-  </nav>
-
-
-  <div class="profile-wrapper" id="profile-wrapper">
-
-    <button
-      class="profile-button"
-      id="profile-button"
-      type="button"
+    <a
+        href="index.html"
+        class="supplier-brand"
     >
 
-      <span
-        class="profile-avatar"
-        id="profile-avatar"
-      >
-        S
-      </span>
+        <img
+            src="elsati.png"
+            alt="Elsati Connect"
+        >
 
-      <span
-        class="profile-name"
-        id="profile-name"
-      >
-        Supplier
-      </span>
-
-      <span class="profile-arrow">
-        ▼
-      </span>
-
-    </button>
+    </a>
 
 
-    <div class="profile-dropdown">
+    <nav class="floating-nav">
 
-      <button
-        class="dropdown-item"
-        data-view="profile"
-      >
-        👤 My Profile
-      </button>
+        <button
+            class="nav-item active"
+            data-view="dashboard"
+        >
+            Dashboard
+        </button>
 
-      <button
-        class="dropdown-item"
-        data-view="documents"
-      >
-        📄 Verification & Documents
-      </button>
+        <button
+            class="nav-item"
+            data-view="rfqs"
+        >
+            Open RFQs
+        </button>
 
-      <button
-        class="dropdown-item"
-        data-view="tracker"
-      >
-        ✓ Status Tracker
-      </button>
+        <button
+            class="nav-item"
+            data-view="quotes"
+        >
+            My Quotes
+        </button>
 
-      <div class="dropdown-divider"></div>
+        <button
+            class="nav-item"
+            data-view="awards"
+        >
+            Awards
+        </button>
 
-      <button
-        class="dropdown-item"
-        id="logout-button"
-      >
-        ↪ Logout
-      </button>
+        <button
+            class="nav-item"
+            data-view="orders"
+        >
+            Orders
+        </button>
+
+        <button
+            class="nav-item"
+            data-view="invoices"
+        >
+            Invoices
+        </button>
+
+    </nav>
+
+
+    <div
+        class="profile-wrapper"
+        id="profile-wrapper"
+    >
+
+        <button
+            class="profile-button"
+            id="profile-button"
+            type="button"
+        >
+
+            <span
+                class="profile-avatar"
+                id="profile-avatar"
+            >
+                S
+            </span>
+
+            <span
+                class="profile-name"
+                id="profile-name"
+            >
+                Supplier
+            </span>
+
+            <span class="profile-arrow">
+                ▼
+            </span>
+
+        </button>
+
+
+        <div class="profile-dropdown">
+
+            <button
+                class="dropdown-item"
+                data-view="profile"
+            >
+                👤 My Profile
+            </button>
+
+            <button
+                class="dropdown-item"
+                data-view="documents"
+            >
+                📄 Verification & Documents
+            </button>
+
+            <button
+                class="dropdown-item"
+                data-view="tracker"
+            >
+                ✓ Status Tracker
+            </button>
+
+            <div class="dropdown-divider"></div>
+
+            <button
+                class="dropdown-item"
+                id="logout-button"
+            >
+                ↪ Logout
+            </button>
+
+        </div>
 
     </div>
-
-  </div>
 
 </header>
 
@@ -1833,194 +1913,192 @@
      ========================================================= -->
 
 <section
-  class="page-view active"
-  id="view-dashboard"
+    class="page-view active"
+    id="view-dashboard"
 >
 
-  <div class="page-header">
+    <div class="page-header">
 
-    <div>
+        <div>
 
-      <h1>
-        Welcome back,
-        <span id="welcome-name">
-          Supplier
-        </span>
-      </h1>
+            <h1>
+                Welcome back,
+                <span id="welcome-name">
+                    Supplier
+                </span>
+            </h1>
 
-      <p>
-        Manage your opportunities, quotations and supplier activity.
-      </p>
+            <p>
+                Manage your opportunities, quotations and supplier activity.
+            </p>
 
-    </div>
+        </div>
 
-    <div class="header-actions">
+        <div class="header-actions">
 
-      <button
-        class="btn btn-primary"
-        data-view="rfqs"
-      >
-        View Open RFQs
-      </button>
+            <button
+                class="btn btn-primary"
+                data-view="rfqs"
+            >
+                View Open RFQs
+            </button>
 
-    </div>
-
-  </div>
-
-
-  <div class="stats-grid">
-
-    <article class="stat-card">
-
-      <div class="stat-label">
-        Open RFQs
-      </div>
-
-      <div
-        class="stat-number"
-        id="stat-rfqs"
-      >
-        0
-      </div>
-
-      <div class="stat-sub">
-        Opportunities available
-      </div>
-
-    </article>
-
-
-    <article class="stat-card">
-
-      <div class="stat-label">
-        Submitted Quotes
-      </div>
-
-      <div
-        class="stat-number"
-        id="stat-quotes"
-      >
-        0
-      </div>
-
-      <div class="stat-sub">
-        Quotations submitted
-      </div>
-
-    </article>
-
-
-    <article class="stat-card">
-
-      <div class="stat-label">
-        Awards
-      </div>
-
-      <div
-        class="stat-number"
-        id="stat-awards"
-      >
-        0
-      </div>
-
-      <div class="stat-sub">
-        Successful opportunities
-      </div>
-
-    </article>
-
-
-    <article class="stat-card">
-
-      <div class="stat-label">
-        Response Rate
-      </div>
-
-      <div
-        class="stat-number"
-        id="stat-response"
-      >
-        —
-      </div>
-
-      <div class="stat-sub">
-        Based on RFQ activity
-      </div>
-
-    </article>
-
-  </div>
-
-
-  <div class="section">
-
-    <div class="section-title">
-
-      <h2>
-        Latest RFQ Opportunities
-      </h2>
-
-      <span>
-        Recently available
-      </span>
-
-    </div>
-
-    <div
-      class="rfq-grid"
-      id="dashboard-rfqs"
-    ></div>
-
-  </div>
-
-
-  <div class="section">
-
-    <div class="section-title">
-
-      <h2>
-        Reviewed / Completed
-      </h2>
-
-      <span>
-        Kept collapsed to reduce clutter
-      </span>
+        </div>
 
     </div>
 
 
-    <div class="completed-panel">
+    <div class="stats-grid">
 
-      <button
-        class="completed-header"
-        id="completed-toggle"
-      >
+        <article class="stat-card">
 
-        <span>
-          View reviewed and completed RFQs
-        </span>
+            <div class="stat-label">
+                Open RFQs
+            </div>
 
-        <span id="completed-arrow">
-          +
-        </span>
+            <div
+                class="stat-number"
+                id="stat-rfqs"
+            >
+                0
+            </div>
 
-      </button>
+            <div class="stat-sub">
+                Opportunities available
+            </div>
+
+        </article>
 
 
-      <div
-        class="completed-list"
-        id="completed-list"
-      >
+        <article class="stat-card">
+
+            <div class="stat-label">
+                Submitted Quotes
+            </div>
+
+            <div
+                class="stat-number"
+                id="stat-quotes"
+            >
+                0
+            </div>
+
+            <div class="stat-sub">
+                Quotations submitted
+            </div>
+
+        </article>
+
+
+        <article class="stat-card">
+
+            <div class="stat-label">
+                Awards
+            </div>
+
+            <div
+                class="stat-number"
+                id="stat-awards"
+            >
+                0
+            </div>
+
+            <div class="stat-sub">
+                Successful opportunities
+            </div>
+
+        </article>
+
+
+        <article class="stat-card">
+
+            <div class="stat-label">
+                Response Rate
+            </div>
+
+            <div
+                class="stat-number"
+                id="stat-response"
+            >
+                —
+            </div>
+
+            <div class="stat-sub">
+                Based on RFQ activity
+            </div>
+
+        </article>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">
+
+            <h2>
+                Latest RFQ Opportunities
+            </h2>
+
+            <span>
+                Recently available
+            </span>
+
+        </div>
 
         <div
-          id="completed-content"
+            class="rfq-grid"
+            id="dashboard-rfqs"
         ></div>
-
-      </div>
 
     </div>
 
-  </div>
+
+    <div class="section">
+
+        <div class="section-title">
+
+            <h2>
+                Reviewed / Completed
+            </h2>
+
+            <span>
+                Kept collapsed to reduce clutter
+            </span>
+
+        </div>
+
+
+        <div class="completed-panel">
+
+            <button
+                class="completed-header"
+                id="completed-toggle"
+            >
+
+                <span>
+                    View reviewed and completed RFQs
+                </span>
+
+                <span id="completed-arrow">
+                    +
+                </span>
+
+            </button>
+
+
+            <div
+                class="completed-list"
+                id="completed-list"
+            >
+
+                <div id="completed-content"></div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </section>
 
@@ -2030,31 +2108,31 @@
      ========================================================= -->
 
 <section
-  class="page-view"
-  id="view-rfqs"
+    class="page-view"
+    id="view-rfqs"
 >
 
-  <div class="page-header">
+    <div class="page-header">
 
-    <div>
+        <div>
 
-      <h1>
-        Open RFQs
-      </h1>
+            <h1>
+                Open RFQs
+            </h1>
 
-      <p>
-        Review procurement requests and submit competitive quotations.
-      </p>
+            <p>
+                Review procurement requests and submit competitive quotations.
+            </p>
+
+        </div>
 
     </div>
 
-  </div>
 
-
-  <div
-    class="rfq-grid"
-    id="all-rfqs"
-  ></div>
+    <div
+        class="rfq-grid"
+        id="all-rfqs"
+    ></div>
 
 </section>
 
@@ -2064,48 +2142,48 @@
      ========================================================= -->
 
 <section
-  class="page-view"
-  id="view-quotes"
+    class="page-view"
+    id="view-quotes"
 >
 
-  <div class="page-header">
+    <div class="page-header">
 
-    <div>
+        <div>
 
-      <h1>
-        My Quotes
-      </h1>
+            <h1>
+                My Quotes
+            </h1>
 
-      <p>
-        Track quotations you have submitted to businesses.
-      </p>
+            <p>
+                Track quotations you have submitted to businesses.
+            </p>
+
+        </div>
 
     </div>
 
-  </div>
 
+    <div class="table-card">
 
-  <div class="table-card">
+        <table>
 
-    <table>
+            <thead>
 
-      <thead>
+                <tr>
+                    <th>RFQ</th>
+                    <th>Customer</th>
+                    <th>Price</th>
+                    <th>Submitted</th>
+                    <th>Status</th>
+                </tr>
 
-        <tr>
-          <th>RFQ</th>
-          <th>Customer</th>
-          <th>Price</th>
-          <th>Submitted</th>
-          <th>Status</th>
-        </tr>
+            </thead>
 
-      </thead>
+            <tbody id="quotes-table-body"></tbody>
 
-      <tbody id="quotes-table-body"></tbody>
+        </table>
 
-    </table>
-
-  </div>
+    </div>
 
 </section>
 
@@ -2115,49 +2193,47 @@
      ========================================================= -->
 
 <section
-  class="page-view"
-  id="view-awards"
+    class="page-view"
+    id="view-awards"
 >
 
-  <div class="page-header">
+    <div class="page-header">
 
-    <div>
+        <div>
 
-      <h1>
-        Awards
-      </h1>
+            <h1>
+                Awards
+            </h1>
 
-      <p>
-        Opportunities where your quotation has been selected.
-      </p>
+            <p>
+                Opportunities where your quotation has been selected.
+            </p>
+
+        </div>
 
     </div>
 
-  </div>
 
+    <div class="table-card">
 
-  <div
-    class="table-card"
-  >
+        <table>
 
-    <table>
+            <thead>
 
-      <thead>
+                <tr>
+                    <th>RFQ</th>
+                    <th>Customer</th>
+                    <th>Award Date</th>
+                    <th>Status</th>
+                </tr>
 
-        <tr>
-          <th>RFQ</th>
-          <th>Customer</th>
-          <th>Award Date</th>
-          <th>Status</th>
-        </tr>
+            </thead>
 
-      </thead>
+            <tbody id="awards-table-body"></tbody>
 
-      <tbody id="awards-table-body"></tbody>
+        </table>
 
-    </table>
-
-  </div>
+    </div>
 
 </section>
 
@@ -2167,39 +2243,39 @@
      ========================================================= -->
 
 <section
-  class="page-view"
-  id="view-orders"
+    class="page-view"
+    id="view-orders"
 >
 
-  <div class="page-header">
+    <div class="page-header">
 
-    <div>
+        <div>
 
-      <h1>
-        Orders
-      </h1>
+            <h1>
+                Orders
+            </h1>
 
-      <p>
-        Manage orders created from awarded quotations.
-      </p>
+            <p>
+                Manage orders created from awarded quotations.
+            </p>
+
+        </div>
 
     </div>
 
-  </div>
 
+    <div class="empty-state">
 
-  <div class="empty-state">
+        <h3>
+            Orders will appear here
+        </h3>
 
-    <h3>
-      Orders will appear here
-    </h3>
+        <p>
+            Once a quotation is awarded and the order is created,
+            the order details will appear in this section.
+        </p>
 
-    <p>
-      Once a quotation is awarded and the order is created,
-      the order details will appear in this section.
-    </p>
-
-  </div>
+    </div>
 
 </section>
 
@@ -2209,39 +2285,39 @@
      ========================================================= -->
 
 <section
-  class="page-view"
-  id="view-invoices"
+    class="page-view"
+    id="view-invoices"
 >
 
-  <div class="page-header">
+    <div class="page-header">
 
-    <div>
+        <div>
 
-      <h1>
-        Invoices
-      </h1>
+            <h1>
+                Invoices
+            </h1>
 
-      <p>
-        View invoices generated after completed payment milestones.
-      </p>
+            <p>
+                View invoices generated after completed payment milestones.
+            </p>
+
+        </div>
 
     </div>
 
-  </div>
 
+    <div class="empty-state">
 
-  <div class="empty-state">
+        <h3>
+            No invoices yet
+        </h3>
 
-    <h3>
-      No invoices yet
-    </h3>
+        <p>
+            Once an awarded order reaches the required payment stage,
+            invoices will appear here.
+        </p>
 
-    <p>
-      Once an awarded order reaches the required payment stage,
-      invoices will appear here.
-    </p>
-
-  </div>
+    </div>
 
 </section>
 
@@ -2251,158 +2327,158 @@
      ========================================================= -->
 
 <section
-  class="page-view"
-  id="view-profile"
+    class="page-view"
+    id="view-profile"
 >
 
-  <div class="page-header">
+    <div class="page-header">
 
-    <div>
+        <div>
 
-      <h1>
-        My Profile
-      </h1>
+            <h1>
+                My Profile
+            </h1>
 
-      <p>
-        Your supplier information registered on Elsati Connect.
-      </p>
+            <p>
+                Your supplier information registered on Elsati Connect.
+            </p>
+
+        </div>
+
+        <button
+            class="btn btn-secondary"
+            data-view="documents"
+        >
+            Verification & Documents
+        </button>
 
     </div>
 
-    <button
-      class="btn btn-secondary"
-      data-view="documents"
-    >
-      Verification & Documents
-    </button>
 
-  </div>
+    <div class="profile-grid">
 
+        <article class="profile-card">
 
-  <div class="profile-grid">
-
-    <article class="profile-card">
-
-      <h3>
-        Business Information
-      </h3>
+            <h3>
+                Business Information
+            </h3>
 
 
-      <div class="profile-field">
+            <div class="profile-field">
 
-        <label>
-          Company Name
-        </label>
+                <label>
+                    Company Name
+                </label>
 
-        <div id="profile-company">
-          —
-        </div>
+                <div id="profile-company">
+                    —
+                </div>
 
-      </div>
-
-
-      <div class="profile-field">
-
-        <label>
-          Supplier Category
-        </label>
-
-        <div id="profile-category">
-          —
-        </div>
-
-      </div>
+            </div>
 
 
-      <div class="profile-field">
+            <div class="profile-field">
 
-        <label>
-          Business Address
-        </label>
+                <label>
+                    Supplier Category
+                </label>
 
-        <div id="profile-address">
-          —
-        </div>
+                <div id="profile-category">
+                    —
+                </div>
 
-      </div>
-
-
-      <div class="profile-field">
-
-        <label>
-          City
-        </label>
-
-        <div id="profile-city">
-          —
-        </div>
-
-      </div>
-
-    </article>
+            </div>
 
 
-    <article class="profile-card">
+            <div class="profile-field">
 
-      <h3>
-        Contact Information
-      </h3>
+                <label>
+                    Business Address
+                </label>
 
+                <div id="profile-address">
+                    —
+                </div>
 
-      <div class="profile-field">
-
-        <label>
-          Contact Person
-        </label>
-
-        <div id="profile-contact">
-          —
-        </div>
-
-      </div>
+            </div>
 
 
-      <div class="profile-field">
+            <div class="profile-field">
 
-        <label>
-          Email
-        </label>
+                <label>
+                    City
+                </label>
 
-        <div id="profile-email">
-          —
-        </div>
+                <div id="profile-city">
+                    —
+                </div>
 
-      </div>
+            </div>
 
-
-      <div class="profile-field">
-
-        <label>
-          Phone
-        </label>
-
-        <div id="profile-phone">
-          —
-        </div>
-
-      </div>
+        </article>
 
 
-      <div class="profile-field">
+        <article class="profile-card">
 
-        <label>
-          Verification Status
-        </label>
+            <h3>
+                Contact Information
+            </h3>
 
-        <div id="profile-verification">
-          —
-        </div>
 
-      </div>
+            <div class="profile-field">
 
-    </article>
+                <label>
+                    Contact Person
+                </label>
 
-  </div>
+                <div id="profile-contact">
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="profile-field">
+
+                <label>
+                    Email
+                </label>
+
+                <div id="profile-email">
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="profile-field">
+
+                <label>
+                    Phone
+                </label>
+
+                <div id="profile-phone">
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="profile-field">
+
+                <label>
+                    Verification Status
+                </label>
+
+                <div id="profile-verification">
+                    —
+                </div>
+
+            </div>
+
+        </article>
+
+    </div>
 
 </section>
 
@@ -2412,355 +2488,345 @@
      ========================================================= -->
 
 <section
-  class="page-view"
-  id="view-documents"
+    class="page-view"
+    id="view-documents"
 >
 
-  <div class="page-header">
+    <div class="page-header">
 
-    <div>
+        <div>
 
-      <h1>
-        Verification & Documents
-      </h1>
+            <h1>
+                Verification & Documents
+            </h1>
 
-      <p>
-        Keep your supplier verification records complete and up to date.
-      </p>
+            <p>
+                Keep your supplier verification records complete and up to date.
+            </p>
+
+        </div>
 
     </div>
 
-  </div>
+
+    <div class="documents-intro">
+
+        <h2>
+            Complete your supplier verification
+        </h2>
+
+        <p>
+            Upload the documents below so Elsati Connect can verify
+            your supplier profile. Verified documents help businesses
+            make procurement decisions with greater confidence.
+        </p>
 
 
-  <div class="documents-intro">
+        <div class="progress-wrap">
 
-    <h2>
-      Complete your supplier verification
-    </h2>
+            <div class="progress-header">
 
-    <p>
-      Upload the documents below so Elsati Connect can verify
-      your supplier profile. Verified documents help businesses
-      make procurement decisions with greater confidence.
+                <span>
+                    Verification progress
+                </span>
+
+                <span id="document-progress-text">
+                    0 of 4 verified
+                </span>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    id="document-progress-fill"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="documents-grid">
+
+
+        <!-- PACRA -->
+
+        <article class="document-card">
+
+            <div class="document-top">
+
+                <div class="document-icon">
+                    P
+                </div>
+
+                <div class="document-title">
+
+                    <h3>
+                        PACRA Certificate
+                    </h3>
+
+                    <p>
+                        Certificate of company registration.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="document-status"
+                id="status-pacra"
+            >
+
+                <span class="status-pill status-pending">
+                    Not uploaded
+                </span>
+
+            </div>
+
+
+            <div
+                class="document-file"
+                id="file-pacra"
+            ></div>
+
+
+            <div class="document-actions">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="openDocumentUpload('pacra')"
+                >
+                    Upload
+                </button>
+
+                <button
+                    class="btn btn-outline"
+                    id="view-pacra"
+                    style="display:none;"
+                    onclick="viewDocument('pacra')"
+                >
+                    View
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <!-- TAX -->
+
+        <article class="document-card">
+
+            <div class="document-top">
+
+                <div class="document-icon">
+                    T
+                </div>
+
+                <div class="document-title">
+
+                    <h3>
+                        Tax Clearance Certificate
+                    </h3>
+
+                    <p>
+                        Current ZRA tax clearance documentation.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="document-status"
+                id="status-tax"
+            >
+
+                <span class="status-pill status-pending">
+                    Not uploaded
+                </span>
+
+            </div>
+
+
+            <div
+                class="document-file"
+                id="file-tax"
+            ></div>
+
+
+            <div class="document-actions">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="openDocumentUpload('tax')"
+                >
+                    Upload
+                </button>
+
+                <button
+                    class="btn btn-outline"
+                    id="view-tax"
+                    style="display:none;"
+                    onclick="viewDocument('tax')"
+                >
+                    View
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <!-- BANK -->
+
+        <article class="document-card">
+
+            <div class="document-top">
+
+                <div class="document-icon">
+                    B
+                </div>
+
+                <div class="document-title">
+
+                    <h3>
+                        Bank Details
+                    </h3>
+
+                    <p>
+                        Bank confirmation letter or official bank details document.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="document-status"
+                id="status-bank"
+            >
+
+                <span class="status-pill status-pending">
+                    Not uploaded
+                </span>
+
+            </div>
+
+
+            <div
+                class="document-file"
+                id="file-bank"
+            ></div>
+
+
+            <div class="document-actions">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="openDocumentUpload('bank')"
+                >
+                    Upload
+                </button>
+
+                <button
+                    class="btn btn-outline"
+                    id="view-bank"
+                    style="display:none;"
+                    onclick="viewDocument('bank')"
+                >
+                    View
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <!-- PROOF OF RESIDENCE -->
+
+        <article class="document-card">
+
+            <div class="document-top">
+
+                <div class="document-icon">
+                    R
+                </div>
+
+                <div class="document-title">
+
+                    <h3>
+                        Proof of Residence
+                    </h3>
+
+                    <p>
+                        Recent document confirming the business or contact address.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="document-status"
+                id="status-residence"
+            >
+
+                <span class="status-pill status-pending">
+                    Not uploaded
+                </span>
+
+            </div>
+
+
+            <div
+                class="document-file"
+                id="file-residence"
+            ></div>
+
+
+            <div class="document-actions">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="openDocumentUpload('residence')"
+                >
+                    Upload
+                </button>
+
+                <button
+                    class="btn btn-outline"
+                    id="view-residence"
+                    style="display:none;"
+                    onclick="viewDocument('residence')"
+                >
+                    View
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+
+    <p class="privacy-note">
+
+        🔒 Your verification documents are stored securely and are
+        not intended to be publicly accessible. Bank information should
+        only be accessed by authorised Elsati Connect personnel where required.
+
     </p>
-
-
-    <div class="progress-wrap">
-
-      <div class="progress-header">
-
-        <span>
-          Verification progress
-        </span>
-
-        <span id="document-progress-text">
-          0 of 4 completed
-        </span>
-
-      </div>
-
-      <div class="progress-bar">
-
-        <div
-          class="progress-fill"
-          id="document-progress-fill"
-        ></div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div class="documents-grid">
-
-
-    <!-- PACRA -->
-
-    <article
-      class="document-card"
-      data-document-card="pacra"
-    >
-
-      <div class="document-top">
-
-        <div class="document-icon">
-          P
-        </div>
-
-        <div class="document-title">
-
-          <h3>
-            PACRA Certificate
-          </h3>
-
-          <p>
-            Certificate of company registration.
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="document-status"
-        id="status-pacra"
-      >
-
-        <span class="status-pill status-pending">
-          Not uploaded
-        </span>
-
-      </div>
-
-
-      <div
-        class="document-file"
-        id="file-pacra"
-      ></div>
-
-
-      <div class="document-actions">
-
-        <button
-          class="btn btn-primary"
-          onclick="openDocumentUpload('pacra')"
-        >
-          Upload
-        </button>
-
-        <button
-          class="btn btn-outline"
-          id="view-pacra"
-          style="display:none;"
-          onclick="viewDocument('pacra')"
-        >
-          View
-        </button>
-
-      </div>
-
-    </article>
-
-
-    <!-- TAX -->
-
-    <article
-      class="document-card"
-      data-document-card="tax"
-    >
-
-      <div class="document-top">
-
-        <div class="document-icon">
-          T
-        </div>
-
-        <div class="document-title">
-
-          <h3>
-            Tax Clearance Certificate
-          </h3>
-
-          <p>
-            Current ZRA tax clearance documentation.
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="document-status"
-        id="status-tax"
-      >
-
-        <span class="status-pill status-pending">
-          Not uploaded
-        </span>
-
-      </div>
-
-
-      <div
-        class="document-file"
-        id="file-tax"
-      ></div>
-
-
-      <div class="document-actions">
-
-        <button
-          class="btn btn-primary"
-          onclick="openDocumentUpload('tax')"
-        >
-          Upload
-        </button>
-
-        <button
-          class="btn btn-outline"
-          id="view-tax"
-          style="display:none;"
-          onclick="viewDocument('tax')"
-        >
-          View
-        </button>
-
-      </div>
-
-    </article>
-
-
-    <!-- BANK -->
-
-    <article
-      class="document-card"
-      data-document-card="bank"
-    >
-
-      <div class="document-top">
-
-        <div class="document-icon">
-          B
-        </div>
-
-        <div class="document-title">
-
-          <h3>
-            Bank Details
-          </h3>
-
-          <p>
-            Bank confirmation letter or official bank details document.
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="document-status"
-        id="status-bank"
-      >
-
-        <span class="status-pill status-pending">
-          Not uploaded
-        </span>
-
-      </div>
-
-
-      <div
-        class="document-file"
-        id="file-bank"
-      ></div>
-
-
-      <div class="document-actions">
-
-        <button
-          class="btn btn-primary"
-          onclick="openDocumentUpload('bank')"
-        >
-          Upload
-        </button>
-
-        <button
-          class="btn btn-outline"
-          id="view-bank"
-          style="display:none;"
-          onclick="viewDocument('bank')"
-        >
-          View
-        </button>
-
-      </div>
-
-    </article>
-
-
-    <!-- RESIDENCE -->
-
-    <article
-      class="document-card"
-      data-document-card="residence"
-    >
-
-      <div class="document-top">
-
-        <div class="document-icon">
-          R
-        </div>
-
-        <div class="document-title">
-
-          <h3>
-            Proof of Residence
-          </h3>
-
-          <p>
-            Recent document confirming the business or contact address.
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="document-status"
-        id="status-residence"
-      >
-
-        <span class="status-pill status-pending">
-          Not uploaded
-        </span>
-
-      </div>
-
-
-      <div
-        class="document-file"
-        id="file-residence"
-      ></div>
-
-
-      <div class="document-actions">
-
-        <button
-          class="btn btn-primary"
-          onclick="openDocumentUpload('residence')"
-        >
-          Upload
-        </button>
-
-        <button
-          class="btn btn-outline"
-          id="view-residence"
-          style="display:none;"
-          onclick="viewDocument('residence')"
-        >
-          View
-        </button>
-
-      </div>
-
-    </article>
-
-
-  </div>
-
-
-  <p class="privacy-note">
-    🔒 Your verification documents are stored securely and are
-    not intended to be publicly accessible. Bank information should
-    only be accessed by authorised Elsati Connect personnel where required.
-  </p>
 
 </section>
 
@@ -2770,136 +2836,136 @@
      ========================================================= -->
 
 <section
-  class="page-view"
-  id="view-tracker"
+    class="page-view"
+    id="view-tracker"
 >
 
-  <div class="page-header">
+    <div class="page-header">
 
-    <div>
+        <div>
 
-      <h1>
-        Status Tracker
-      </h1>
+            <h1>
+                Status Tracker
+            </h1>
 
-      <p>
-        Follow your quotation and order journey.
-      </p>
+            <p>
+                Follow your quotation and order journey.
+            </p>
+
+        </div>
 
     </div>
 
-  </div>
+
+    <div class="tracker-card">
+
+        <h2 style="margin:0;font-size:19px;">
+            Supplier Opportunity Journey
+        </h2>
+
+        <p
+            style="
+                color:var(--muted);
+                font-size:12px;
+                margin:7px 0 0;
+            "
+        >
+            Track the typical journey from RFQ invitation to payment.
+        </p>
 
 
-  <div class="tracker-card">
+        <div class="tracker">
 
-    <h2 style="margin:0;font-size:19px;">
-      Supplier Opportunity Journey
-    </h2>
-
-    <p
-      style="
-        color:var(--muted);
-        font-size:12px;
-        margin:7px 0 0;
-      "
-    >
-      Track the typical journey from RFQ invitation to payment.
-    </p>
+            <div class="tracker-line"></div>
 
 
-    <div class="tracker">
+            <div class="tracker-step complete">
 
-      <div class="tracker-line"></div>
+                <div class="tracker-dot">
+                    ✓
+                </div>
+
+                <strong>
+                    RFQ Received
+                </strong>
+
+                <span>
+                    Opportunity received
+                </span>
+
+            </div>
 
 
-      <div class="tracker-step complete">
+            <div class="tracker-step complete">
 
-        <div class="tracker-dot">
-          ✓
+                <div class="tracker-dot">
+                    ✓
+                </div>
+
+                <strong>
+                    Quote Submitted
+                </strong>
+
+                <span>
+                    Your quotation sent
+                </span>
+
+            </div>
+
+
+            <div class="tracker-step current">
+
+                <div class="tracker-dot">
+                    3
+                </div>
+
+                <strong>
+                    Buyer Review
+                </strong>
+
+                <span>
+                    Awaiting decision
+                </span>
+
+            </div>
+
+
+            <div class="tracker-step">
+
+                <div class="tracker-dot">
+                    4
+                </div>
+
+                <strong>
+                    Award
+                </strong>
+
+                <span>
+                    If selected
+                </span>
+
+            </div>
+
+
+            <div class="tracker-step">
+
+                <div class="tracker-dot">
+                    5
+                </div>
+
+                <strong>
+                    Payment
+                </strong>
+
+                <span>
+                    Payment received
+                </span>
+
+            </div>
+
         </div>
-
-        <strong>
-          RFQ Received
-        </strong>
-
-        <span>
-          Opportunity received
-        </span>
-
-      </div>
-
-
-      <div class="tracker-step complete">
-
-        <div class="tracker-dot">
-          ✓
-        </div>
-
-        <strong>
-          Quote Submitted
-        </strong>
-
-        <span>
-          Your quotation sent
-        </span>
-
-      </div>
-
-
-      <div class="tracker-step current">
-
-        <div class="tracker-dot">
-          3
-        </div>
-
-        <strong>
-          Buyer Review
-        </strong>
-
-        <span>
-          Awaiting decision
-        </span>
-
-      </div>
-
-
-      <div class="tracker-step">
-
-        <div class="tracker-dot">
-          4
-        </div>
-
-        <strong>
-          Award
-        </strong>
-
-        <span>
-          If selected
-        </span>
-
-      </div>
-
-
-      <div class="tracker-step">
-
-        <div class="tracker-dot">
-          5
-        </div>
-
-        <strong>
-          Payment
-        </strong>
-
-        <span>
-          Payment received
-        </span>
-
-      </div>
 
     </div>
-
-  </div>
 
 </section>
 
@@ -2911,255 +2977,254 @@
      ========================================================= -->
 
 <div
-  class="modal-backdrop"
-  id="quote-modal"
+    class="modal-backdrop"
+    id="quote-modal"
 >
 
-  <div class="modal">
+    <div class="modal">
 
-    <div class="modal-header">
+        <div class="modal-header">
 
-      <div>
+            <div>
 
-        <h2>
-          Submit Your Quotation
-        </h2>
+                <h2>
+                    Submit Your Quotation
+                </h2>
 
-        <p id="quote-modal-subtitle">
-          Respond to the client's request.
-        </p>
+                <p id="quote-modal-subtitle">
+                    Respond to the client's request.
+                </p>
 
-      </div>
+            </div>
 
-      <button
-        class="close-modal"
-        onclick="closeModal('quote-modal')"
-      >
-        ×
-      </button>
+            <button
+                class="close-modal"
+                onclick="closeModal('quote-modal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="modal-rfq-summary"
+            id="quote-rfq-summary"
+        ></div>
+
+
+        <form id="quote-form">
+
+            <input
+                type="hidden"
+                id="quote-rfq-id"
+            >
+
+
+            <div class="form-grid">
+
+                <div class="form-field">
+
+                    <label>
+                        Your Price / Total Amount
+                    </label>
+
+                    <input
+                        type="number"
+                        id="quote-price"
+                        min="0"
+                        step="0.01"
+                        placeholder="e.g. 25000"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label>
+                        Delivery Period
+                    </label>
+
+                    <input
+                        type="text"
+                        id="quote-delivery"
+                        placeholder="e.g. 5 working days"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label>
+                        Payment Terms
+                    </label>
+
+                    <select id="quote-payment">
+
+                        <option value="">
+                            Select payment terms
+                        </option>
+
+                        <option>
+                            Cash on delivery
+                        </option>
+
+                        <option>
+                            Payment on delivery
+                        </option>
+
+                        <option>
+                            50% deposit / 50% on delivery
+                        </option>
+
+                        <option>
+                            7 days credit
+                        </option>
+
+                        <option>
+                            14 days credit
+                        </option>
+
+                        <option>
+                            30 days credit
+                        </option>
+
+                        <option>
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label>
+                        Quote Validity
+                    </label>
+
+                    <input
+                        type="text"
+                        id="quote-validity"
+                        placeholder="e.g. 30 days"
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label>
+                        Availability
+                    </label>
+
+                    <select id="quote-availability">
+
+                        <option value="">
+                            Select availability
+                        </option>
+
+                        <option>
+                            In stock
+                        </option>
+
+                        <option>
+                            Available to order
+                        </option>
+
+                        <option>
+                            Partial availability
+                        </option>
+
+                        <option>
+                            Made to order
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label>
+                        Warranty / Guarantee
+                    </label>
+
+                    <input
+                        type="text"
+                        id="quote-warranty"
+                        placeholder="e.g. 12 months"
+                    >
+
+                </div>
+
+
+                <div class="form-field full">
+
+                    <label>
+                        Additional Notes
+                    </label>
+
+                    <textarea
+                        id="quote-notes"
+                        placeholder="Add any relevant information about your quotation..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <label class="confirm-row">
+
+                <input
+                    type="checkbox"
+                    id="quote-confirm"
+                    required
+                >
+
+                <span>
+                    By submitting, you confirm that the quotation
+                    information provided is accurate and valid.
+                </span>
+
+            </label>
+
+
+            <div
+                class="feedback"
+                id="quote-feedback"
+            ></div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-outline"
+                    onclick="closeModal('quote-modal')"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Submit Quotation
+                </button>
+
+            </div>
+
+        </form>
 
     </div>
-
-
-    <div
-      class="modal-rfq-summary"
-      id="quote-rfq-summary"
-    ></div>
-
-
-    <form id="quote-form">
-
-      <input
-        type="hidden"
-        id="quote-rfq-id"
-      >
-
-
-      <div class="form-grid">
-
-
-        <div class="form-field">
-
-          <label>
-            Your Price / Total Amount
-          </label>
-
-          <input
-            type="number"
-            id="quote-price"
-            min="0"
-            step="0.01"
-            placeholder="e.g. 25000"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-field">
-
-          <label>
-            Delivery Period
-          </label>
-
-          <input
-            type="text"
-            id="quote-delivery"
-            placeholder="e.g. 5 working days"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-field">
-
-          <label>
-            Payment Terms
-          </label>
-
-          <select id="quote-payment">
-
-            <option value="">
-              Select payment terms
-            </option>
-
-            <option>
-              Cash on delivery
-            </option>
-
-            <option>
-              Payment on delivery
-            </option>
-
-            <option>
-              50% deposit / 50% on delivery
-            </option>
-
-            <option>
-              7 days credit
-            </option>
-
-            <option>
-              14 days credit
-            </option>
-
-            <option>
-              30 days credit
-            </option>
-
-            <option>
-              Other
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div class="form-field">
-
-          <label>
-            Quote Validity
-          </label>
-
-          <input
-            type="text"
-            id="quote-validity"
-            placeholder="e.g. 30 days"
-          >
-
-        </div>
-
-
-        <div class="form-field">
-
-          <label>
-            Availability
-          </label>
-
-          <select id="quote-availability">
-
-            <option value="">
-              Select availability
-            </option>
-
-            <option>
-              In stock
-            </option>
-
-            <option>
-              Available to order
-            </option>
-
-            <option>
-              Partial availability
-            </option>
-
-            <option>
-              Made to order
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div class="form-field">
-
-          <label>
-            Warranty / Guarantee
-          </label>
-
-          <input
-            type="text"
-            id="quote-warranty"
-            placeholder="e.g. 12 months"
-          >
-
-        </div>
-
-
-        <div class="form-field full">
-
-          <label>
-            Additional Notes
-          </label>
-
-          <textarea
-            id="quote-notes"
-            placeholder="Add any relevant information about your quotation..."
-          ></textarea>
-
-        </div>
-
-      </div>
-
-
-      <label class="confirm-row">
-
-        <input
-          type="checkbox"
-          id="quote-confirm"
-          required
-        >
-
-        <span>
-          By submitting, you confirm that the quotation
-          information provided is accurate and valid.
-        </span>
-
-      </label>
-
-
-      <div
-        class="feedback"
-        id="quote-feedback"
-      ></div>
-
-
-      <div class="modal-footer">
-
-        <button
-          type="button"
-          class="btn btn-outline"
-          onclick="closeModal('quote-modal')"
-        >
-          Cancel
-        </button>
-
-        <button
-          type="submit"
-          class="btn btn-primary"
-        >
-          Submit Quotation
-        </button>
-
-      </div>
-
-    </form>
-
-  </div>
 
 </div>
 
@@ -3169,81 +3234,84 @@
      ========================================================= -->
 
 <div
-  class="modal-backdrop"
-  id="decline-modal"
+    class="modal-backdrop"
+    id="decline-modal"
 >
 
-  <div class="modal" style="max-width:500px;">
-
-    <div class="modal-header">
-
-      <div>
-
-        <h2>
-          Decline RFQ
-        </h2>
-
-        <p>
-          Let the client know you will not be submitting a quotation.
-        </p>
-
-      </div>
-
-      <button
-        class="close-modal"
-        onclick="closeModal('decline-modal')"
-      >
-        ×
-      </button>
-
-    </div>
-
-
-    <input
-      type="hidden"
-      id="decline-rfq-id"
+    <div
+        class="modal"
+        style="max-width:500px;"
     >
 
+        <div class="modal-header">
 
-    <div class="form-field">
+            <div>
 
-      <label>
-        Reason (optional)
-      </label>
+                <h2>
+                    Decline RFQ
+                </h2>
 
-      <textarea
-        id="decline-reason"
-        placeholder="e.g. We are unable to meet the requested delivery period."
-      ></textarea>
+                <p>
+                    Let the client know you will not be submitting a quotation.
+                </p>
+
+            </div>
+
+            <button
+                class="close-modal"
+                onclick="closeModal('decline-modal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <input
+            type="hidden"
+            id="decline-rfq-id"
+        >
+
+
+        <div class="form-field">
+
+            <label>
+                Reason
+            </label>
+
+            <textarea
+                id="decline-reason"
+                placeholder="e.g. We are unable to meet the requested delivery period."
+            ></textarea>
+
+        </div>
+
+
+        <div
+            class="feedback"
+            id="decline-feedback"
+        ></div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="btn btn-outline"
+                onclick="closeModal('decline-modal')"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="btn btn-danger"
+                id="confirm-decline"
+            >
+                Decline RFQ
+            </button>
+
+        </div>
 
     </div>
-
-
-    <div
-      class="feedback"
-      id="decline-feedback"
-    ></div>
-
-
-    <div class="modal-footer">
-
-      <button
-        class="btn btn-outline"
-        onclick="closeModal('decline-modal')"
-      >
-        Cancel
-      </button>
-
-      <button
-        class="btn btn-danger"
-        id="confirm-decline"
-      >
-        Decline RFQ
-      </button>
-
-    </div>
-
-  </div>
 
 </div>
 
@@ -3253,106 +3321,109 @@
      ========================================================= -->
 
 <div
-  class="modal-backdrop"
-  id="document-modal"
+    class="modal-backdrop"
+    id="document-modal"
 >
 
-  <div class="modal" style="max-width:540px;">
+    <div
+        class="modal"
+        style="max-width:540px;"
+    >
 
-    <div class="modal-header">
+        <div class="modal-header">
 
-      <div>
+            <div>
 
-        <h2 id="document-modal-title">
-          Upload Document
-        </h2>
+                <h2 id="document-modal-title">
+                    Upload Document
+                </h2>
 
-        <p id="document-modal-description">
-          Upload your verification document.
-        </p>
+                <p id="document-modal-description">
+                    Upload your verification document.
+                </p>
 
-      </div>
+            </div>
 
-      <button
-        class="close-modal"
-        onclick="closeModal('document-modal')"
-      >
-        ×
-      </button>
+            <button
+                class="close-modal"
+                onclick="closeModal('document-modal')"
+            >
+                ×
+            </button>
 
-    </div>
-
-
-    <form id="document-form">
-
-      <input
-        type="hidden"
-        id="document-type"
-      >
-
-
-      <div class="upload-box">
-
-        <label
-          class="upload-label"
-          for="document-file-input"
-        >
-          Choose File
-        </label>
-
-        <input
-          type="file"
-          id="document-file-input"
-          accept=".pdf,.png,.jpg,.jpeg"
-          required
-        >
-
-        <div class="upload-help">
-          PDF, JPG or PNG. Maximum 10 MB.
         </div>
 
-        <div
-          class="selected-file"
-          id="selected-document-file"
-        ></div>
 
-      </div>
+        <form id="document-form">
 
-
-      <div
-        class="feedback"
-        id="document-feedback"
-      ></div>
+            <input
+                type="hidden"
+                id="document-type"
+            >
 
 
-      <div class="modal-footer">
+            <div class="upload-box">
 
-        <button
-          type="button"
-          class="btn btn-outline"
-          onclick="closeModal('document-modal')"
-        >
-          Cancel
-        </button>
+                <label
+                    class="upload-label"
+                    for="document-file-input"
+                >
+                    Choose File
+                </label>
 
-        <button
-          type="submit"
-          class="btn btn-primary"
-        >
-          Upload Document
-        </button>
+                <input
+                    type="file"
+                    id="document-file-input"
+                    accept=".pdf,.png,.jpg,.jpeg"
+                    required
+                >
 
-      </div>
+                <div class="upload-help">
+                    PDF, JPG or PNG. Maximum 10 MB.
+                </div>
 
-    </form>
+                <div
+                    class="selected-file"
+                    id="selected-document-file"
+                ></div>
 
-  </div>
+            </div>
+
+
+            <div
+                class="feedback"
+                id="document-feedback"
+            ></div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-outline"
+                    onclick="closeModal('document-modal')"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Upload Document
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 
 
 <!-- =========================================================
-     SCRIPTS
+     SUPABASE
      ========================================================= -->
 
 <script src="script.js"></script>
@@ -3364,332 +3435,344 @@
 
 <script>
 
-  /* =========================================================
-     SUPABASE
-     ========================================================= */
+/* =========================================================
+   SUPABASE CLIENT
+   ========================================================= */
 
-  const supabaseClient = supabase.createClient(
+const supabaseClient = supabase.createClient(
     window.ELSATI_SUPABASE.url,
     window.ELSATI_SUPABASE.publishableKey
-  );
+);
 
 
-  /* =========================================================
-     STATE
-     ========================================================= */
+/* =========================================================
+   VARIABLES
+   ========================================================= */
 
-  let currentUser = null;
-  let currentProfile = null;
+let currentUser = null;
 
-  let rfqs = [];
-  let quotes = [];
-  let documents = {};
+let currentProfile = null;
 
-  let declinedIds = new Set();
+let rfqs = [];
 
-  let currentDocumentType = null;
+let quotes = [];
+
+let documents = {};
+
+let declinedIds = new Set();
+
+let currentDocumentType = null;
 
 
-  /* =========================================================
-     DOCUMENT INFORMATION
-     ========================================================= */
+/* =========================================================
+   DOCUMENT INFORMATION
+   ========================================================= */
 
-  const documentInfo = {
+const documentInfo = {
 
     pacra: {
-      title: "PACRA Certificate",
-      description:
-        "Upload your current PACRA company registration certificate."
+        title: "PACRA Certificate",
+        description:
+            "Upload your current PACRA company registration certificate."
     },
 
     tax: {
-      title: "Tax Clearance Certificate",
-      description:
-        "Upload your current ZRA Tax Clearance Certificate."
+        title: "Tax Clearance Certificate",
+        description:
+            "Upload your current ZRA Tax Clearance Certificate."
     },
 
     bank: {
-      title: "Bank Details",
-      description:
-        "Upload an official bank confirmation letter or bank details document."
+        title: "Bank Details",
+        description:
+            "Upload an official bank confirmation letter or bank details document."
     },
 
     residence: {
-      title: "Proof of Residence",
-      description:
-        "Upload a recent document confirming your business or contact address."
+        title: "Proof of Residence",
+        description:
+            "Upload a recent document confirming your business or contact address."
     }
 
-  };
+};
 
 
-  /* =========================================================
-     HELPERS
-     ========================================================= */
+/* =========================================================
+   HELPER
+   ========================================================= */
 
-  function $(id) {
+function $(id) {
     return document.getElementById(id);
-  }
+}
 
 
-  function escapeHtml(value) {
+function escapeHtml(value) {
 
-    if (value === null || value === undefined) {
-      return "";
+    if (
+        value === null ||
+        value === undefined
+    ) {
+        return "";
     }
 
     return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
 
 
-  function formatDate(dateValue) {
+function formatDate(value) {
 
-    if (!dateValue) {
-      return "—";
+    if (!value) {
+        return "—";
     }
 
-    const date = new Date(dateValue);
+    const date = new Date(value);
 
     if (Number.isNaN(date.getTime())) {
-      return "—";
+        return "—";
     }
 
     return date.toLocaleDateString(
-      undefined,
-      {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
-      }
+        undefined,
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }
     );
 
-  }
+}
 
 
-  function formatDateTime(dateValue) {
+function formatDateTime(value) {
 
-    if (!dateValue) {
-      return "—";
+    if (!value) {
+        return "—";
     }
 
-    const date = new Date(dateValue);
+    const date = new Date(value);
 
     if (Number.isNaN(date.getTime())) {
-      return "—";
+        return "—";
     }
 
     return date.toLocaleString(
-      undefined,
-      {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-      }
+        undefined,
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        }
     );
 
-  }
+}
 
 
-  function money(value) {
+function money(value) {
 
     if (
-      value === null ||
-      value === undefined ||
-      value === ""
+        value === null ||
+        value === undefined ||
+        value === ""
     ) {
-      return "—";
+        return "—";
     }
 
     const number = Number(value);
 
     if (Number.isNaN(number)) {
-      return value;
+        return value;
     }
 
-    return "K" + number.toLocaleString(
-      undefined,
-      {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }
-    );
-
-  }
-
-
-  /* =========================================================
-     NAVIGATION
-     ========================================================= */
-
-  function showView(viewName) {
-
-    document
-      .querySelectorAll(".page-view")
-      .forEach(view => {
-
-        view.classList.toggle(
-          "active",
-          view.id === "view-" + viewName
+    return "K" +
+        number.toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
         );
 
-      });
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function showView(viewName) {
+
+    document
+        .querySelectorAll(".page-view")
+        .forEach(view => {
+
+            view.classList.toggle(
+                "active",
+                view.id === "view-" + viewName
+            );
+
+        });
 
 
     document
-      .querySelectorAll("[data-view]")
-      .forEach(item => {
+        .querySelectorAll(".nav-item")
+        .forEach(item => {
 
-        if (
-          item.classList.contains("nav-item")
-        ) {
+            item.classList.toggle(
+                "active",
+                item.dataset.view === viewName
+            );
 
-          item.classList.toggle(
-            "active",
-            item.dataset.view === viewName
-          );
+        });
 
-        }
 
-      });
+    $("profile-wrapper")
+        .classList
+        .remove("open");
 
 
     window.scrollTo({
-      top: 0,
-      behavior: "smooth"
+        top: 0,
+        behavior: "smooth"
     });
 
-  }
+}
 
 
-  document
+document
     .querySelectorAll("[data-view]")
     .forEach(button => {
 
-      button.addEventListener(
-        "click",
-        function() {
+        button.addEventListener(
+            "click",
+            function() {
 
-          const view =
-            this.dataset.view;
+                const view =
+                    this.dataset.view;
 
-          if (view) {
-            showView(view);
-          }
+                if (view) {
+                    showView(view);
+                }
 
-        }
-      );
+            }
+        );
 
     });
 
 
-  /* =========================================================
-     PROFILE DROPDOWN
-     ========================================================= */
+/* =========================================================
+   PROFILE DROPDOWN
+   ========================================================= */
 
-  $("profile-button")
+$("profile-button")
     .addEventListener(
-      "click",
-      function(event) {
-
-        event.stopPropagation();
-
-        $("profile-wrapper")
-          .classList.toggle("open");
-
-      }
-    );
-
-
-  document.addEventListener(
-    "click",
-    function() {
-
-      $("profile-wrapper")
-        .classList.remove("open");
-
-    }
-  );
-
-
-  /* =========================================================
-     MODALS
-     ========================================================= */
-
-  function openModal(id) {
-
-    $(id)
-      .classList
-      .add("open");
-
-  }
-
-
-  function closeModal(id) {
-
-    $(id)
-      .classList
-      .remove("open");
-
-  }
-
-
-  document
-    .querySelectorAll(".modal-backdrop")
-    .forEach(backdrop => {
-
-      backdrop.addEventListener(
         "click",
         function(event) {
 
-          if (
-            event.target === backdrop
-          ) {
+            event.stopPropagation();
 
-            backdrop.classList.remove("open");
-
-          }
+            $("profile-wrapper")
+                .classList
+                .toggle("open");
 
         }
-      );
+    );
+
+
+document.addEventListener(
+    "click",
+    function() {
+
+        $("profile-wrapper")
+            .classList
+            .remove("open");
+
+    }
+);
+
+
+/* =========================================================
+   MODALS
+   ========================================================= */
+
+function openModal(id) {
+
+    $(id)
+        .classList
+        .add("open");
+
+}
+
+
+function closeModal(id) {
+
+    $(id)
+        .classList
+        .remove("open");
+
+}
+
+
+document
+    .querySelectorAll(".modal-backdrop")
+    .forEach(backdrop => {
+
+        backdrop.addEventListener(
+            "click",
+            function(event) {
+
+                if (
+                    event.target === backdrop
+                ) {
+
+                    backdrop
+                        .classList
+                        .remove("open");
+
+                }
+
+            }
+        );
 
     });
 
 
-  /* =========================================================
-     INITIAL LOAD
-     ========================================================= */
+/* =========================================================
+   INITIALISE
+   ========================================================= */
 
-  async function initialise() {
+async function initialise() {
 
     const {
-      data,
-      error
+        data,
+        error
     } =
-      await supabaseClient.auth.getUser();
+        await supabaseClient.auth.getUser();
 
 
     if (
-      error ||
-      !data ||
-      !data.user
+        error ||
+        !data ||
+        !data.user
     ) {
 
-      window.location.href =
-        "supplier-signin.html";
+        window.location.href =
+            "supplier-signin.html";
 
-      return;
+        return;
 
     }
 
 
-    currentUser = data.user;
+    currentUser =
+        data.user;
 
 
     await loadProfile();
@@ -3702,237 +3785,240 @@
 
     renderAll();
 
-  }
+}
 
 
-  /* =========================================================
-     PROFILE
-     ========================================================= */
+/* =========================================================
+   PROFILE
+   ========================================================= */
 
-  async function loadProfile() {
+async function loadProfile() {
 
     const {
-      data,
-      error
+        data,
+        error
     } =
-      await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq("id", currentUser.id)
-        .maybeSingle();
+        await supabaseClient
+            .from("profiles")
+            .select("*")
+            .eq("id",currentUser.id)
+            .maybeSingle();
 
 
     if (error) {
 
-      console.error(
-        "Profile error:",
-        error
-      );
+        console.error(
+            "Profile error:",
+            error
+        );
 
-      return;
+        return;
 
     }
 
 
-    currentProfile = data;
+    currentProfile =
+        data;
 
 
     if (!currentProfile) {
-      return;
+        return;
     }
 
 
-    const companyName =
-      currentProfile.company_name ||
-      "Supplier";
+    const company =
+        currentProfile.company_name ||
+        "Supplier";
 
 
     $("welcome-name")
-      .textContent =
-      companyName;
+        .textContent =
+        company;
 
 
     $("profile-name")
-      .textContent =
-      companyName;
+        .textContent =
+        company;
 
 
     $("profile-avatar")
-      .textContent =
-      companyName
-        .substring(0, 1)
-        .toUpperCase();
+        .textContent =
+        company
+            .substring(0,1)
+            .toUpperCase();
 
 
     $("profile-company")
-      .textContent =
-      currentProfile.company_name ||
-      "—";
+        .textContent =
+        currentProfile.company_name ||
+        "—";
 
 
     $("profile-category")
-      .textContent =
-      currentProfile.supplier_category ||
-      "—";
+        .textContent =
+        currentProfile.supplier_category ||
+        "—";
 
 
     $("profile-address")
-      .textContent =
-      currentProfile.business_address ||
-      "—";
+        .textContent =
+        currentProfile.business_address ||
+        "—";
 
 
     $("profile-city")
-      .textContent =
-      currentProfile.city ||
-      "—";
+        .textContent =
+        currentProfile.city ||
+        "—";
 
 
     $("profile-contact")
-      .textContent =
-      currentProfile.contact_person ||
-      "—";
+        .textContent =
+        currentProfile.contact_person ||
+        "—";
 
 
     $("profile-email")
-      .textContent =
-      currentUser.email ||
-      "—";
+        .textContent =
+        currentUser.email ||
+        "—";
 
 
     $("profile-phone")
-      .textContent =
-      currentProfile.contact_phone ||
-      "—";
+        .textContent =
+        currentProfile.contact_phone ||
+        "—";
 
 
     $("profile-verification")
-      .textContent =
-      currentProfile.verification_status ||
-      (
-        currentProfile.verified
-          ? "Verified"
-          : "Pending"
-      );
+        .textContent =
+        currentProfile.verification_status ||
+        (
+            currentProfile.verified
+                ? "Verified"
+                : "Pending"
+        );
 
-  }
+}
 
 
-  /* =========================================================
-     RFQS
-     ========================================================= */
+/* =========================================================
+   RFQS
+   ========================================================= */
 
-  async function loadRFQs() {
+async function loadRFQs() {
 
     const {
-      data,
-      error
+        data,
+        error
     } =
-      await supabaseClient
-        .from("rfqs")
-        .select("*")
-        .order(
-          "created_at",
-          {
-            ascending: false
-          }
-        );
+        await supabaseClient
+            .from("rfqs")
+            .select("*")
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
 
 
     if (error) {
 
-      console.error(
-        "RFQ error:",
-        error
-      );
+        console.error(
+            "RFQ error:",
+            error
+        );
 
-      rfqs = [];
+        rfqs = [];
 
-      return;
+        return;
 
     }
 
 
-    rfqs = data || [];
+    rfqs =
+        data || [];
 
-  }
+}
 
 
-  /* =========================================================
-     QUOTES
-     ========================================================= */
+/* =========================================================
+   QUOTES
+   ========================================================= */
 
-  async function loadQuotes() {
+async function loadQuotes() {
 
     const {
-      data,
-      error
+        data,
+        error
     } =
-      await supabaseClient
-        .from("quotes")
-        .select("*")
-        .eq(
-          "supplier_user_id",
-          currentUser.id
-        )
-        .order(
-          "created_at",
-          {
-            ascending: false
-          }
-        );
+        await supabaseClient
+            .from("quotes")
+            .select("*")
+            .eq(
+                "supplier_user_id",
+                currentUser.id
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
 
 
     if (error) {
 
-      console.error(
-        "Quotes error:",
-        error
-      );
+        console.error(
+            "Quote error:",
+            error
+        );
 
-      quotes = [];
+        quotes = [];
 
-      return;
+        return;
 
     }
 
 
-    quotes = data || [];
+    quotes =
+        data || [];
 
-  }
+}
 
 
-  /* =========================================================
-     DOCUMENTS
-     ========================================================= */
+/* =========================================================
+   DOCUMENTS
+   ========================================================= */
 
-  async function loadDocuments() {
+async function loadDocuments() {
 
     const {
-      data,
-      error
+        data,
+        error
     } =
-      await supabaseClient
-        .from("supplier_documents")
-        .select("*")
-        .eq(
-          "supplier_user_id",
-          currentUser.id
-        );
+        await supabaseClient
+            .from("supplier_documents")
+            .select("*")
+            .eq(
+                "supplier_user_id",
+                currentUser.id
+            );
 
 
     if (error) {
 
-      console.error(
-        "Documents error:",
-        error
-      );
+        console.error(
+            "Document error:",
+            error
+        );
 
-      documents = {};
+        documents = {};
 
-      renderDocuments();
+        renderDocuments();
 
-      return;
+        return;
 
     }
 
@@ -3941,25 +4027,25 @@
 
 
     (data || [])
-      .forEach(document => {
+        .forEach(document => {
 
-        documents[
-          document.document_type
-        ] = document;
+            documents[
+                document.document_type
+            ] = document;
 
-      });
+        });
 
 
     renderDocuments();
 
-  }
+}
 
 
-  /* =========================================================
-     RENDER ALL
-     ========================================================= */
+/* =========================================================
+   RENDER
+   ========================================================= */
 
-  function renderAll() {
+function renderAll() {
 
     renderStats();
 
@@ -3975,1705 +4061,1640 @@
 
     renderDocuments();
 
-  }
+}
 
 
-  /* =========================================================
-     STATS
-     ========================================================= */
+/* =========================================================
+   STATS
+   ========================================================= */
 
-  function renderStats() {
+function renderStats() {
 
-    const activeRFQs =
-      rfqs.filter(
-        rfq =>
-          !declinedIds.has(rfq.id) &&
-          rfq.status !== "closed" &&
-          rfq.status !== "completed"
-      );
-
-
-    $("stat-rfqs")
-      .textContent =
-      activeRFQs.length;
-
-
-    $("stat-quotes")
-      .textContent =
-      quotes.length;
-
-
-    const awards =
-      quotes.filter(
-        quote =>
-          quote.status === "awarded" ||
-          quote.status === "accepted" ||
-          quote.status === "won"
-      );
-
-
-    $("stat-awards")
-      .textContent =
-      awards.length;
-
-
-    const submitted =
-      quotes.length;
-
-
-    if (submitted === 0) {
-
-      $("stat-response")
-        .textContent = "—";
-
-    } else {
-
-      const respondedRFQIds =
-        new Set(
-          quotes.map(
-            quote => quote.rfq_id
-          )
+    const active =
+        rfqs.filter(
+            rfq =>
+                !declinedIds.has(rfq.id) &&
+                rfq.status !== "closed" &&
+                rfq.status !== "completed"
         );
 
 
-      const responseRate =
-        rfqs.length
-          ? Math.round(
-              (
-                respondedRFQIds.size /
-                Math.max(rfqs.length, 1)
-              ) * 100
-            )
-          : 0;
-
-
-      $("stat-response")
+    $("stat-rfqs")
         .textContent =
-        responseRate + "%";
+        active.length;
+
+
+    $("stat-quotes")
+        .textContent =
+        quotes.length;
+
+
+    const awards =
+        quotes.filter(
+            quote =>
+                quote.status === "awarded" ||
+                quote.status === "accepted" ||
+                quote.status === "won"
+        );
+
+
+    $("stat-awards")
+        .textContent =
+        awards.length;
+
+
+    if (!rfqs.length) {
+
+        $("stat-response")
+            .textContent =
+            "—";
+
+        return;
 
     }
 
-  }
+
+    const responded =
+        new Set(
+            quotes.map(
+                quote =>
+                    quote.rfq_id
+            )
+        );
 
 
-  /* =========================================================
-     RFQ CARD
-     ========================================================= */
+    $("stat-response")
+        .textContent =
+        Math.round(
+            (
+                responded.size /
+                rfqs.length
+            ) * 100
+        ) + "%";
 
-  function rfqCard(rfq) {
-
-    const isDirect =
-      Boolean(
-        rfq.supplier_profile_id ||
-        rfq.supplier_id ||
-        rfq.target_supplier_id
-      );
+}
 
 
-    const badgeClass =
-      isDirect
-        ? "direct"
-        : "";
+/* =========================================================
+   RFQ CARD
+   ========================================================= */
 
+function rfqCard(rfq) {
 
-    const badgeText =
-      isDirect
-        ? "DIRECT REQUEST"
-        : "OPEN TO ALL SUPPLIERS";
+    const direct =
+        Boolean(
+            rfq.supplier_profile_id ||
+            rfq.supplier_id ||
+            rfq.target_supplier_id
+        );
 
 
     return `
 
-      <article
-        class="rfq-card"
-        data-rfq-id="${escapeHtml(rfq.id)}"
-      >
+        <article class="rfq-card">
 
-        <div class="rfq-top">
+            <div class="rfq-top">
 
-          <span class="rfq-badge ${badgeClass}">
-            ${badgeText}
-          </span>
+                <span
+                    class="rfq-badge ${direct ? "direct" : ""}"
+                >
+                    ${
+                        direct
+                            ? "DIRECT REQUEST"
+                            : "OPEN TO ALL SUPPLIERS"
+                    }
+                </span>
 
-          <span class="rfq-time">
-            ${formatDateTime(rfq.created_at)}
-          </span>
+                <span class="rfq-time">
+                    ${formatDateTime(rfq.created_at)}
+                </span>
 
-        </div>
-
-
-        <h3 class="rfq-title">
-          ${escapeHtml(
-            rfq.title ||
-            "Procurement Request"
-          )}
-        </h3>
+            </div>
 
 
-        <div class="company-line">
+            <h3 class="rfq-title">
 
-          <span>
-            ${escapeHtml(
-              rfq.business_name ||
-              "Business Client"
-            )}
-          </span>
+                ${escapeHtml(
+                    rfq.title ||
+                    "Procurement Request"
+                )}
 
-          <span class="verified-check">
-            ✓
-          </span>
-
-        </div>
+            </h3>
 
 
-        <div class="rfq-details">
+            <div class="company-line">
+
+                <span>
+                    ${escapeHtml(
+                        rfq.business_name ||
+                        "Business Client"
+                    )}
+                </span>
+
+                <span class="verified-check">
+                    ✓
+                </span>
+
+            </div>
 
 
-          <div class="detail-box">
-
-            <span class="detail-label">
-              Quantity
-            </span>
-
-            <span class="detail-value">
-              ${escapeHtml(
-                rfq.quantity ||
-                "—"
-              )}
-            </span>
-
-          </div>
+            <div class="rfq-details">
 
 
-          <div class="detail-box">
+                <div class="detail-box">
 
-            <span class="detail-label">
-              Required Date
-            </span>
+                    <span class="detail-label">
+                        Quantity
+                    </span>
 
-            <span class="detail-value">
-              ${formatDate(
-                rfq.deadline
-              )}
-            </span>
+                    <span class="detail-value">
+                        ${escapeHtml(
+                            rfq.quantity ||
+                            "—"
+                        )}
+                    </span>
 
-          </div>
-
-
-          <div class="detail-box">
-
-            <span class="detail-label">
-              Delivery
-            </span>
-
-            <span class="detail-value">
-              ${escapeHtml(
-                rfq.delivery_location ||
-                "—"
-              )}
-            </span>
-
-          </div>
+                </div>
 
 
-          <div class="detail-box">
+                <div class="detail-box">
 
-            <span class="detail-label">
-              Budget
-            </span>
+                    <span class="detail-label">
+                        Required Date
+                    </span>
 
-            <span class="detail-value">
-              ${money(
-                rfq.estimated_budget
-              )}
-            </span>
+                    <span class="detail-value">
+                        ${formatDate(
+                            rfq.deadline
+                        )}
+                    </span>
 
-          </div>
-
-
-        </div>
+                </div>
 
 
-        <div class="rfq-bottom">
+                <div class="detail-box">
 
-          <span class="rfq-category">
+                    <span class="detail-label">
+                        Delivery
+                    </span>
 
-            ${escapeHtml(
-              rfq.category ||
-              "General Procurement"
-            )}
+                    <span class="detail-value">
+                        ${escapeHtml(
+                            rfq.delivery_location ||
+                            "—"
+                        )}
+                    </span>
 
-          </span>
+                </div>
 
 
-          <div class="rfq-actions">
+                <div class="detail-box">
 
-            <button
-              class="btn btn-danger small-btn"
-              onclick="openDecline('${escapeHtml(rfq.id)}')"
-            >
-              Decline
-            </button>
+                    <span class="detail-label">
+                        Budget
+                    </span>
 
-            <button
-              class="btn btn-primary small-btn"
-              onclick="openQuote('${escapeHtml(rfq.id)}')"
-            >
-              View & Submit Quote
-            </button>
+                    <span class="detail-value">
+                        ${money(
+                            rfq.estimated_budget
+                        )}
+                    </span>
 
-          </div>
+                </div>
 
-        </div>
 
-      </article>
+            </div>
+
+
+            <div class="rfq-bottom">
+
+                <span class="rfq-category">
+
+                    ${escapeHtml(
+                        rfq.category ||
+                        "General Procurement"
+                    )}
+
+                </span>
+
+
+                <div class="rfq-actions">
+
+                    <button
+                        class="btn btn-danger small-btn"
+                        onclick="openDecline('${escapeHtml(rfq.id)}')"
+                    >
+                        Decline
+                    </button>
+
+
+                    <button
+                        class="btn btn-primary small-btn"
+                        onclick="openQuote('${escapeHtml(rfq.id)}')"
+                    >
+                        View & Submit Quote
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
 
     `;
 
-  }
+}
 
 
-  /* =========================================================
-     DASHBOARD RFQS
-     ========================================================= */
+/* =========================================================
+   DASHBOARD RFQS
+   ========================================================= */
 
-  function renderDashboardRFQs() {
+function renderDashboardRFQs() {
 
     const container =
-      $("dashboard-rfqs");
+        $("dashboard-rfqs");
 
 
     const active =
-      rfqs
-        .filter(
-          rfq =>
-            !declinedIds.has(rfq.id) &&
-            rfq.status !== "closed" &&
-            rfq.status !== "completed"
-        )
-        .slice(0, 4);
+        rfqs
+            .filter(
+                rfq =>
+                    !declinedIds.has(rfq.id) &&
+                    rfq.status !== "closed" &&
+                    rfq.status !== "completed"
+            )
+            .slice(0,4);
 
 
     if (!active.length) {
 
-      container.innerHTML = `
+        container.innerHTML = `
 
-        <div class="empty-state">
+            <div class="empty-state">
 
-          <h3>
-            No open RFQs
-          </h3>
+                <h3>
+                    No open RFQs
+                </h3>
 
-          <p>
-            New supplier opportunities will appear here.
-          </p>
+                <p>
+                    New supplier opportunities will appear here.
+                </p>
 
-        </div>
+            </div>
 
-      `;
+        `;
 
-      return;
+        return;
 
     }
 
 
     container.innerHTML =
-      active
-        .map(rfqCard)
-        .join("");
+        active
+            .map(rfqCard)
+            .join("");
 
-  }
+}
 
 
-  /* =========================================================
-     ALL RFQS
-     ========================================================= */
+/* =========================================================
+   ALL RFQS
+   ========================================================= */
 
-  function renderAllRFQs() {
+function renderAllRFQs() {
 
     const container =
-      $("all-rfqs");
+        $("all-rfqs");
 
 
     const active =
-      rfqs.filter(
-        rfq =>
-          !declinedIds.has(rfq.id) &&
-          rfq.status !== "closed" &&
-          rfq.status !== "completed"
-      );
+        rfqs.filter(
+            rfq =>
+                !declinedIds.has(rfq.id) &&
+                rfq.status !== "closed" &&
+                rfq.status !== "completed"
+        );
 
 
     if (!active.length) {
 
-      container.innerHTML = `
+        container.innerHTML = `
 
-        <div class="empty-state">
+            <div class="empty-state">
 
-          <h3>
-            No open RFQs
-          </h3>
+                <h3>
+                    No open RFQs
+                </h3>
 
-          <p>
-            There are currently no RFQs available for you.
-          </p>
+                <p>
+                    There are currently no RFQs available.
+                </p>
 
-        </div>
+            </div>
 
-      `;
+        `;
 
-      return;
+        return;
 
     }
 
 
     container.innerHTML =
-      active
-        .map(rfqCard)
-        .join("");
+        active
+            .map(rfqCard)
+            .join("");
 
-  }
+}
 
 
-  /* =========================================================
-     COMPLETED
-     ========================================================= */
+/* =========================================================
+   COMPLETED
+   ========================================================= */
 
-  function renderCompleted() {
+function renderCompleted() {
 
     const container =
-      $("completed-content");
+        $("completed-content");
 
 
     const completed =
-      rfqs.filter(
-        rfq =>
-          declinedIds.has(rfq.id) ||
-          rfq.status === "closed" ||
-          rfq.status === "completed"
-      );
+        rfqs.filter(
+            rfq =>
+                declinedIds.has(rfq.id) ||
+                rfq.status === "closed" ||
+                rfq.status === "completed"
+        );
 
 
     if (!completed.length) {
 
-      container.innerHTML = `
+        container.innerHTML = `
 
-        <div
-          style="
-            padding:20px;
-            color:var(--muted);
-            font-size:12px;
-          "
-        >
-          No reviewed or completed RFQs yet.
-        </div>
+            <div
+                style="
+                    padding:20px;
+                    color:var(--muted);
+                    font-size:12px;
+                "
+            >
+                No reviewed or completed RFQs yet.
+            </div>
 
-      `;
+        `;
 
-      return;
+        return;
 
     }
 
 
     container.innerHTML =
-      completed
-        .map(
-          rfq => `
+        completed
+            .map(
+                rfq => `
 
-            <div class="completed-row">
+                    <div class="completed-row">
 
-              <div>
+                        <div>
 
-                <strong>
-                  ${escapeHtml(
-                    rfq.title ||
-                    "RFQ"
-                  )}
-                </strong>
+                            <strong>
+                                ${escapeHtml(
+                                    rfq.title ||
+                                    "RFQ"
+                                )}
+                            </strong>
 
-                <small>
-                  ${
-                    escapeHtml(
-                      rfq.business_name ||
-                      "Business"
-                    )
-                  }
-                </small>
+                            <small>
+                                ${escapeHtml(
+                                    rfq.business_name ||
+                                    "Business"
+                                )}
+                            </small>
 
-              </div>
+                        </div>
 
-              <span>
-                ${formatDateTime(
-                  rfq.created_at
-                )}
-              </span>
+                        <span>
+                            ${formatDateTime(
+                                rfq.created_at
+                            )}
+                        </span>
 
-            </div>
+                    </div>
 
-          `
-        )
-        .join("");
+                `
+            )
+            .join("");
 
-  }
+}
 
 
-  $("completed-toggle")
+$("completed-toggle")
     .addEventListener(
-      "click",
-      function() {
+        "click",
+        function() {
 
-        const list =
-          $("completed-list");
+            const list =
+                $("completed-list");
 
-        list.classList.toggle("open");
+            list.classList.toggle("open");
 
-        $("completed-arrow")
-          .textContent =
-          list.classList.contains("open")
-            ? "−"
-            : "+";
+            $("completed-arrow")
+                .textContent =
+                list.classList.contains("open")
+                    ? "−"
+                    : "+";
 
-      }
+        }
     );
 
 
-  /* =========================================================
-     OPEN QUOTE MODAL
-     ========================================================= */
+/* =========================================================
+   OPEN QUOTE
+   ========================================================= */
 
-  function openQuote(rfqId) {
+function openQuote(rfqId) {
 
     const rfq =
-      rfqs.find(
-        item =>
-          String(item.id) ===
-          String(rfqId)
-      );
+        rfqs.find(
+            item =>
+                String(item.id) ===
+                String(rfqId)
+        );
 
 
     if (!rfq) {
-      return;
+        return;
     }
 
 
     $("quote-rfq-id")
-      .value =
-      rfq.id;
+        .value =
+        rfq.id;
 
 
     $("quote-modal-subtitle")
-      .textContent =
-      "Submit a quotation to " +
-      (
-        rfq.business_name ||
-        "the client"
-      );
+        .textContent =
+        "Submit a quotation to " +
+        (
+            rfq.business_name ||
+            "the client"
+        );
 
 
     $("quote-rfq-summary")
-      .innerHTML = `
+        .innerHTML = `
 
-        <div class="summary-grid">
+            <div class="summary-grid">
 
-          <div class="summary-item">
+                <div class="summary-item">
 
-            <label>
-              RFQ
-            </label>
+                    <label>
+                        RFQ
+                    </label>
 
-            <strong>
-              ${escapeHtml(
-                rfq.code ||
-                rfq.id
-              )}
-            </strong>
+                    <strong>
+                        ${escapeHtml(
+                            rfq.code ||
+                            rfq.id
+                        )}
+                    </strong>
 
-          </div>
-
-
-          <div class="summary-item">
-
-            <label>
-              Customer
-            </label>
-
-            <strong>
-              ${escapeHtml(
-                rfq.business_name ||
-                "—"
-              )}
-            </strong>
-
-          </div>
+                </div>
 
 
-          <div class="summary-item">
+                <div class="summary-item">
 
-            <label>
-              Request
-            </label>
+                    <label>
+                        Customer
+                    </label>
 
-            <strong>
-              ${escapeHtml(
-                rfq.title ||
-                "—"
-              )}
-            </strong>
+                    <strong>
+                        ${escapeHtml(
+                            rfq.business_name ||
+                            "—"
+                        )}
+                    </strong>
 
-          </div>
-
-
-          <div class="summary-item">
-
-            <label>
-              Required Date
-            </label>
-
-            <strong>
-              ${formatDate(
-                rfq.deadline
-              )}
-            </strong>
-
-          </div>
-
-        </div>
-
-      `;
+                </div>
 
 
-    $("quote-feedback")
-      .textContent = "";
+                <div class="summary-item">
+
+                    <label>
+                        Request
+                    </label>
+
+                    <strong>
+                        ${escapeHtml(
+                            rfq.title ||
+                            "—"
+                        )}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <label>
+                        Required Date
+                    </label>
+
+                    <strong>
+                        ${formatDate(
+                            rfq.deadline
+                        )}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        `;
 
 
     $("quote-form")
-      .reset();
+        .reset();
 
 
     $("quote-rfq-id")
-      .value =
-      rfq.id;
+        .value =
+        rfq.id;
 
 
-    openModal("quote-modal");
+    $("quote-feedback")
+        .textContent =
+        "";
 
-  }
+
+    openModal(
+        "quote-modal"
+    );
+
+}
 
 
-  /* =========================================================
-     SUBMIT QUOTE
-     ========================================================= */
+/* =========================================================
+   SUBMIT QUOTE
+   ========================================================= */
 
-  $("quote-form")
+$("quote-form")
     .addEventListener(
-      "submit",
-      async function(event) {
+        "submit",
+        async function(event) {
 
-        event.preventDefault();
-
-
-        const feedback =
-          $("quote-feedback");
+            event.preventDefault();
 
 
-        feedback
-          .className =
-          "feedback";
+            const feedback =
+                $("quote-feedback");
 
 
-        feedback
-          .textContent =
-          "Submitting quotation...";
+            feedback.className =
+                "feedback";
 
 
-        const rfqId =
-          $("quote-rfq-id").value;
+            feedback.textContent =
+                "Submitting quotation...";
 
 
-        const price =
-          $("quote-price").value;
+            const payment =
+                $("quote-payment").value;
 
 
-        const delivery =
-          $("quote-delivery").value;
+            const validity =
+                $("quote-validity").value;
 
 
-        const payment =
-          $("quote-payment").value;
+            const availability =
+                $("quote-availability").value;
 
 
-        const validity =
-          $("quote-validity").value;
+            const warranty =
+                $("quote-warranty").value;
 
 
-        const availability =
-          $("quote-availability").value;
+            const notes =
+                $("quote-notes").value;
 
 
-        const warranty =
-          $("quote-warranty").value;
+            const combinedNotes = [
+
+                payment
+                    ? "Payment Terms: " + payment
+                    : "",
+
+                validity
+                    ? "Quote Validity: " + validity
+                    : "",
+
+                availability
+                    ? "Availability: " + availability
+                    : "",
+
+                warranty
+                    ? "Warranty/Guarantee: " + warranty
+                    : "",
+
+                notes
+                    ? "Additional Notes: " + notes
+                    : ""
+
+            ]
+                .filter(Boolean)
+                .join("\n");
 
 
-        const notes =
-          $("quote-notes").value;
+            const payload = {
+
+                rfq_id:
+                    $("quote-rfq-id").value,
+
+                supplier_user_id:
+                    currentUser.id,
+
+                supplier_company:
+                    currentProfile?.company_name ||
+                    "Supplier",
+
+                price:
+                    Number(
+                        $("quote-price").value
+                    ),
+
+                delivery:
+                    $("quote-delivery").value,
+
+                notes:
+                    combinedNotes,
+
+                status:
+                    "pending"
+
+            };
 
 
-        const combinedNotes = [
-
-          payment
-            ? "Payment Terms: " + payment
-            : "",
-
-          validity
-            ? "Quote Validity: " + validity
-            : "",
-
-          availability
-            ? "Availability: " + availability
-            : "",
-
-          warranty
-            ? "Warranty/Guarantee: " + warranty
-            : "",
-
-          notes
-            ? "Additional Notes: " + notes
-            : ""
-
-        ]
-          .filter(Boolean)
-          .join("\n");
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from("quotes")
+                    .insert(payload);
 
 
-        const payload = {
+            if (error) {
 
-          rfq_id: rfqId,
-
-          supplier_user_id:
-            currentUser.id,
-
-          supplier_company:
-            currentProfile?.company_name ||
-            "Supplier",
-
-          price:
-            Number(price),
-
-          delivery:
-            delivery,
-
-          notes:
-            combinedNotes
-
-        };
+                console.error(
+                    error
+                );
 
 
-        const {
-          data,
-          error
-        } =
-          await supabaseClient
-            .from("quotes")
-            .insert(payload)
-            .select()
-            .single();
+                feedback.className =
+                    "feedback error";
 
 
-        if (error) {
+                feedback.textContent =
+                    error.message ||
+                    "Unable to submit quotation.";
 
-          console.error(
-            "Quote submission error:",
-            error
-          );
+                return;
 
-
-          feedback
-            .className =
-            "feedback error";
+            }
 
 
-          feedback
-            .textContent =
-            error.message ||
-            "Unable to submit quotation.";
-
-          return;
-
-        }
+            feedback.className =
+                "feedback success";
 
 
-        feedback
-          .className =
-          "feedback success";
+            feedback.textContent =
+                "Quotation submitted successfully.";
 
 
-        feedback
-          .textContent =
-          "Quotation submitted successfully.";
+            await loadQuotes();
+
+            renderAll();
 
 
-        await loadQuotes();
+            setTimeout(
+                function() {
 
-        renderAll();
+                    closeModal(
+                        "quote-modal"
+                    );
 
-
-        setTimeout(
-          function() {
-
-            closeModal(
-              "quote-modal"
+                },
+                900
             );
 
-          },
-          900
-        );
-
-      }
+        }
     );
 
 
-  /* =========================================================
-     DECLINE
-     ========================================================= */
+/* =========================================================
+   DECLINE
+   ========================================================= */
 
-  function openDecline(rfqId) {
+function openDecline(rfqId) {
 
     $("decline-rfq-id")
-      .value =
-      rfqId;
+        .value =
+        rfqId;
 
 
     $("decline-reason")
-      .value = "";
+        .value =
+        "";
 
 
     $("decline-feedback")
-      .textContent = "";
+        .textContent =
+        "";
 
 
     openModal(
-      "decline-modal"
+        "decline-modal"
     );
 
-  }
+}
 
 
-  $("confirm-decline")
+$("confirm-decline")
     .addEventListener(
-      "click",
-      async function() {
+        "click",
+        function() {
 
-        const rfqId =
-          $("decline-rfq-id").value;
-
-
-        const reason =
-          $("decline-reason").value;
+            const rfqId =
+                $("decline-rfq-id")
+                    .value;
 
 
-        /*
-          The current confirmed schema does not contain
-          a supplier-specific RFQ response/decline table.
-
-          Therefore this is kept in the current browser session
-          until the response table is added.
-        */
-
-        declinedIds.add(rfqId);
-
-
-        console.log(
-          "RFQ declined:",
-          rfqId,
-          reason
-        );
-
-
-        $("decline-feedback")
-          .className =
-          "feedback success";
-
-
-        $("decline-feedback")
-          .textContent =
-          "RFQ declined.";
-
-
-        renderAll();
-
-
-        setTimeout(
-          function() {
-
-            closeModal(
-              "decline-modal"
+            declinedIds.add(
+                rfqId
             );
 
-          },
-          700
-        );
 
-      }
+            $("decline-feedback")
+                .className =
+                "feedback success";
+
+
+            $("decline-feedback")
+                .textContent =
+                "RFQ declined.";
+
+
+            renderAll();
+
+
+            setTimeout(
+                function() {
+
+                    closeModal(
+                        "decline-modal"
+                    );
+
+                },
+                700
+            );
+
+        }
     );
 
 
-  /* =========================================================
-     DOCUMENT UPLOAD
-     ========================================================= */
+/* =========================================================
+   DOCUMENT UPLOAD MODAL
+   ========================================================= */
 
-  function openDocumentUpload(type) {
+function openDocumentUpload(type) {
 
     currentDocumentType =
-      type;
+        type;
 
 
     const info =
-      documentInfo[type];
+        documentInfo[type];
 
 
     $("document-type")
-      .value =
-      type;
+        .value =
+        type;
 
 
     $("document-modal-title")
-      .textContent =
-      info.title;
+        .textContent =
+        info.title;
 
 
     $("document-modal-description")
-      .textContent =
-      info.description;
+        .textContent =
+        info.description;
 
 
     $("document-file-input")
-      .value = "";
+        .value =
+        "";
 
 
     $("selected-document-file")
-      .textContent = "";
+        .textContent =
+        "";
 
 
     $("document-feedback")
-      .textContent = "";
+        .textContent =
+        "";
 
 
     openModal(
-      "document-modal"
+        "document-modal"
     );
 
-  }
+}
 
 
-  $("document-file-input")
+$("document-file-input")
     .addEventListener(
-      "change",
-      function() {
+        "change",
+        function() {
 
-        const file =
-          this.files[0];
+            const file =
+                this.files[0];
 
 
-        if (!file) {
+            if (!file) {
 
-          $("selected-document-file")
-            .textContent = "";
+                $("selected-document-file")
+                    .textContent =
+                    "";
 
-          return;
+                return;
+
+            }
+
+
+            $("selected-document-file")
+                .textContent =
+                "Selected: " +
+                file.name;
 
         }
-
-
-        $("selected-document-file")
-          .textContent =
-          "Selected: " +
-          file.name;
-
-      }
     );
 
 
-  /* =========================================================
-     UPLOAD DOCUMENT TO SUPABASE
-     ========================================================= */
+/* =========================================================
+   UPLOAD DOCUMENT
+   ========================================================= */
 
-  $("document-form")
+$("document-form")
     .addEventListener(
-      "submit",
-      async function(event) {
+        "submit",
+        async function(event) {
 
-        event.preventDefault();
-
-
-        const feedback =
-          $("document-feedback");
+            event.preventDefault();
 
 
-        feedback
-          .className =
-          "feedback";
+            const feedback =
+                $("document-feedback");
 
 
-        const type =
-          $("document-type").value;
+            const type =
+                $("document-type").value;
 
 
-        const file =
-          $("document-file-input").files[0];
+            const file =
+                $("document-file-input")
+                    .files[0];
 
 
-        if (!file) {
+            if (!file) {
 
-          feedback
-            .className =
-            "feedback error";
+                feedback.className =
+                    "feedback error";
 
+                feedback.textContent =
+                    "Please choose a document.";
 
-          feedback
-            .textContent =
-            "Please choose a document.";
+                return;
 
-          return;
-
-        }
+            }
 
 
-        if (
-          file.size >
-          10 * 1024 * 1024
-        ) {
+            if (
+                file.size >
+                10 * 1024 * 1024
+            ) {
 
-          feedback
-            .className =
-            "feedback error";
+                feedback.className =
+                    "feedback error";
 
+                feedback.textContent =
+                    "The file is larger than 10 MB.";
 
-          feedback
-            .textContent =
-            "The file is larger than 10 MB.";
+                return;
 
-          return;
-
-        }
+            }
 
 
-        const allowedTypes = [
+            const allowedTypes = [
 
-          "application/pdf",
+                "application/pdf",
 
-          "image/png",
+                "image/png",
 
-          "image/jpeg"
+                "image/jpeg"
 
-        ];
-
-
-        if (
-          !allowedTypes.includes(
-            file.type
-          )
-        ) {
-
-          feedback
-            .className =
-            "feedback error";
+            ];
 
 
-          feedback
-            .textContent =
-            "Please upload a PDF, JPG or PNG file.";
+            if (
+                !allowedTypes.includes(
+                    file.type
+                )
+            ) {
 
-          return;
+                feedback.className =
+                    "feedback error";
 
-        }
+                feedback.textContent =
+                    "Please upload a PDF, JPG or PNG file.";
 
+                return;
 
-        feedback
-          .textContent =
-          "Uploading securely...";
-
-
-        const extension =
-          file.name
-            .split(".")
-            .pop()
-            .toLowerCase();
+            }
 
 
-        const safeName =
-          file.name
-            .replace(
-              /[^a-zA-Z0-9._-]/g,
-              "_"
+            feedback.className =
+                "feedback";
+
+
+            feedback.textContent =
+                "Uploading securely...";
+
+
+            const safeName =
+                file.name
+                    .replace(
+                        /[^a-zA-Z0-9._-]/g,
+                        "_"
+                    );
+
+
+            const filePath =
+                currentUser.id +
+                "/" +
+                type +
+                "/" +
+                Date.now() +
+                "-" +
+                safeName;
+
+
+            const {
+                error:
+                    uploadError
+            } =
+                await supabaseClient
+                    .storage
+                    .from(
+                        "supplier-documents"
+                    )
+                    .upload(
+                        filePath,
+                        file,
+                        {
+                            upsert: false,
+                            contentType:
+                                file.type
+                        }
+                    );
+
+
+            if (uploadError) {
+
+                console.error(
+                    uploadError
+                );
+
+
+                feedback.className =
+                    "feedback error";
+
+
+                feedback.textContent =
+                    uploadError.message ||
+                    "Unable to upload document.";
+
+                return;
+
+            }
+
+
+            const existing =
+                documents[type];
+
+
+            let databaseError =
+                null;
+
+
+            if (existing) {
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .from(
+                            "supplier_documents"
+                        )
+                        .update({
+
+                            file_name:
+                                file.name,
+
+                            file_path:
+                                filePath,
+
+                            status:
+                                "pending",
+
+                            uploaded_at:
+                                new Date()
+                                    .toISOString(),
+
+                            verified_at:
+                                null,
+
+                            verification_notes:
+                                null
+
+                        })
+                        .eq(
+                            "id",
+                            existing.id
+                        );
+
+
+                databaseError =
+                    error;
+
+            } else {
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .from(
+                            "supplier_documents"
+                        )
+                        .insert({
+
+                            supplier_user_id:
+                                currentUser.id,
+
+                            document_type:
+                                type,
+
+                            file_name:
+                                file.name,
+
+                            file_path:
+                                filePath,
+
+                            status:
+                                "pending"
+
+                        });
+
+
+                databaseError =
+                    error;
+
+            }
+
+
+            if (databaseError) {
+
+                await supabaseClient
+                    .storage
+                    .from(
+                        "supplier-documents"
+                    )
+                    .remove([
+                        filePath
+                    ]);
+
+
+                feedback.className =
+                    "feedback error";
+
+
+                feedback.textContent =
+                    databaseError.message ||
+                    "Document record could not be saved.";
+
+                return;
+
+            }
+
+
+            feedback.className =
+                "feedback success";
+
+
+            feedback.textContent =
+                "Document uploaded successfully and is pending verification.";
+
+
+            await loadDocuments();
+
+
+            setTimeout(
+                function() {
+
+                    closeModal(
+                        "document-modal"
+                    );
+
+                },
+                900
             );
 
-
-        const filePath =
-          currentUser.id +
-          "/" +
-          type +
-          "/" +
-          Date.now() +
-          "-" +
-          safeName;
-
-
-        /*
-          Upload to private bucket.
-        */
-
-        const {
-          error:
-            uploadError
-        } =
-          await supabaseClient
-            .storage
-            .from("supplier-documents")
-            .upload(
-              filePath,
-              file,
-              {
-                upsert: false,
-                contentType:
-                  file.type
-              }
-            );
-
-
-        if (uploadError) {
-
-          console.error(
-            uploadError
-          );
-
-
-          feedback
-            .className =
-            "feedback error";
-
-
-          feedback
-            .textContent =
-            uploadError.message ||
-            "Unable to upload document.";
-
-          return;
-
         }
-
-
-        /*
-          If an older document exists,
-          replace its database record.
-        */
-
-        const existing =
-          documents[type];
-
-
-        let databaseError =
-          null;
-
-
-        if (existing) {
-
-          const {
-            error
-          } =
-            await supabaseClient
-              .from("supplier_documents")
-              .update({
-
-                file_name:
-                  file.name,
-
-                file_path:
-                  filePath,
-
-                status:
-                  "pending",
-
-                uploaded_at:
-                  new Date().toISOString(),
-
-                verified_at:
-                  null,
-
-                verification_notes:
-                  null
-
-              })
-              .eq(
-                "id",
-                existing.id
-              );
-
-
-          databaseError =
-            error;
-
-        } else {
-
-          const {
-            error
-          } =
-            await supabaseClient
-              .from("supplier_documents")
-              .insert({
-
-                supplier_user_id:
-                  currentUser.id,
-
-                document_type:
-                  type,
-
-                file_name:
-                  file.name,
-
-                file_path:
-                  filePath,
-
-                status:
-                  "pending",
-
-                uploaded_at:
-                  new Date().toISOString()
-
-              });
-
-
-          databaseError =
-            error;
-
-        }
-
-
-        if (databaseError) {
-
-          console.error(
-            databaseError
-          );
-
-
-          /*
-            Clean up uploaded file
-            if database record fails.
-          */
-
-          await supabaseClient
-            .storage
-            .from("supplier-documents")
-            .remove([
-              filePath
-            ]);
-
-
-          feedback
-            .className =
-            "feedback error";
-
-
-          feedback
-            .textContent =
-            databaseError.message ||
-            "Document record could not be saved.";
-
-          return;
-
-        }
-
-
-        feedback
-          .className =
-          "feedback success";
-
-
-        feedback
-          .textContent =
-          "Document uploaded successfully and is pending verification.";
-
-
-        await loadDocuments();
-
-
-        setTimeout(
-          function() {
-
-            closeModal(
-              "document-modal"
-            );
-
-          },
-          900
-        );
-
-      }
     );
 
 
-  /* =========================================================
-     RENDER DOCUMENTS
-     ========================================================= */
+/* =========================================================
+   RENDER DOCUMENTS
+   ========================================================= */
 
-  function renderDocuments() {
+function renderDocuments() {
 
     const types = [
 
-      "pacra",
-      "tax",
-      "bank",
-      "residence"
+        "pacra",
+        "tax",
+        "bank",
+        "residence"
 
     ];
 
 
-    let completed = 0;
+    let verified =
+        0;
 
 
     types.forEach(
-      type => {
+        type => {
 
-        const document =
-          documents[type];
-
-
-        const statusElement =
-          $("status-" + type);
+            const document =
+                documents[type];
 
 
-        const fileElement =
-          $("file-" + type);
+            const status =
+                $("status-" + type);
 
 
-        const viewButton =
-          $("view-" + type);
+            const file =
+                $("file-" + type);
 
 
-        if (!document) {
-
-          statusElement.innerHTML = `
-
-            <span class="status-pill status-pending">
-              Not uploaded
-            </span>
-
-          `;
+            const view =
+                $("view-" + type);
 
 
-          fileElement
-            .classList
-            .remove("visible");
+            if (!document) {
+
+                status.innerHTML = `
+
+                    <span class="status-pill status-pending">
+                        Not uploaded
+                    </span>
+
+                `;
 
 
-          viewButton.style.display =
-            "none";
+                file.classList
+                    .remove("visible");
 
 
-          return;
+                view.style.display =
+                    "none";
+
+
+                return;
+
+            }
+
+
+            if (
+                document.status ===
+                "verified"
+            ) {
+
+                verified++;
+
+
+                status.innerHTML = `
+
+                    <span class="status-pill status-success">
+                        ✓ Verified
+                    </span>
+
+                `;
+
+            }
+            else if (
+                document.status ===
+                "rejected"
+            ) {
+
+                status.innerHTML = `
+
+                    <span class="status-pill status-danger">
+                        Rejected – Please re-upload
+                    </span>
+
+                `;
+
+            }
+            else {
+
+                status.innerHTML = `
+
+                    <span class="status-pill status-pending">
+                        Uploaded – Pending Verification
+                    </span>
+
+                `;
+
+            }
+
+
+            file.classList
+                .add("visible");
+
+
+            file.textContent =
+                document.file_name ||
+                "Uploaded document";
+
+
+            view.style.display =
+                "block";
 
         }
-
-
-        if (
-          document.status ===
-          "verified"
-        ) {
-
-          completed++;
-
-
-          statusElement.innerHTML = `
-
-            <span class="status-pill status-success">
-              ✓ Verified
-            </span>
-
-          `;
-
-        } else if (
-          document.status ===
-          "rejected"
-        ) {
-
-          statusElement.innerHTML = `
-
-            <span class="status-pill status-danger">
-              Rejected – Please re-upload
-            </span>
-
-          `;
-
-        } else {
-
-          statusElement.innerHTML = `
-
-            <span class="status-pill status-pending">
-              Uploaded – Pending Verification
-            </span>
-
-          `;
-
-        }
-
-
-        fileElement
-          .classList
-          .add("visible");
-
-
-        fileElement
-          .textContent =
-          document.file_name ||
-          "Uploaded document";
-
-
-        viewButton.style.display =
-          "block";
-
-      }
     );
 
 
     $("document-progress-text")
-      .textContent =
-      completed +
-      " of 4 verified";
+        .textContent =
+        verified +
+        " of 4 verified";
 
 
     $("document-progress-fill")
-      .style.width =
-      (
-        completed / 4 * 100
-      ) + "%";
+        .style.width =
+        (
+            verified / 4 * 100
+        ) + "%";
 
-  }
+}
 
 
-  /* =========================================================
-     VIEW DOCUMENT
-     ========================================================= */
+/* =========================================================
+   VIEW DOCUMENT
+   ========================================================= */
 
-  async function viewDocument(type) {
+async function viewDocument(type) {
 
     const document =
-      documents[type];
+        documents[type];
 
 
     if (
-      !document ||
-      !document.file_path
+        !document ||
+        !document.file_path
     ) {
 
-      alert(
-        "Document not found."
-      );
+        alert(
+            "Document not found."
+        );
 
-      return;
+        return;
 
     }
 
 
     const {
-      data,
-      error
+        data,
+        error
     } =
-      await supabaseClient
-        .storage
-        .from("supplier-documents")
-        .createSignedUrl(
-          document.file_path,
-          300
-        );
+        await supabaseClient
+            .storage
+            .from(
+                "supplier-documents"
+            )
+            .createSignedUrl(
+                document.file_path,
+                300
+            );
 
 
     if (error) {
 
-      console.error(
-        error
-      );
+        console.error(
+            error
+        );
 
 
-      alert(
-        "Unable to open the document."
-      );
+        alert(
+            "Unable to open document."
+        );
 
-      return;
+        return;
 
     }
 
 
     window.open(
-      data.signedUrl,
-      "_blank",
-      "noopener,noreferrer"
+        data.signedUrl,
+        "_blank",
+        "noopener,noreferrer"
     );
 
-  }
+}
 
 
-  /* =========================================================
-     QUOTES TABLE
-     ========================================================= */
+/* =========================================================
+   QUOTES TABLE
+   ========================================================= */
 
-  function renderQuotes() {
+function renderQuotes() {
 
     const body =
-      $("quotes-table-body");
+        $("quotes-table-body");
 
 
     if (!quotes.length) {
 
-      body.innerHTML = `
+        body.innerHTML = `
 
-        <tr>
+            <tr>
 
-          <td
-            colspan="5"
-            style="
-              text-align:center;
-              padding:35px;
-              color:var(--muted);
-            "
-          >
-            No quotations submitted yet.
-          </td>
+                <td
+                    colspan="5"
+                    style="
+                        text-align:center;
+                        padding:35px;
+                        color:var(--muted);
+                    "
+                >
+                    No quotations submitted yet.
+                </td>
 
-        </tr>
+            </tr>
 
-      `;
+        `;
 
-      return;
+        return;
 
     }
 
 
     body.innerHTML =
-      quotes
-        .map(
-          quote => {
+        quotes
+            .map(
+                quote => {
 
-            const rfq =
-              rfqs.find(
-                item =>
-                  String(item.id) ===
-                  String(quote.rfq_id)
-              );
-
-
-            const status =
-              quote.status ||
-              "pending";
+                    const rfq =
+                        rfqs.find(
+                            item =>
+                                String(item.id) ===
+                                String(quote.rfq_id)
+                        );
 
 
-            const statusClass =
-              (
-                status === "awarded" ||
-                status === "accepted" ||
-                status === "won"
-              )
-                ? "status-success"
-                : (
-                    status === "rejected"
-                      ? "status-danger"
-                      : "status-pending"
-                  );
+                    const status =
+                        quote.status ||
+                        "pending";
 
 
-            return `
-
-              <tr>
-
-                <td>
-
-                  <strong>
-                    ${escapeHtml(
-                      rfq?.title ||
-                      quote.rfq_id
-                    )}
-                  </strong>
-
-                </td>
+                    let statusClass =
+                        "status-pending";
 
 
-                <td>
-                  ${escapeHtml(
-                    rfq?.business_name ||
-                    "—"
-                  )}
-                </td>
+                    if (
+                        status === "awarded" ||
+                        status === "accepted" ||
+                        status === "won"
+                    ) {
+
+                        statusClass =
+                            "status-success";
+
+                    }
 
 
-                <td>
-                  ${money(
-                    quote.price
-                  )}
-                </td>
+                    if (
+                        status === "rejected"
+                    ) {
+
+                        statusClass =
+                            "status-danger";
+
+                    }
 
 
-                <td>
-                  ${formatDateTime(
-                    quote.created_at
-                  )}
-                </td>
+                    return `
+
+                        <tr>
+
+                            <td>
+
+                                <strong>
+                                    ${escapeHtml(
+                                        rfq?.title ||
+                                        quote.rfq_id
+                                    )}
+                                </strong>
+
+                            </td>
 
 
-                <td>
-
-                  <span
-                    class="status-pill ${statusClass}"
-                  >
-                    ${escapeHtml(
-                      status
-                    )}
-                  </span>
-
-                </td>
-
-              </tr>
-
-            `;
-
-          }
-        )
-        .join("");
-
-  }
+                            <td>
+                                ${escapeHtml(
+                                    rfq?.business_name ||
+                                    "—"
+                                )}
+                            </td>
 
 
-  /* =========================================================
-     AWARDS
-     ========================================================= */
+                            <td>
+                                ${money(
+                                    quote.price
+                                )}
+                            </td>
 
-  function renderAwards() {
+
+                            <td>
+                                ${formatDateTime(
+                                    quote.created_at
+                                )}
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="status-pill ${statusClass}"
+                                >
+                                    ${escapeHtml(
+                                        status
+                                    )}
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* =========================================================
+   AWARDS
+   ========================================================= */
+
+function renderAwards() {
 
     const body =
-      $("awards-table-body");
+        $("awards-table-body");
 
 
     const awards =
-      quotes.filter(
-        quote =>
-          quote.status === "awarded" ||
-          quote.status === "accepted" ||
-          quote.status === "won"
-      );
+        quotes.filter(
+            quote =>
+                quote.status === "awarded" ||
+                quote.status === "accepted" ||
+                quote.status === "won"
+        );
 
 
     if (!awards.length) {
 
-      body.innerHTML = `
+        body.innerHTML = `
 
-        <tr>
+            <tr>
 
-          <td
-            colspan="4"
-            style="
-              text-align:center;
-              padding:35px;
-              color:var(--muted);
-            "
-          >
-            No awards yet.
-          </td>
+                <td
+                    colspan="4"
+                    style="
+                        text-align:center;
+                        padding:35px;
+                        color:var(--muted);
+                    "
+                >
+                    No awards yet.
+                </td>
 
-        </tr>
+            </tr>
 
-      `;
+        `;
 
-      return;
+        return;
 
     }
 
 
     body.innerHTML =
-      awards
-        .map(
-          quote => {
+        awards
+            .map(
+                quote => {
 
-            const rfq =
-              rfqs.find(
-                item =>
-                  String(item.id) ===
-                  String(quote.rfq_id)
-              );
-
-
-            return `
-
-              <tr>
-
-                <td>
-
-                  <strong>
-                    ${escapeHtml(
-                      rfq?.title ||
-                      quote.rfq_id
-                    )}
-                  </strong>
-
-                </td>
+                    const rfq =
+                        rfqs.find(
+                            item =>
+                                String(item.id) ===
+                                String(quote.rfq_id)
+                        );
 
 
-                <td>
-                  ${escapeHtml(
-                    rfq?.business_name ||
-                    "—"
-                  )}
-                </td>
+                    return `
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    ${escapeHtml(
+                                        rfq?.title ||
+                                        quote.rfq_id
+                                    )}
+                                </strong>
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    rfq?.business_name ||
+                                    "—"
+                                )}
+                            </td>
+
+                            <td>
+                                ${formatDate(
+                                    quote.created_at
+                                )}
+                            </td>
+
+                            <td>
+
+                                <span class="status-pill status-success">
+                                    Awarded
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+}
 
 
-                <td>
-                  ${formatDate(
-                    quote.created_at
-                  )}
-                </td>
+/* =========================================================
+   LOGOUT
+   ========================================================= */
 
-
-                <td>
-
-                  <span class="status-pill status-success">
-                    Awarded
-                  </span>
-
-                </td>
-
-              </tr>
-
-            `;
-
-          }
-        )
-        .join("");
-
-  }
-
-
-  /* =========================================================
-     LOGOUT
-     ========================================================= */
-
-  $("logout-button")
+$("logout-button")
     .addEventListener(
-      "click",
-      async function() {
+        "click",
+        async function() {
 
-        await supabaseClient
-          .auth
-          .signOut();
+            await supabaseClient
+                .auth
+                .signOut();
 
 
-        window.location.href =
-          "supplier-signin.html";
+            window.location.href =
+                "supplier-signin.html";
 
-      }
+        }
     );
 
 
-  /* =========================================================
-     START
-     ========================================================= */
+/* =========================================================
+   START
+   ========================================================= */
 
-  initialise();
+initialise();
 
 </script>
 
