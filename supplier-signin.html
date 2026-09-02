@@ -19,14 +19,325 @@
     rel="stylesheet"
   >
 
+  <!-- KEEP ORIGINAL STYLES -->
   <link rel="stylesheet" href="styles.css">
+
+  <!-- ==========================================
+       DATA PROTECTION CONSENT POP-UP
+       This is the ONLY additional styling.
+  =========================================== -->
+
+  <style>
+
+    .consent-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      padding: 24px;
+
+      background: rgba(13, 31, 48, 0.58);
+
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .consent-overlay.show {
+      display: flex;
+    }
+
+    .consent-modal {
+      width: 100%;
+      max-width: 600px;
+
+      background: #ffffff;
+
+      border-radius: 20px;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 30px 80px rgba(16, 42, 67, 0.28);
+
+      font-family: "Manrope", sans-serif;
+
+      animation: consentAppear 0.22s ease;
+    }
+
+    @keyframes consentAppear {
+
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+    }
+
+    .consent-header {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+
+      padding: 23px 26px 20px;
+
+      border-bottom: 1px solid #e5ebf0;
+    }
+
+    .consent-icon {
+      width: 43px;
+      height: 43px;
+
+      flex-shrink: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 12px;
+
+      background: #eaf7ef;
+
+      color: #299c5a;
+
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .consent-heading h2 {
+      margin: 0;
+
+      color: #10243a;
+
+      font-family: "Manrope", sans-serif;
+
+      font-size: 18px;
+      line-height: 1.2;
+
+      font-weight: 800;
+    }
+
+    .consent-heading span {
+      display: block;
+
+      margin-top: 4px;
+
+      color: #718096;
+
+      font-size: 10px;
+
+      font-weight: 600;
+    }
+
+    .consent-body {
+      padding: 23px 26px 8px;
+    }
+
+    .consent-body p {
+      margin: 0 0 14px;
+
+      color: #526a7d;
+
+      font-size: 11px;
+
+      line-height: 1.72;
+    }
+
+    .consent-body strong {
+      color: #10243a;
+
+      font-weight: 800;
+    }
+
+    .consent-notice {
+      margin-top: 17px;
+
+      padding: 12px 14px;
+
+      background: #f4f8fa;
+
+      border-left: 3px solid #2fa35d;
+
+      border-radius: 8px;
+
+      color: #617587;
+
+      font-size: 10px;
+
+      line-height: 1.6;
+    }
+
+    .consent-confirm {
+      padding: 15px 26px 4px;
+    }
+
+    .consent-confirm label {
+      display: flex;
+      align-items: flex-start;
+
+      gap: 9px;
+
+      cursor: pointer;
+
+      color: #243b53;
+
+      font-size: 10px;
+
+      font-weight: 600;
+
+      line-height: 1.55;
+    }
+
+    .consent-confirm input {
+      width: 16px;
+      height: 16px;
+
+      flex-shrink: 0;
+
+      margin-top: 1px;
+
+      accent-color: #2fa35d;
+
+      cursor: pointer;
+    }
+
+    .consent-error {
+      display: none;
+
+      padding: 7px 26px 0;
+
+      color: #c0392b;
+
+      font-size: 10px;
+
+      font-weight: 700;
+    }
+
+    .consent-error.show {
+      display: block;
+    }
+
+    .consent-footer {
+      display: flex;
+      justify-content: flex-end;
+
+      gap: 9px;
+
+      padding: 18px 26px 24px;
+    }
+
+    .consent-btn {
+      border: none;
+
+      border-radius: 9px;
+
+      padding: 11px 18px;
+
+      font-family: "Manrope", sans-serif;
+
+      font-size: 10px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition: 0.2s ease;
+    }
+
+    .consent-decline {
+      background: #f1f4f6;
+
+      color: #65798a;
+    }
+
+    .consent-decline:hover {
+      background: #e6ebee;
+
+      color: #10243a;
+    }
+
+    .consent-accept {
+      background: #31a65f;
+
+      color: #ffffff;
+
+      opacity: 0.45;
+
+      pointer-events: none;
+    }
+
+    .consent-accept.enabled {
+      opacity: 1;
+
+      pointer-events: auto;
+    }
+
+    .consent-accept.enabled:hover {
+      background: #23894c;
+
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 8px 20px rgba(47, 163, 93, 0.22);
+    }
+
+    @media(max-width: 600px) {
+
+      .consent-overlay {
+        padding: 16px;
+      }
+
+      .consent-modal {
+        max-height: 92vh;
+        overflow-y: auto;
+      }
+
+      .consent-header {
+        padding: 20px;
+      }
+
+      .consent-body {
+        padding: 20px 20px 8px;
+      }
+
+      .consent-confirm {
+        padding: 14px 20px 4px;
+      }
+
+      .consent-footer {
+        padding: 17px 20px 20px;
+
+        flex-direction: column-reverse;
+      }
+
+      .consent-btn {
+        width: 100%;
+      }
+
+    }
+
+  </style>
+
 </head>
+
 
 <body>
 
   <div class="site-shell auth-shell">
 
-    <!-- TOP BAR -->
+
+    <!-- ==========================================
+         ORIGINAL HEADER
+    =========================================== -->
+
     <header class="topbar auth-topbar">
 
       <a
@@ -34,11 +345,14 @@
         href="index.html"
         aria-label="Elsati Connect home"
       >
+
         <img
           src="elsati.png"
           alt="Elsati Connect logo"
         >
+
       </a>
+
 
       <div class="topbar-actions topbar-actions-compact">
 
@@ -47,7 +361,9 @@
           href="signin.html"
           aria-label="Log in"
         >
+
           <span class="login-icon"></span>
+
         </a>
 
       </div>
@@ -55,34 +371,44 @@
     </header>
 
 
-    <!-- MAIN -->
+    <!-- ==========================================
+         ORIGINAL SIGN IN PAGE
+    =========================================== -->
+
     <main class="auth-layout supplier-auth reveal">
 
 
-      <!-- SIGN IN PANEL -->
+      <!-- LEFT SIDE -->
+
       <section class="auth-panel">
+
 
         <p class="eyebrow">
           Supplier Sign In
         </p>
 
+
         <h1>
           Respond to requests with confidence.
         </h1>
 
+
         <p class="auth-copy">
+
           Track invitations, submit quotations,
           and see award progress in your supplier workspace.
+
         </p>
 
 
-        <!-- SIGN IN FORM -->
         <form
           class="contact-form auth-form"
           id="supplier-signin-form"
         >
 
+
           <label>
+
             Supplier email
 
             <input
@@ -96,6 +422,7 @@
 
 
           <label>
+
             Password
 
             <input
@@ -110,10 +437,12 @@
 
           <div class="auth-options">
 
+
             <label class="checkbox-row">
 
               <input
                 type="checkbox"
+                name="remember"
               >
 
               Remember this device
@@ -125,21 +454,23 @@
               Need an account?
             </a>
 
+
           </div>
 
 
           <button
             class="button button-primary"
             type="submit"
-            id="supplier-signin-button"
           >
+
             Sign in as Supplier
+
           </button>
+
 
         </form>
 
 
-        <!-- LOGIN MESSAGE -->
         <p
           class="form-feedback"
           id="supplier-signin-feedback"
@@ -156,17 +487,24 @@
 
         </p>
 
+
       </section>
 
 
-      <!-- DASHBOARD PREVIEW -->
+      <!-- ==========================================
+           RIGHT SIDE PREVIEW
+      =========================================== -->
+
       <section class="dashboard-preview supplier-preview">
 
+
         <div class="preview-topbar">
+
 
           <span class="preview-brand">
             Elsati Connect
           </span>
+
 
           <nav>
 
@@ -188,51 +526,69 @@
 
           </nav>
 
-          <button class="mini-cta">
+
+          <button
+            class="mini-cta"
+            type="button"
+          >
+
             Submit Quote
+
           </button>
+
 
         </div>
 
 
         <div class="preview-body">
 
+
           <aside class="preview-sidebar">
+
 
             <span>
               Dashboard
             </span>
 
+
             <span class="active">
               Open Bids
             </span>
+
 
             <span>
               My Quotes
             </span>
 
+
             <span>
               Orders
             </span>
+
 
             <span>
               Capacity
             </span>
 
+
             <span>
               Messages
             </span>
 
+
             <span>
               Settings
             </span>
+
 
           </aside>
 
 
           <div class="preview-main">
 
+
             <div class="preview-stat-row supplier-stats">
+
 
               <article>
 
@@ -285,36 +641,243 @@
 
               </article>
 
+
             </div>
+
 
           </div>
 
+
         </div>
 
+
       </section>
+
 
     </main>
 
   </div>
 
 
-  <!-- EXISTING ELSATI SCRIPT -->
+  <!-- ==========================================
+       DATA PROTECTION CONSENT POP-UP
+    =========================================== -->
+
+  <div
+    class="consent-overlay"
+    id="consentOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="consentTitle"
+  >
+
+
+    <div class="consent-modal">
+
+
+      <!-- HEADER -->
+
+      <div class="consent-header">
+
+
+        <div class="consent-icon">
+          ✓
+        </div>
+
+
+        <div class="consent-heading">
+
+          <h2 id="consentTitle">
+            Data Protection Consent
+          </h2>
+
+          <span>
+            Elsati Connect Supplier Platform
+          </span>
+
+        </div>
+
+
+      </div>
+
+
+      <!-- BODY -->
+
+      <div class="consent-body">
+
+
+        <p>
+
+          In accordance with the
+          <strong>
+            Data Protection Act No. 3 of 2021
+            of the Laws of Zambia
+          </strong>,
+          Elsati Connect is committed to protecting
+          the personal and business information
+          provided by its users.
+
+        </p>
+
+
+        <p>
+
+          By clicking
+          <strong>
+            “I Consent & Continue”
+          </strong>,
+          you acknowledge and agree that Elsati Connect
+          may collect, store, use and process your
+          personal and business information for purposes
+          related to the operation and provision of
+          services through the Elsati Connect
+          procurement platform.
+
+        </p>
+
+
+        <p>
+
+          This includes supplier registration and
+          verification, responding to requests for
+          quotation, quotation processing, communication,
+          transaction management, payment-related
+          processes, account administration and other
+          legitimate purposes necessary for the operation
+          of the platform.
+
+        </p>
+
+
+        <p>
+
+          Your information will be handled in accordance
+          with applicable data protection requirements
+          and Elsati Connect's privacy practices.
+
+        </p>
+
+
+        <div class="consent-notice">
+
+          <strong>
+            Please note:
+          </strong>
+
+          Your consent enables Elsati Connect to process
+          the information necessary to create and manage
+          your supplier account and facilitate procurement
+          activities through the platform.
+
+        </div>
+
+
+      </div>
+
+
+      <!-- CONFIRMATION -->
+
+      <div class="consent-confirm">
+
+
+        <label>
+
+          <input
+            type="checkbox"
+            id="consentCheckbox"
+          >
+
+
+          <span>
+
+            I confirm that I have read and understood
+            this notice and consent to Elsati Connect
+            collecting, storing, using and processing
+            my information for the purposes stated above.
+
+          </span>
+
+
+        </label>
+
+
+      </div>
+
+
+      <!-- ERROR -->
+
+      <div
+        class="consent-error"
+        id="consentError"
+      >
+
+        Please confirm your consent before continuing.
+
+      </div>
+
+
+      <!-- ACTIONS -->
+
+      <div class="consent-footer">
+
+
+        <button
+          type="button"
+          class="consent-btn consent-decline"
+          id="declineConsent"
+        >
+
+          Decline
+
+        </button>
+
+
+        <button
+          type="button"
+          class="consent-btn consent-accept"
+          id="acceptConsent"
+        >
+
+          I Consent & Continue
+
+        </button>
+
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+  <!-- ==========================================
+       ORIGINAL SCRIPTS
+    =========================================== -->
+
   <script src="script.js"></script>
 
 
   <!-- SUPABASE -->
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
   <script src="supabase-config.js"></script>
 
 
-  <!-- SUPPLIER LOGIN -->
+  <!-- ==========================================
+       SUPPLIER LOGIN
+    =========================================== -->
+
   <script>
 
-    const supabaseClient = supabase.createClient(
-      window.ELSATI_SUPABASE.url,
-      window.ELSATI_SUPABASE.publishableKey
-    );
+    const supabaseClient =
+      supabase.createClient(
+        window.ELSATI_SUPABASE.url,
+        window.ELSATI_SUPABASE.publishableKey
+      );
 
 
     const form =
@@ -329,11 +892,39 @@
       );
 
 
-    const button =
+    const consentOverlay =
       document.getElementById(
-        "supplier-signin-button"
+        "consentOverlay"
       );
 
+
+    const consentCheckbox =
+      document.getElementById(
+        "consentCheckbox"
+      );
+
+
+    const acceptConsent =
+      document.getElementById(
+        "acceptConsent"
+      );
+
+
+    const declineConsent =
+      document.getElementById(
+        "declineConsent"
+      );
+
+
+    const consentError =
+      document.getElementById(
+        "consentError"
+      );
+
+
+    /* ==========================================
+       SUPPLIER LOGIN
+    =========================================== */
 
     form.addEventListener(
       "submit",
@@ -362,38 +953,31 @@
         feedback.textContent =
           "Signing in...";
 
+
         feedback.className =
           "form-feedback";
 
 
-        button.disabled = true;
-
-        button.textContent =
-          "Signing in...";
-
-
         /*
-         * SIGN IN WITH SUPABASE
+         * Authenticate with Supabase.
          */
 
         const {
           data,
           error
         } =
-          await supabaseClient.auth.signInWithPassword({
+          await supabaseClient
+            .auth
+            .signInWithPassword({
 
-            email: email,
+              email: email,
 
-            password: password
+              password: password
 
-          });
+            });
 
 
-        /*
-         * LOGIN ERROR
-         */
-
-        if (error) {
+        if(error){
 
           feedback.textContent =
             error.message;
@@ -401,18 +985,13 @@
           feedback.className =
             "form-feedback error";
 
-          button.disabled = false;
-
-          button.textContent =
-            "Sign in as Supplier";
-
           return;
 
         }
 
 
         /*
-         * GET SUPPLIER PROFILE
+         * Retrieve supplier profile.
          */
 
         const {
@@ -429,14 +1008,10 @@
             .maybeSingle();
 
 
-        /*
-         * PROFILE NOT FOUND
-         */
-
-        if (
+        if(
           profileError ||
           !profile
-        ) {
+        ){
 
           feedback.textContent =
             "Supplier profile not found. Please contact administrator.";
@@ -444,12 +1019,11 @@
           feedback.className =
             "form-feedback error";
 
-          await supabaseClient.auth.signOut();
 
-          button.disabled = false;
+          await supabaseClient
+            .auth
+            .signOut();
 
-          button.textContent =
-            "Sign in as Supplier";
 
           return;
 
@@ -457,12 +1031,13 @@
 
 
         /*
-         * MAKE SURE ACCOUNT IS A SUPPLIER
+         * Make sure this is a supplier account.
          */
 
-        if (
-          profile.role !== "supplier"
-        ) {
+        if(
+          profile.role !==
+          "supplier"
+        ){
 
           feedback.textContent =
             "This account is not registered as a supplier.";
@@ -471,13 +1046,9 @@
             "form-feedback error";
 
 
-          await supabaseClient.auth.signOut();
-
-
-          button.disabled = false;
-
-          button.textContent =
-            "Sign in as Supplier";
+          await supabaseClient
+            .auth
+            .signOut();
 
 
           return;
@@ -486,38 +1057,192 @@
 
 
         /*
-         * SUCCESS
+         * =====================================
+         * SHOW DATA PROTECTION CONSENT
+         * =====================================
          */
 
+        consentOverlay.classList.add(
+          "show"
+        );
+
+
+        document.body.style.overflow =
+          "hidden";
+
+
+        consentCheckbox.checked =
+          false;
+
+
+        acceptConsent.classList.remove(
+          "enabled"
+        );
+
+
+        consentError.classList.remove(
+          "show"
+        );
+
+      }
+    );
+
+
+    /* ==========================================
+       CONSENT CHECKBOX
+    =========================================== */
+
+    consentCheckbox.addEventListener(
+      "change",
+      function(){
+
+        if(
+          consentCheckbox.checked
+        ){
+
+          acceptConsent.classList.add(
+            "enabled"
+          );
+
+
+          consentError.classList.remove(
+            "show"
+          );
+
+        }else{
+
+          acceptConsent.classList.remove(
+            "enabled"
+          );
+
+        }
+
+      }
+    );
+
+
+    /* ==========================================
+       ACCEPT CONSENT
+    =========================================== */
+
+    acceptConsent.addEventListener(
+      "click",
+      async function(){
+
+        if(
+          !consentCheckbox.checked
+        ){
+
+          consentError.classList.add(
+            "show"
+          );
+
+          return;
+
+        }
+
+
+        /*
+         * Save consent locally for the current
+         * browser.
+         *
+         * We can later save this formally
+         * in Supabase with the user ID,
+         * date/time and consent version.
+         */
+
+        localStorage.setItem(
+          "elsati_data_protection_consent",
+          "accepted"
+        );
+
+
+        localStorage.setItem(
+          "elsati_data_protection_consent_date",
+          new Date().toISOString()
+        );
+
+
+        /*
+         * Close the consent notification.
+         */
+
+        consentOverlay.classList.remove(
+          "show"
+        );
+
+
+        document.body.style.overflow =
+          "";
+
+
         feedback.textContent =
-          "Login successful. Opening your supplier dashboard...";
+          "Login successful. Opening supplier dashboard...";
+
 
         feedback.className =
           "form-feedback ok";
 
 
         /*
-         * THIS IS THE IMPORTANT PART.
-         *
-         * The supplier is now sent to the
-         * NEW dashboard instead of the old one.
+         * =====================================
+         * GO TO NEW SUPPLIER DASHBOARD
+         * =====================================
          */
 
-        setTimeout(
-          function() {
-
-            window.location.href =
-              "supplier-dashboard-new.html";
-
-          },
-          500
-        );
+        window.location.href =
+          "supplier-dashboard-new.html";
 
       }
+    );
 
+
+    /* ==========================================
+       DECLINE CONSENT
+    =========================================== */
+
+    declineConsent.addEventListener(
+      "click",
+      async function(){
+
+        /*
+         * Close notification.
+         */
+
+        consentOverlay.classList.remove(
+          "show"
+        );
+
+
+        document.body.style.overflow =
+          "";
+
+
+        /*
+         * Tell supplier why they cannot continue.
+         */
+
+        feedback.textContent =
+          "Consent is required to access the Elsati Connect supplier platform.";
+
+
+        feedback.className =
+          "form-feedback error";
+
+
+        /*
+         * Sign the supplier out.
+         */
+
+        await supabaseClient
+          .auth
+          .signOut();
+
+      }
     );
 
   </script>
+
 
 </body>
 </html>
