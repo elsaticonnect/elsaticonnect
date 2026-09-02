@@ -1,148 +1,1627 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
   <title>Register Supplier | Elsati Connect</title>
-  <meta name="description" content="Register your supplier business on Elsati Connect.">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta
+    name="description"
+    content="Register your supplier business on Elsati Connect."
+  >
 
-  <link rel="stylesheet" href="styles.css">
+
+  <!-- ==========================================
+       FONTS
+  =========================================== -->
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+
+  <!-- ==========================================
+       ORIGINAL ELSATI STYLES
+  =========================================== -->
+
+  <link
+    rel="stylesheet"
+    href="styles.css"
+  >
+
+
+  <!-- ==========================================
+       DATA PROTECTION CONSENT POP-UP
+  =========================================== -->
+
+  <style>
+
+    .consent-overlay {
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 99999;
+
+      display: none;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 24px;
+
+      background: rgba(13, 31, 48, 0.62);
+
+      backdrop-filter: blur(5px);
+
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+
+    .consent-overlay.show {
+      display: flex;
+    }
+
+
+    .consent-modal {
+
+      width: 100%;
+
+      max-width: 600px;
+
+      max-height: 90vh;
+
+      overflow-y: auto;
+
+      background: #ffffff;
+
+      border-radius: 20px;
+
+      box-shadow:
+        0 30px 80px rgba(16, 42, 67, 0.28);
+
+      font-family: "Manrope", sans-serif;
+
+      animation: consentAppear 0.22s ease;
+
+    }
+
+
+    @keyframes consentAppear {
+
+      from {
+
+        opacity: 0;
+
+        transform:
+          translateY(14px)
+          scale(0.98);
+
+      }
+
+      to {
+
+        opacity: 1;
+
+        transform:
+          translateY(0)
+          scale(1);
+
+      }
+
+    }
+
+
+    /* ==========================================
+       CONSENT HEADER
+    =========================================== */
+
+    .consent-header {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 13px;
+
+      padding: 23px 26px 20px;
+
+      border-bottom:
+        1px solid #e5ebf0;
+
+    }
+
+
+    .consent-icon {
+
+      width: 43px;
+
+      height: 43px;
+
+      flex-shrink: 0;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border-radius: 12px;
+
+      background: #eaf7ef;
+
+      color: #299c5a;
+
+      font-size: 18px;
+
+      font-weight: 800;
+
+    }
+
+
+    .consent-heading h2 {
+
+      margin: 0;
+
+      color: #10243a;
+
+      font-family: "Manrope", sans-serif;
+
+      font-size: 18px;
+
+      line-height: 1.2;
+
+      font-weight: 800;
+
+    }
+
+
+    .consent-heading span {
+
+      display: block;
+
+      margin-top: 4px;
+
+      color: #718096;
+
+      font-size: 10px;
+
+      font-weight: 600;
+
+    }
+
+
+    /* ==========================================
+       CONSENT CONTENT
+    =========================================== */
+
+    .consent-body {
+
+      padding: 23px 26px 8px;
+
+    }
+
+
+    .consent-body p {
+
+      margin: 0 0 14px;
+
+      color: #526a7d;
+
+      font-size: 11px;
+
+      line-height: 1.72;
+
+    }
+
+
+    .consent-body strong {
+
+      color: #10243a;
+
+      font-weight: 800;
+
+    }
+
+
+    .consent-notice {
+
+      margin-top: 17px;
+
+      padding: 12px 14px;
+
+      background: #f4f8fa;
+
+      border-left:
+        3px solid #2fa35d;
+
+      border-radius: 8px;
+
+      color: #617587;
+
+      font-size: 10px;
+
+      line-height: 1.6;
+
+    }
+
+
+    /* ==========================================
+       CHECKBOX
+    =========================================== */
+
+    .consent-confirm {
+
+      padding: 15px 26px 4px;
+
+    }
+
+
+    .consent-confirm label {
+
+      display: flex;
+
+      align-items: flex-start;
+
+      gap: 9px;
+
+      cursor: pointer;
+
+      color: #243b53;
+
+      font-size: 10px;
+
+      font-weight: 600;
+
+      line-height: 1.55;
+
+    }
+
+
+    .consent-confirm input {
+
+      width: 16px;
+
+      height: 16px;
+
+      flex-shrink: 0;
+
+      margin-top: 1px;
+
+      accent-color: #2fa35d;
+
+      cursor: pointer;
+
+    }
+
+
+    /* ==========================================
+       ERROR
+    =========================================== */
+
+    .consent-error {
+
+      display: none;
+
+      padding: 7px 26px 0;
+
+      color: #c0392b;
+
+      font-size: 10px;
+
+      font-weight: 700;
+
+    }
+
+
+    .consent-error.show {
+
+      display: block;
+
+    }
+
+
+    /* ==========================================
+       CONSENT BUTTONS
+    =========================================== */
+
+    .consent-footer {
+
+      display: flex;
+
+      justify-content: flex-end;
+
+      gap: 9px;
+
+      padding: 18px 26px 24px;
+
+    }
+
+
+    .consent-btn {
+
+      border: none;
+
+      border-radius: 9px;
+
+      padding: 11px 18px;
+
+      font-family: "Manrope", sans-serif;
+
+      font-size: 10px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition: 0.2s ease;
+
+    }
+
+
+    .consent-decline {
+
+      background: #f1f4f6;
+
+      color: #65798a;
+
+    }
+
+
+    .consent-decline:hover {
+
+      background: #e6ebee;
+
+      color: #10243a;
+
+    }
+
+
+    .consent-accept {
+
+      background: #31a65f;
+
+      color: #ffffff;
+
+      opacity: 0.45;
+
+      pointer-events: none;
+
+    }
+
+
+    .consent-accept.enabled {
+
+      opacity: 1;
+
+      pointer-events: auto;
+
+    }
+
+
+    .consent-accept.enabled:hover {
+
+      background: #23894c;
+
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 8px 20px rgba(47, 163, 93, 0.22);
+
+    }
+
+
+    /* ==========================================
+       MOBILE
+    =========================================== */
+
+    @media(max-width: 600px) {
+
+      .consent-overlay {
+
+        padding: 16px;
+
+      }
+
+
+      .consent-modal {
+
+        max-height: 92vh;
+
+      }
+
+
+      .consent-header {
+
+        padding: 20px;
+
+      }
+
+
+      .consent-body {
+
+        padding: 20px 20px 8px;
+
+      }
+
+
+      .consent-confirm {
+
+        padding: 14px 20px 4px;
+
+      }
+
+
+      .consent-footer {
+
+        padding: 17px 20px 20px;
+
+        flex-direction: column-reverse;
+
+      }
+
+
+      .consent-btn {
+
+        width: 100%;
+
+      }
+
+    }
+
+  </style>
+
 </head>
 
+
 <body>
+
+
   <div class="site-shell auth-shell">
+
+
+    <!-- ==========================================
+         ORIGINAL HEADER
+    =========================================== -->
+
     <header class="topbar auth-topbar">
-      <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home">
-        <img src="elsati.png" alt="Elsati Connect logo">
+
+      <a
+        class="brand brand-image"
+        href="index.html"
+        aria-label="Elsati Connect home"
+      >
+
+        <img
+          src="elsati.png"
+          alt="Elsati Connect logo"
+        >
+
       </a>
 
+
       <div class="topbar-actions topbar-actions-compact">
-        <a class="login-icon-link" href="signin.html" aria-label="Log in">
+
+        <a
+          class="login-icon-link"
+          href="signin.html"
+          aria-label="Log in"
+        >
+
           <span class="login-icon"></span>
+
         </a>
+
       </div>
+
     </header>
 
+
+    <!-- ==========================================
+         REGISTRATION PAGE
+    =========================================== -->
+
     <main class="auth-layout reveal">
+
+
+      <!-- ========================================
+           LEFT REGISTRATION PANEL
+      ========================================= -->
+
       <section class="auth-panel">
-        <p class="eyebrow">Supplier registration</p>
-        <h1>Join the verified supplier network.</h1>
-        <p class="auth-copy">Register your supplier profile to receive client RFQs, submit quotations digitally, and track decisions transparently.</p>
 
-        <form class="contact-form auth-form" id="supplier-register-form">
+
+        <p class="eyebrow">
+          Supplier registration
+        </p>
+
+
+        <h1>
+          Join the verified supplier network.
+        </h1>
+
+
+        <p class="auth-copy">
+
+          Register your supplier profile to receive
+          client RFQs, submit quotations digitally,
+          and track decisions transparently.
+
+        </p>
+
+
+        <form
+          class="contact-form auth-form"
+          id="supplier-register-form"
+        >
+
+
+          <!-- COMPANY -->
+
           <label>
+
             Supplier company
-            <input type="text" name="company" placeholder="Supplier company" required>
+
+            <input
+              type="text"
+              name="company"
+              placeholder="Supplier company"
+              required
+            >
+
           </label>
 
+
+          <!-- CONTACT PERSON -->
+
           <label>
+
             Contact person
-            <input type="text" name="name" placeholder="Full name" required>
+
+            <input
+              type="text"
+              name="name"
+              placeholder="Full name"
+              required
+            >
+
           </label>
 
+
+          <!-- EMAIL -->
+
           <label>
+
             Supplier email
-            <input type="email" name="email" placeholder="supplier@company.com" required>
+
+            <input
+              type="email"
+              name="email"
+              placeholder="supplier@company.com"
+              required
+            >
+
           </label>
+
+
+          <!-- PASSWORD -->
 
           <label>
+
             Password
-            <input type="password" name="password" placeholder="Create password" required>
+
+            <input
+              type="password"
+              name="password"
+              placeholder="Create password"
+              minlength="6"
+              required
+            >
+
           </label>
 
-          <button class="button button-primary" type="submit">Register Supplier</button>
+
+          <!-- REGISTER BUTTON -->
+
+          <button
+            class="button button-primary"
+            type="submit"
+          >
+
+            Register Supplier
+
+          </button>
+
+
         </form>
 
-        <p class="form-feedback" id="supplier-register-feedback"></p>
-        <p class="auth-note">Already registered? <a href="supplier-signin.html">Sign in as supplier</a></p>
+
+        <p
+          class="form-feedback"
+          id="supplier-register-feedback"
+        ></p>
+
+
+        <p class="auth-note">
+
+          Already registered?
+
+          <a href="supplier-signin.html">
+            Sign in as supplier
+          </a>
+
+        </p>
+
+
       </section>
 
-      <section class="dashboard-preview supplier-preview register-preview">
+
+      <!-- ==========================================
+           RIGHT SIDE PREVIEW
+      =========================================== -->
+
+      <section
+        class="dashboard-preview supplier-preview register-preview"
+      >
+
+
         <div class="preview-topbar">
-          <span class="preview-brand">Elsati Connect</span>
+
+
+          <span class="preview-brand">
+            Elsati Connect
+          </span>
+
+
           <nav>
-            <span>Open RFQs</span>
-            <span>Quote tracking</span>
-            <span>Award visibility</span>
+
+            <span>
+              Open RFQs
+            </span>
+
+            <span>
+              Quote tracking
+            </span>
+
+            <span>
+              Award visibility
+            </span>
+
           </nav>
-          <button class="mini-cta">Join network</button>
+
+
+          <button
+            class="mini-cta"
+            type="button"
+          >
+
+            Join network
+
+          </button>
+
+
         </div>
+
 
         <div class="preview-body register-body">
+
+
           <div class="register-highlight-grid">
-            <article><strong>Market visibility</strong><p>Get discovered by businesses looking for verified suppliers.</p></article>
-            <article><strong>Standardized submissions</strong><p>Respond to RFQs with a cleaner digital quotation process.</p></article>
-            <article><strong>Trust advantage</strong><p>Verification builds confidence across multiple buyers.</p></article>
-            <article><strong>Status clarity</strong><p>Track review and award progress without manual chasing.</p></article>
+
+
+            <article>
+
+              <strong>
+                Market visibility
+              </strong>
+
+              <p>
+                Get discovered by businesses looking
+                for verified suppliers.
+              </p>
+
+            </article>
+
+
+            <article>
+
+              <strong>
+                Standardized submissions
+              </strong>
+
+              <p>
+                Respond to RFQs with a cleaner
+                digital quotation process.
+              </p>
+
+            </article>
+
+
+            <article>
+
+              <strong>
+                Trust advantage
+              </strong>
+
+              <p>
+                Verification builds confidence
+                across multiple buyers.
+              </p>
+
+            </article>
+
+
+            <article>
+
+              <strong>
+                Status clarity
+              </strong>
+
+              <p>
+                Track review and award progress
+                without manual chasing.
+              </p>
+
+            </article>
+
+
           </div>
+
+
         </div>
+
+
       </section>
+
+
     </main>
+
   </div>
 
+
+  <!-- ==========================================
+       DATA PROTECTION CONSENT POP-UP
+    =========================================== -->
+
+  <div
+    class="consent-overlay"
+    id="consentOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="consentTitle"
+  >
+
+
+    <div class="consent-modal">
+
+
+      <!-- HEADER -->
+
+      <div class="consent-header">
+
+
+        <div class="consent-icon">
+
+          ✓
+
+        </div>
+
+
+        <div class="consent-heading">
+
+          <h2 id="consentTitle">
+
+            Data Protection Consent
+
+          </h2>
+
+
+          <span>
+
+            Elsati Connect Supplier Registration
+
+          </span>
+
+        </div>
+
+
+      </div>
+
+
+      <!-- ========================================
+           CONSENT TEXT
+      ========================================= -->
+
+      <div class="consent-body">
+
+
+        <p>
+
+          In accordance with the
+          <strong>
+            Data Protection Act No. 3 of 2021
+            of the Laws of Zambia
+          </strong>,
+          Elsati Connect is committed to protecting
+          the personal and business information
+          provided by its users.
+
+        </p>
+
+
+        <p>
+
+          By clicking
+          <strong>
+            “I Consent & Create Account”
+          </strong>,
+          you acknowledge and agree that Elsati Connect
+          may collect, store, use and process your
+          personal and business information for purposes
+          related to the operation and provision of
+          services through the Elsati Connect
+          procurement platform.
+
+        </p>
+
+
+        <p>
+
+          This includes supplier registration and
+          verification, responding to requests for
+          quotation, quotation processing, communication,
+          transaction management, payment-related
+          processes, account administration and other
+          legitimate purposes necessary for the operation
+          of the platform.
+
+        </p>
+
+
+        <p>
+
+          Your information will be handled in accordance
+          with applicable data protection requirements
+          and Elsati Connect's privacy practices.
+
+        </p>
+
+
+        <div class="consent-notice">
+
+          <strong>
+            Please note:
+          </strong>
+
+          The information you provide may be used to
+          verify your supplier business, facilitate
+          procurement opportunities and enable
+          communication and transactions between
+          suppliers and businesses using the
+          Elsati Connect platform.
+
+        </div>
+
+
+      </div>
+
+
+      <!-- ========================================
+           CONFIRMATION
+      ========================================= -->
+
+      <div class="consent-confirm">
+
+
+        <label>
+
+
+          <input
+            type="checkbox"
+            id="consentCheckbox"
+          >
+
+
+          <span>
+
+            I confirm that I have read and understood
+            this notice and consent to Elsati Connect
+            collecting, storing, using and processing
+            my information for the purposes stated above.
+
+          </span>
+
+
+        </label>
+
+
+      </div>
+
+
+      <!-- ERROR -->
+
+      <div
+        class="consent-error"
+        id="consentError"
+      >
+
+        Please confirm your consent before creating
+        your supplier account.
+
+      </div>
+
+
+      <!-- ========================================
+           BUTTONS
+      ========================================= -->
+
+      <div class="consent-footer">
+
+
+        <button
+          type="button"
+          class="consent-btn consent-decline"
+          id="declineConsent"
+        >
+
+          Decline
+
+        </button>
+
+
+        <button
+          type="button"
+          class="consent-btn consent-accept"
+          id="acceptConsent"
+        >
+
+          I Consent & Create Account
+
+        </button>
+
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+  <!-- ==========================================
+       ORIGINAL SCRIPTS
+  =========================================== -->
+
   <script src="script.js"></script>
+
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
   <script src="supabase-config.js"></script>
 
+
+  <!-- ==========================================
+       SUPPLIER REGISTRATION LOGIC
+  =========================================== -->
+
   <script>
-    const supabaseClient = supabase.createClient(
-      window.ELSATI_SUPABASE.url,
-      window.ELSATI_SUPABASE.publishableKey
+
+
+    const supabaseClient =
+      supabase.createClient(
+
+        window.ELSATI_SUPABASE.url,
+
+        window.ELSATI_SUPABASE.publishableKey
+
+      );
+
+
+    const form =
+      document.getElementById(
+        "supplier-register-form"
+      );
+
+
+    const feedback =
+      document.getElementById(
+        "supplier-register-feedback"
+      );
+
+
+    const consentOverlay =
+      document.getElementById(
+        "consentOverlay"
+      );
+
+
+    const consentCheckbox =
+      document.getElementById(
+        "consentCheckbox"
+      );
+
+
+    const acceptConsent =
+      document.getElementById(
+        "acceptConsent"
+      );
+
+
+    const declineConsent =
+      document.getElementById(
+        "declineConsent"
+      );
+
+
+    const consentError =
+      document.getElementById(
+        "consentError"
+      );
+
+
+    /*
+     * ==========================================
+     * TEMPORARILY STORE REGISTRATION DETAILS
+     *
+     * The account is NOT created when the
+     * supplier clicks "Register Supplier".
+     *
+     * First, we show the consent notice.
+     * ==========================================
+     */
+
+    let pendingSupplierRegistration = null;
+
+
+    /* ==========================================
+       STEP 1 — SUPPLIER CLICKS REGISTER
+    =========================================== */
+
+    form.addEventListener(
+      "submit",
+      function(event) {
+
+        event.preventDefault();
+
+
+        /*
+         * Collect registration information.
+         */
+
+        const companyName =
+          document
+            .querySelector(
+              'input[name="company"]'
+            )
+            .value
+            .trim();
+
+
+        const contactName =
+          document
+            .querySelector(
+              'input[name="name"]'
+            )
+            .value
+            .trim();
+
+
+        const email =
+          document
+            .querySelector(
+              'input[name="email"]'
+            )
+            .value
+            .trim()
+            .toLowerCase();
+
+
+        const password =
+          document
+            .querySelector(
+              'input[name="password"]'
+            )
+            .value;
+
+
+        /*
+         * Basic validation.
+         */
+
+        if(
+          !companyName ||
+          !contactName ||
+          !email ||
+          !password
+        ){
+
+          feedback.textContent =
+            "Please complete all registration fields.";
+
+          feedback.className =
+            "form-feedback error";
+
+          return;
+
+        }
+
+
+        if(
+          password.length < 6
+        ){
+
+          feedback.textContent =
+            "Password must contain at least 6 characters.";
+
+          feedback.className =
+            "form-feedback error";
+
+          return;
+
+        }
+
+
+        /*
+         * Store the information temporarily.
+         *
+         * The actual Supabase account will only
+         * be created AFTER consent is provided.
+         */
+
+        pendingSupplierRegistration = {
+
+          companyName:
+            companyName,
+
+          contactName:
+            contactName,
+
+          email:
+            email,
+
+          password:
+            password
+
+        };
+
+
+        /*
+         * Clear previous messages.
+         */
+
+        feedback.textContent = "";
+
+        feedback.className =
+          "form-feedback";
+
+
+        /*
+         * Show Data Protection consent.
+         */
+
+        consentOverlay.classList.add(
+          "show"
+        );
+
+
+        document.body.style.overflow =
+          "hidden";
+
+
+        consentCheckbox.checked =
+          false;
+
+
+        acceptConsent.classList.remove(
+          "enabled"
+        );
+
+
+        consentError.classList.remove(
+          "show"
+        );
+
+      }
     );
 
-    const form = document.getElementById("supplier-register-form");
-    const feedback = document.getElementById("supplier-register-feedback");
 
-    form.addEventListener("submit", async function(event) {
-      event.preventDefault();
+    /* ==========================================
+       STEP 2 — CHECK CONSENT
+    =========================================== */
 
-      const companyName = document.querySelector('input[name="company"]').value;
-      const contactName = document.querySelector('input[name="name"]').value;
-      const email = document.querySelector('input[name="email"]').value;
-      const password = document.querySelector('input[name="password"]').value;
+    consentCheckbox.addEventListener(
+      "change",
+      function(){
 
-      feedback.textContent = "Creating supplier account...";
+        if(
+          consentCheckbox.checked
+        ){
 
-      const { data, error } = await supabaseClient.auth.signUp({
-        email: email,
-        password: password
-      });
+          acceptConsent.classList.add(
+            "enabled"
+          );
 
-      if (error) {
-        feedback.textContent = error.message;
-        return;
+
+          consentError.classList.remove(
+            "show"
+          );
+
+        }else{
+
+          acceptConsent.classList.remove(
+            "enabled"
+          );
+
+        }
+
       }
+    );
 
-      if (!data.user) {
-        feedback.textContent = "Supplier account could not be created.";
-        return;
+
+    /* ==========================================
+       STEP 3 — ACCEPT CONSENT
+    =========================================== */
+
+    acceptConsent.addEventListener(
+      "click",
+      async function(){
+
+        /*
+         * Make absolutely sure the checkbox
+         * has been selected.
+         */
+
+        if(
+          !consentCheckbox.checked
+        ){
+
+          consentError.classList.add(
+            "show"
+          );
+
+          return;
+
+        }
+
+
+        if(
+          !pendingSupplierRegistration
+        ){
+
+          consentOverlay.classList.remove(
+            "show"
+          );
+
+          document.body.style.overflow =
+            "";
+
+          return;
+
+        }
+
+
+        /*
+         * Disable button while account is
+         * being created.
+         */
+
+        acceptConsent.disabled =
+          true;
+
+
+        acceptConsent.textContent =
+          "Creating Account...";
+
+
+        consentError.classList.remove(
+          "show"
+        );
+
+
+        /*
+         * ======================================
+         * CREATE SUPABASE AUTH ACCOUNT
+         * ======================================
+         */
+
+        const {
+          data,
+          error
+        } =
+          await supabaseClient
+            .auth
+            .signUp({
+
+              email:
+                pendingSupplierRegistration.email,
+
+              password:
+                pendingSupplierRegistration.password
+
+            });
+
+
+        /*
+         * Re-enable button if there is an error.
+         */
+
+        acceptConsent.disabled =
+          false;
+
+
+        acceptConsent.textContent =
+          "I Consent & Create Account";
+
+
+        if(error){
+
+          console.error(
+            "Supplier registration error:",
+            error
+          );
+
+
+          feedback.textContent =
+            error.message;
+
+          feedback.className =
+            "form-feedback error";
+
+
+          consentOverlay.classList.remove(
+            "show"
+          );
+
+
+          document.body.style.overflow =
+            "";
+
+
+          pendingSupplierRegistration =
+            null;
+
+
+          return;
+
+        }
+
+
+        if(
+          !data.user
+        ){
+
+          feedback.textContent =
+            "Supplier account could not be created.";
+
+          feedback.className =
+            "form-feedback error";
+
+
+          return;
+
+        }
+
+
+        /*
+         * ======================================
+         * CREATE SUPPLIER PROFILE
+         * ======================================
+         */
+
+        const {
+          error: profileError
+        } =
+          await supabaseClient
+            .from("profiles")
+            .insert({
+
+              id:
+                data.user.id,
+
+              email:
+                pendingSupplierRegistration.email,
+
+              role:
+                "supplier",
+
+              company_name:
+                pendingSupplierRegistration.companyName,
+
+              contact_person:
+                pendingSupplierRegistration.contactName,
+
+              contact_phone:
+                null,
+
+              verification_status:
+                "pending",
+
+              verified:
+                false
+
+            });
+
+
+        if(profileError){
+
+          console.error(
+            "Supplier profile error:",
+            profileError
+          );
+
+
+          feedback.textContent =
+            "Account was created, but the supplier profile could not be completed. Please contact the administrator.";
+
+          feedback.className =
+            "form-feedback error";
+
+
+          consentOverlay.classList.remove(
+            "show"
+          );
+
+
+          document.body.style.overflow =
+            "";
+
+
+          pendingSupplierRegistration =
+            null;
+
+
+          return;
+
+        }
+
+
+        /*
+         * ======================================
+         * RECORD CONSENT
+         * ======================================
+         *
+         * For now we save the consent information
+         * locally.
+         *
+         * A proper Supabase consent table should
+         * be added so Elsati has an auditable record.
+         * ======================================
+         */
+
+        localStorage.setItem(
+          "elsati_supplier_consent",
+          "accepted"
+        );
+
+
+        localStorage.setItem(
+          "elsati_supplier_consent_date",
+          new Date().toISOString()
+        );
+
+
+        localStorage.setItem(
+          "elsati_supplier_consent_version",
+          "2026-09-03"
+        );
+
+
+        /*
+         * Close consent.
+         */
+
+        consentOverlay.classList.remove(
+          "show"
+        );
+
+
+        document.body.style.overflow =
+          "";
+
+
+        /*
+         * Clear pending registration data.
+         */
+
+        pendingSupplierRegistration =
+          null;
+
+
+        /*
+         * Show success message.
+         */
+
+        feedback.textContent =
+          "Supplier account created successfully. You can now sign in.";
+
+        feedback.className =
+          "form-feedback ok";
+
+
+        /*
+         * Redirect to supplier sign-in.
+         */
+
+        setTimeout(
+          function(){
+
+            window.location.href =
+              "supplier-signin.html";
+
+          },
+          1800
+        );
+
       }
+    );
 
-      const { error: profileError } = await supabaseClient
-        .from("profiles")
-        .insert({
-          id: data.user.id,
-          email: email,
-          role: "supplier",
-          company_name: companyName,
-          phone: contactName
-        });
 
-      if (profileError) {
-        feedback.textContent = profileError.message;
-        return;
+    /* ==========================================
+       STEP 4 — DECLINE CONSENT
+    =========================================== */
+
+    declineConsent.addEventListener(
+      "click",
+      function(){
+
+        /*
+         * Do NOT create the account.
+         */
+
+        pendingSupplierRegistration =
+          null;
+
+
+        /*
+         * Close the consent window.
+         */
+
+        consentOverlay.classList.remove(
+          "show"
+        );
+
+
+        document.body.style.overflow =
+          "";
+
+
+        /*
+         * Inform supplier.
+         */
+
+        feedback.textContent =
+          "Consent is required to create a supplier account on Elsati Connect.";
+
+        feedback.className =
+          "form-feedback error";
+
       }
+    );
 
-      feedback.textContent = "Supplier account created successfully.";
 
-      setTimeout(() => {
-        window.location.href = "supplier-signin.html";
-      }, 1500);
-    });
   </script>
+
+
 </body>
 </html>
