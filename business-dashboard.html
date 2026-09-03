@@ -1,340 +1,613 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Business Dashboard | Elsati Connect</title>
-  <meta name="description" content="Business dashboard for Elsati Connect.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Dashboard | Elsati Connect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+:root{--navy:#12304a;--green:#2f9955;--green2:#248446;--bg:#edf5f8;--text:#435965;--muted:#71818d;--line:#dce7ec;--white:#fff;--soft:#f5fafb;--danger:#c84d4d}
+body{margin:0;min-height:100vh;font-family:Manrope,"Plus Jakarta Sans",sans-serif;color:var(--text);background:radial-gradient(circle at 7% 10%,#dff3e6 0,transparent 27%),radial-gradient(circle at 93% 20%,#dcebf7 0,transparent 30%),linear-gradient(135deg,#f7fbfc,#edf5f8,#f7fafb)}
+button,input,textarea{font:inherit}button{cursor:pointer}
+.header{width:calc(100% - 52px);height:205px;margin:auto;background:rgba(255,255,255,.96);border-radius:0 0 55px 55px;box-shadow:0 15px 45px rgba(18,48,74,.07);position:sticky;top:0;z-index:1000;backdrop-filter:blur(18px)}
+.brand{position:absolute;left:48px;top:42px;display:flex;align-items:center;height:70px;text-decoration:none}.brand img{width:245px;height:auto;max-height:70px;display:block;object-fit:contain}.brand-name{font-family:"Plus Jakarta Sans",Manrope,sans-serif;color:#12304a;font-size:21px;font-weight:800;letter-spacing:-.7px;white-space:nowrap}.brand-name::first-letter{color:#12304a}
+.floating-nav{position:absolute;top:25px;left:50%;transform:translateX(-50%);width:min(760px,calc(100% - 390px));padding:7px;border:1px solid var(--line);background:#fff;border-radius:999px;display:flex;justify-content:center;gap:2px}
+.nav-item{border:0;background:transparent;color:#687d8d;padding:13px 16px;border-radius:999px;font-size:10px;font-weight:800;white-space:nowrap;transition:.2s}
+.nav-item:hover{background:#f1f7f8;color:var(--navy);transform:translateY(-3px)}
+.nav-item.active{background:var(--green);color:#fff;box-shadow:0 9px 20px #2f99552e}
+.header-right{position:absolute;right:42px;top:25px}.profile-button{width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--navy);font-weight:900;box-shadow:0 8px 22px #12304a17}
+.profile-menu{display:none;position:absolute;right:0;top:59px;width:235px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:8px;box-shadow:0 18px 50px #12304a14}.profile-menu.show{display:block}
+.profile-menu-header{padding:12px;border-bottom:1px solid #edf2f4;margin-bottom:5px}.profile-menu-company{color:var(--navy);font-size:11px;font-weight:800}.profile-menu-label{color:var(--muted);font-size:8px;margin-top:3px}
+.profile-menu-item{width:100%;border:0;background:transparent;border-radius:11px;padding:11px 12px;display:flex;gap:9px;color:var(--text);font-size:9px;font-weight:700;text-align:left}.profile-menu-item:hover{background:#f3f8f9}.logout{color:var(--danger)!important}
+.divider{height:1px;background:#edf2f4;margin:5px 0}
+.page{width:min(1450px,calc(100% - 52px));margin:48px auto 80px}.section{display:none}.section.active{display:block}
+.section-header{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:22px}.section-header h2{margin:0;color:var(--navy);font-size:29px;letter-spacing:-1px}.section-header p{margin:5px 0 0;color:var(--muted);font-size:10px}
+.welcome-card{position:relative;overflow:hidden;background:#fff;border-radius:34px;padding:50px;box-shadow:0 18px 50px #12304a14}.welcome-card:after{content:"";position:absolute;right:-120px;top:-130px;width:430px;height:430px;border-radius:50%;background:radial-gradient(circle,#d2e8f5,transparent 67%)}
+.welcome-content{position:relative;z-index:2;max-width:820px}.eyebrow{color:#168044;font-size:9px;font-weight:900;letter-spacing:1.8px}.welcome-card h1{color:var(--navy);font-size:52px;line-height:1.04;letter-spacing:-2.5px;margin:10px 0 13px}.welcome-card h2{color:var(--navy);font-size:20px;margin:0 0 13px}.welcome-message{color:#657d8e;font-size:12px;line-height:1.8;max-width:720px}.welcome-message strong{color:var(--green2)}
+.welcome-actions,.card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}.btn{border:0;border-radius:999px;padding:12px 20px;font-size:9px;font-weight:800;transition:.2s}.btn:hover{transform:translateY(-2px)}.btn-primary{background:var(--green);color:#fff;box-shadow:0 9px 20px #2f99552b}.btn-primary:hover{background:var(--green2)}.btn-secondary,.btn-light{background:#fff;color:var(--navy);border:1px solid var(--line)}.btn-light{background:#f1f7f9}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:13px;margin-top:20px}.stat{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 9px 30px #12304a0b}.stat-label{color:#8193a0;font-size:8px;font-weight:800;text-transform:uppercase}.stat-value{color:var(--navy);font-size:28px;font-weight:900;line-height:1;margin-top:9px}.stat-note{color:#9aabb5;font-size:8px;margin-top:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:17px;margin-top:18px}.panel{background:#fff;border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 18px 50px #12304a0d}.panel-title{color:var(--navy);font-size:16px;font-weight:800}.panel-sub{color:var(--muted);font-size:9px;margin:5px 0 18px}
+.toolbar{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}.filter{border:1px solid var(--line);background:#fff;color:#667b8b;border-radius:999px;padding:10px 14px;font-size:8px;font-weight:800}.filter.active{background:var(--green);border-color:var(--green);color:#fff}.search{flex:1;min-width:230px;border:1px solid var(--line);background:var(--soft);border-radius:999px;padding:11px 16px;font-size:9px;color:var(--navy)}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.card{background:#fff;border:1px solid var(--line);border-radius:19px;padding:19px;box-shadow:0 7px 25px #12304a0a}.card-top,.row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.card h3{color:var(--navy);font-size:14px;margin:12px 0 5px}.small{color:var(--muted);font-size:8px}.code{color:#91a1ac;font-size:7px}.badge{display:inline-flex;border-radius:999px;padding:6px 9px;font-size:7px;font-weight:900;text-transform:uppercase}.open{background:#eaf7ef;color:var(--green2)}.pending{background:#fff7e7;color:#966b19}.awarded{background:#eaf2fb;color:#24567c}.completed{background:#e9f7ef;color:#257a43}.danger{background:#fff2f2;color:#a74343}
+.meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:15px 0}.meta div{background:#f6fafb;border-radius:10px;padding:9px}.meta span{display:block;color:#8ca0ad;font-size:7px}.meta strong{display:block;color:var(--navy);font-size:8px;margin-top:3px}
+.quote-list{display:grid;gap:12px}.quote-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}.price{color:var(--green2);font-size:18px;font-weight:900}.quote-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.quote-meta div{background:#f6fafb;border-radius:10px;padding:9px}.quote-meta span{display:block;color:#8da0ac;font-size:7px}.quote-meta strong{display:block;color:var(--navy);font-size:8px;margin-top:3px}
+.workflow{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:12px}.workflow h3{color:var(--navy);font-size:14px;margin:0}.details{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:15px 0}.detail{background:#f6fafb;border-radius:11px;padding:10px}.detail span{display:block;color:#8da0ac;font-size:7px}.detail strong{display:block;color:var(--navy);font-size:8px;margin-top:3px}
+.bank{background:linear-gradient(135deg,#f4faf7,#f3f8fb);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:15px}.bank h4{color:var(--navy);font-size:12px;margin:0 0 5px}.bank-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.bank-detail{background:#fff;border:1px solid #e2eaed;border-radius:10px;padding:10px}.bank-detail span{display:block;color:#8ca0ac;font-size:7px}.bank-detail strong{display:block;color:var(--navy);font-size:8px;margin-top:3px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{color:var(--navy);font-size:8px;font-weight:800}.field input,.field textarea{width:100%;border:1px solid var(--line);background:#f6fafb;color:var(--navy);border-radius:11px;padding:11px 12px;font-size:9px}.field textarea{min-height:100px;resize:vertical}
+.steps{display:grid;gap:0}.step{display:grid;grid-template-columns:38px 1fr;gap:12px;min-height:75px;position:relative}.step:not(:last-child):before{content:"";position:absolute;left:17px;top:35px;width:2px;height:48px;background:#dce8ec}.dot{width:35px;height:35px;border-radius:50%;background:#edf2f4;color:#8da0ab;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;z-index:2}.step.done .dot{background:var(--green);color:#fff}.step.current .dot{background:#eaf3fb;color:#285d83;border:2px solid #bdd6e7}.step h4{color:var(--navy);font-size:10px;margin:2px 0 3px}.step p{color:var(--muted);font-size:8px;margin:0;line-height:1.5}
+.notice{padding:12px 14px;border-radius:12px;font-size:8px;line-height:1.6;margin-bottom:14px}.notice.info{background:#eef7fb;color:#4e6e83;border:1px solid #d9e9f1}.notice.success{background:#eaf7ef;color:var(--green2);border:1px solid #cfe8d8}.notice.warning{background:#fff8e9;color:#906719;border:1px solid #efdba9}.notice.error{background:#fff2f2;color:#a34343;border:1px solid #edcece}.empty{text-align:center;padding:45px 20px;color:var(--muted);font-size:9px}.modal-overlay{display:none;position:fixed;inset:0;background:#081c2b88;backdrop-filter:blur(5px);z-index:3000;align-items:center;justify-content:center;padding:20px}.modal-overlay.show{display:flex}.modal{width:min(760px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:24px;padding:26px;box-shadow:0 30px 90px #071b2b40}.modal-head{display:flex;justify-content:space-between;gap:15px}.modal-head h2{color:var(--navy);font-size:20px;margin:0}.close{width:34px;height:34px;border:1px solid var(--line);background:#fff;border-radius:50%;font-size:18px;color:var(--navy)}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;flex-wrap:wrap}
+@media(max-width:1100px){.floating-nav{width:calc(100% - 340px)}.nav-item{padding:12px 10px;font-size:8px}.stats{grid-template-columns:repeat(3,1fr)}.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){.header{width:calc(100% - 24px);height:205px;border-radius:0 0 35px 35px}.brand{left:25px;top:27px}.brand img{width:145px}.header-right{right:20px}.floating-nav{top:86px;left:20px;transform:none;width:calc(100% - 40px);justify-content:flex-start;overflow:auto}.page{width:calc(100% - 24px);margin-top:27px}.welcome-card{padding:31px 25px;border-radius:28px}.welcome-card h1{font-size:41px}.grid2,.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.details,.bank-grid{grid-template-columns:1fr 1fr}.quote-meta{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.stats,.cards,.details,.bank-grid,.quote-meta{grid-template-columns:1fr}.section-header{align-items:flex-start;flex-direction:column}.welcome-card h1{font-size:35px}.nav-item{font-size:7px;padding:10px 11px}}
 
-  <link rel="stylesheet" href="styles.css">
+.supplier-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.supplier-card{background:#fff;border:1px solid #e4eaf1;border-radius:22px;padding:22px;box-shadow:0 10px 28px rgba(20,45,70,.06);transition:transform .18s ease,box-shadow .18s ease}
+.supplier-card:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(20,45,70,.10)}
+.supplier-top{display:flex;align-items:center;gap:13px;margin-bottom:18px}
+.supplier-avatar{width:46px;height:46px;border-radius:14px;background:#e8f5ef;color:#15905b;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+.supplier-name{font-weight:800;color:#102a43;font-size:16px}
+.verified-tick{display:inline-flex;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;background:#15905b;color:#fff;font-size:11px;font-weight:900;margin-left:4px}
+.supplier-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.supplier-meta div{background:#f7f9fb;border-radius:13px;padding:11px}
+.supplier-meta span{display:block;font-size:11px;color:#718096;margin-bottom:4px}
+.supplier-meta strong{display:block;color:#243b53;font-size:12px;line-height:1.35}
+.supplier-description{min-height:42px;line-height:1.5}
+@media(max-width:1000px){.supplier-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.supplier-grid{grid-template-columns:1fr}.supplier-meta{grid-template-columns:1fr}}
 
-  <style>
-    .dashboard-actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
+.rfq-filter-toolbar{align-items:center}
+.rfq-filter-toolbar .filter{min-width:88px}
+.rfq-filter-toolbar .filter.active{box-shadow:0 8px 18px rgba(47,153,85,.18)}
+.completed,.processed{background:#e9f7ef;color:#257a43}
 
-    .notification-btn {
-      border: 1px solid rgba(15, 23, 42, 0.12);
-      background: #ffffff;
-      border-radius: 999px;
-      padding: 12px 16px;
-      cursor: pointer;
-      font-weight: 800;
-    }
+.rfq-filter-toolbar{align-items:center;gap:9px}
+.rfq-filter-toolbar .rfq-filter{
+  min-width:92px;
+  border:1px solid #d8e4ea;
+  background:#fff;
+  color:#526b7b;
+  cursor:pointer;
+  user-select:none;
+  position:relative;
+  transition:transform .18s ease,background .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+.rfq-filter-toolbar .rfq-filter:hover{
+  transform:translateY(-2px);
+  border-color:#2f9955;
+  color:#12304a;
+  box-shadow:0 8px 18px rgba(18,48,74,.10);
+}
+.rfq-filter-toolbar .rfq-filter:active{transform:translateY(0)}
+.rfq-filter-toolbar .rfq-filter.active{
+  background:#2f9955;
+  border-color:#2f9955;
+  color:#fff;
+  box-shadow:0 8px 18px rgba(47,153,85,.20);
+}
+@media(max-width:800px){
+  .brand{left:25px;top:25px;gap:8px}
+  .brand img{width:48px;height:48px}
+  .brand-name{font-size:17px}
+}
 
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(160px, 1fr));
-      gap: 18px;
-      margin: 28px 0;
-    }
+.rfq-card{transition:transform .18s ease,box-shadow .18s ease}
+.rfq-card:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(18,48,74,.10)}
+.rfq-stage-quotes{margin-top:14px;padding:12px;background:#f7fafb;border:1px solid #e3ecef;border-radius:13px}
+.stage-title{font-size:8px;font-weight:900;color:#12304a;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
+.mini-quote{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-top:1px solid #e7eef1}
+.mini-quote:first-of-type{border-top:0;padding-top:2px}
+.mini-quote strong{display:block;color:#12304a;font-size:9px}
+.mini-quote span{display:block;color:#8193a0;font-size:7px;margin-top:3px}
+.mini-quote-right{text-align:right}
+.mini-quote-right b{display:block;color:#248446;font-size:10px}
+.awarded-stage{background:#f2f8fc}
+.processed-stage{background:#f3faf5}
 
-    .kpi-card,
-    .profile-panel {
-      background: #ffffff;
-      border-radius: 24px;
-      padding: 22px;
-      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
-      border: 1px solid rgba(15, 23, 42, 0.06);
-    }
-
-    .kpi-card span {
-      color: #64748b;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .kpi-card strong {
-      display: block;
-      font-size: 34px;
-      margin-top: 8px;
-      color: #102033;
-    }
-
-    .dashboard-section-stack {
-      display: grid;
-      gap: 22px;
-      margin-top: 24px;
-    }
-
-    .profile-form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-
-    .profile-form-grid label.full-width {
-      grid-column: 1 / -1;
-    }
-
-    .supplier-directory-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(180px, 1fr));
-      gap: 14px;
-    }
-
-    .activity-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .activity-item {
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(248, 250, 252, 0.94);
-      color: #64748b;
-    }
-
-    .activity-item strong {
-      color: #102033;
-      margin-right: 6px;
-    }
-
-    @media (max-width: 1000px) {
-      .kpi-grid,
-      .supplier-directory-grid,
-      .profile-form-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 700px) {
-      .kpi-grid,
-      .supplier-directory-grid,
-      .profile-form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .dashboard-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
-    }
-  </style>
+.rfq-filter-toolbar{align-items:center;gap:9px}
+.rfq-filter-toolbar .rfq-filter{min-width:105px;cursor:pointer;user-select:none;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.rfq-filter-toolbar .rfq-filter:hover{transform:translateY(-2px);border-color:#2f9955;box-shadow:0 8px 18px rgba(18,48,74,.10)}
+.rfq-filter-toolbar .rfq-filter:active{transform:translateY(0)}
+.filter-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;margin-left:5px;border-radius:999px;background:#edf3f5;color:#557080;font-size:7px;font-weight:900}
+.rfq-filter.active .filter-count{background:rgba(255,255,255,.22);color:#fff}
+</style>
 </head>
 
 <body>
-  <div class="site-shell auth-shell">
+<header class="header">
+<a href="index.html" class="brand" aria-label="Elsati Connect home"><img src="data:image/png;base64,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" alt="Elsati Connect"></a>
 
-    <header class="topbar auth-topbar">
-      <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home">
-        <img src="elsati.png" alt="Elsati Connect logo">
-      </a>
+<nav class="floating-nav">
+<button class="nav-item active" onclick="showSection('dashboard',this)">Dashboard</button><button class="nav-item" onclick="showSection('suppliers',this)">Verified Suppliers</button>
+<button class="nav-item" onclick="showSection('rfqs',this)">RFQs</button>
+<button class="nav-item" onclick="showSection('quotes',this)">Quotes</button>
+<button class="nav-item" onclick="showSection('orders',this)">Orders</button>
+<button class="nav-item" onclick="showSection('payments',this)">Payments</button>
+<button class="nav-item" onclick="showSection('invoices',this)">Invoices</button>
+</nav>
 
-      <div class="topbar-actions dashboard-actions">
-        <button class="notification-btn" type="button">🔔</button>
-        <a class="button button-secondary" href="monitor.html">Background Monitor</a>
-        <button class="button button-secondary" id="logout-button" type="button">Log out</button>
-      </div>
-    </header>
+<div class="header-right">
+<button class="profile-button" id="profileInitial" onclick="toggleMenu(event)">B</button>
+<div class="profile-menu" id="profileMenu">
+<div class="profile-menu-header"><div class="profile-menu-company" id="menuCompany">Business</div><div class="profile-menu-label">Business Account</div></div>
+<button class="profile-menu-item" onclick="showSection('profile');closeMenu()">🏢 Company Profile</button>
+<button class="profile-menu-item" onclick="showSection('status');closeMenu()">✓ Procurement Status</button>
+<div class="divider"></div>
+<button class="profile-menu-item logout" onclick="logoutBusiness()">↪ Logout</button>
+</div>
+</div>
+</header>
 
-    <main class="dashboard-page reveal">
+<main class="page">
 
-      <section class="dashboard-intro">
-        <p class="eyebrow">Business dashboard</p>
+<section id="section-dashboard" class="section active">
+<div class="welcome-card">
+<div class="welcome-content">
+<div class="eyebrow">WELCOME TO ELSATI CONNECT</div>
+<h1 id="welcomeTitle">Hello, Business</h1>
+<h2>Find suppliers, compare quotes<br>and make every procurement count.</h2>
+<p class="welcome-message">Create RFQs, receive quotations from verified suppliers, compare offers, award the best quotation and manage payment through completion — <strong>connecting businesses, one deal at a time.</strong></p>
+<div class="welcome-actions">
+<button class="btn btn-primary" onclick="openCreateRFQ()">Create RFQ</button>
+<button class="btn btn-secondary" onclick="showSection('quotes')">Compare Quotes</button>
+</div>
+</div>
+</div>
 
-        <h1>
-          Welcome, <span id="dashboard-user-name">Business user</span>.
-        </h1>
+<div class="stats">
+<div class="stat"><div class="stat-label">Open RFQs</div><div class="stat-value" id="statRFQs">0</div><div class="stat-note">Currently sourcing</div></div>
+<div class="stat"><div class="stat-label">Quotes Received</div><div class="stat-value" id="statQuotes">0</div><div class="stat-note">Supplier responses</div></div>
+<div class="stat"><div class="stat-label">Awards</div><div class="stat-value" id="statAwards">0</div><div class="stat-note">Quotes awarded</div></div>
+<div class="stat"><div class="stat-label">Payments</div><div class="stat-value" id="statPayments">0</div><div class="stat-note">Payment actions</div></div>
+<div class="stat"><div class="stat-label">Processed</div><div class="stat-value" id="statProcessed">0</div><div class="stat-note">Processed procurement</div></div>
+</div>
 
-        <p class="auth-copy">
-          Your organization <strong id="dashboard-company-name">Company</strong>
-          can create RFQs, compare supplier quotes, review verified suppliers, and track sourcing decisions.
-        </p>
-      </section>
+<div class="grid2">
+<div class="panel">
+<div class="panel-title">Procurement workflow</div><div class="panel-sub">The customer side follows the same transaction from RFQ through invoice as the supplier side.</div>
+<div class="steps">
+<div class="step done"><div class="dot">1</div><div><h4>Create RFQ</h4><p>Publish what your business needs.</p></div></div>
+<div class="step current"><div class="dot">2</div><div><h4>Receive & Compare Quotes</h4><p>Review supplier price, delivery and commercial terms.</p></div></div>
+<div class="step"><div class="dot">3</div><div><h4>Award Supplier</h4><p>Select the supplier that best meets your requirements.</p></div></div>
+<div class="step"><div class="dot">4</div><div><h4>Pay Supplier</h4><p>After award, view the supplier's bank details and upload proof of payment.</p></div></div>
+<div class="step"><div class="dot">5</div><div><h4>Payment Confirmed & Invoice</h4><p>The supplier confirms receipt and creates the invoice.</p></div></div>
+</div>
+</div>
+<div class="panel"><div class="panel-title">Recent activity</div><div class="panel-sub">Your latest procurement activity.</div><div id="activity"><div class="empty">No activity yet.</div></div></div>
+</div>
+</section>
 
-      <section class="kpi-grid">
-        <article class="kpi-card">
-          <span>Active RFQs</span>
-          <strong id="active-rfq-count">0</strong>
-        </article>
+<section id="section-rfqs" class="section">
+<div class="section-header"><div><h2>RFQs</h2><p>Create and manage procurement requests sent to suppliers.</p></div><button class="btn btn-primary" onclick="openCreateRFQ()">+ Create RFQ</button></div>
+<div class="panel">
+<div class="toolbar rfq-filter-toolbar" role="tablist" aria-label="RFQ stages">
+<button type="button" class="filter rfq-filter active" data-rfq-filter="all" role="tab" aria-selected="true" onclick="openRFQStage('all',this)">All RFQs <span class="filter-count" id="count-all">0</span></button>
+<button type="button" class="filter rfq-filter" data-rfq-filter="open" role="tab" aria-selected="false" onclick="openRFQStage('open',this)">Open <span class="filter-count" id="count-open">0</span></button>
+<button type="button" class="filter rfq-filter" data-rfq-filter="quoted" role="tab" aria-selected="false" onclick="openRFQStage('quoted',this)">Quotes Received <span class="filter-count" id="count-quoted">0</span></button>
+<button type="button" class="filter rfq-filter" data-rfq-filter="awarded" role="tab" aria-selected="false" onclick="openRFQStage('awarded',this)">Awarded <span class="filter-count" id="count-awarded">0</span></button>
+<button type="button" class="filter rfq-filter" data-rfq-filter="processed" role="tab" aria-selected="false" onclick="openRFQStage('processed',this)">Processed <span class="filter-count" id="count-processed">0</span></button>
+<input class="search" id="rfqSearch" oninput="renderRFQs()" placeholder="Search RFQs..." aria-label="Search RFQs">
+</div>
+<div class="cards" id="rfqContainer"><div class="empty">Loading RFQs...</div></div>
+</div>
+</section>
 
-        <article class="kpi-card">
-          <span>Quotes Received</span>
-          <strong id="quotes-received-count">0</strong>
-        </article>
+<section id="section-quotes" class="section">
+<div class="section-header"><div><h2>Quotes</h2><p>Compare supplier quotations and award the best offer.</p></div></div>
+<div class="panel"><div id="quotesContainer"><div class="empty">Loading supplier quotations...</div></div></div>
+</section>
 
-        <article class="kpi-card">
-          <span>Approved Suppliers</span>
-          <strong id="approved-supplier-count">0</strong>
-        </article>
+<section id="section-orders" class="section">
+<div class="section-header"><div><h2>Orders</h2><p>Track awarded procurement and supplier fulfilment.</p></div></div>
+<div id="ordersContainer"><div class="empty">Loading orders...</div></div>
+</section>
 
-        <article class="kpi-card">
-          <span>Estimated Savings</span>
-          <strong>K0</strong>
-        </article>
-      </section>
+<section id="section-payments" class="section">
+<div class="section-header"><div><h2>Payments</h2><p>Pay awarded suppliers and upload proof of payment.</p></div></div>
+<div id="paymentsContainer"><div class="empty">Loading payment workflow...</div></div>
+</section>
 
-      <section class="profile-panel">
-        <div class="panel-head">
-          <h2>Business profile</h2>
-          <span>Complete your buyer profile for better supplier visibility and admin records</span>
-        </div>
+<section id="section-invoices" class="section">
+<div class="section-header"><div><h2>Invoices</h2><p>View invoices created by suppliers after payment confirmation.</p></div></div>
+<div id="invoicesContainer"><div class="empty">Loading invoices...</div></div>
+</section>
 
-        <form class="contact-form compact-form" id="business-profile-form">
-          <div class="profile-form-grid">
-            <label>
-              Business name
-              <input type="text" name="company_name" placeholder="Your business name" required>
-            </label>
-
-            <label>
-              Contact person
-              <input type="text" name="contact_person" placeholder="Full name">
-            </label>
-
-            <label>
-              Contact phone
-              <input type="text" name="contact_phone" placeholder="+260...">
-            </label>
-
-            <label>
-              City
-              <input type="text" name="city" placeholder="Lusaka">
-            </label>
-
-            <label>
-              Country
-              <input type="text" name="country" placeholder="Zambia">
-            </label>
-
-            <label>
-              Business address
-              <input type="text" name="business_address" placeholder="Physical address">
-            </label>
-
-            <label class="full-width">
-              Business description
-              <textarea name="business_description" rows="3" placeholder="Briefly describe your business and procurement needs"></textarea>
-            </label>
-          </div>
-
-          <button class="button button-primary" type="submit">Save Business Profile</button>
-        </form>
-
-        <p class="form-feedback" id="business-profile-feedback"></p>
-      </section>
-
-      <section class="app-grid business-app-grid">
-        <section class="app-panel app-panel-form">
-          <div class="panel-head">
-            <h2>Create request</h2>
-            <span>Send RFQs to suppliers</span>
-          </div>
-
-          <form class="contact-form compact-form" id="rfq-create-form">
-            <label>
-              Request title
-              <input type="text" name="title" placeholder="Office Furniture Supply" required>
-            </label>
-
-            <label>
-              Category
-              <input type="text" name="category" placeholder="Stationery, furniture, ICT, catering...">
-            </label>
-
-            <label>
-              Quantity
-              <input type="number" name="quantity" placeholder="180" required>
-            </label>
-
-            <label>
-              Estimated budget
-              <input type="number" name="estimated_budget" placeholder="25000">
-            </label>
-
-            <label>
-              Delivery location
-              <input type="text" name="delivery_location" placeholder="Lusaka, Zambia">
-            </label>
-
-            <label>
-              Deadline
-              <input type="text" name="deadline" placeholder="5 days" required>
-            </label>
-
-            <label>
-              Notes
-              <textarea name="notes" rows="4" placeholder="Delivery location, required documents, and evaluation criteria" required></textarea>
-            </label>
-
-            <button class="button button-primary" type="submit">Send Request</button>
-          </form>
-
-          <p class="form-feedback" id="rfq-create-feedback"></p>
-        </section>
-
-        <section class="app-panel app-panel-list">
-          <div class="panel-head">
-            <h2>Requests</h2>
-            <span>Select a request to compare quotes</span>
-          </div>
-
-          <div class="request-list" id="business-rfq-list">
-            <p class="empty-state">Loading RFQs...</p>
-          </div>
-        </section>
-      </section>
-
-      <section class="app-grid business-app-grid">
-        <section class="app-panel app-panel-table">
-          <div class="panel-head">
-            <h2>Quote comparison</h2>
-            <span id="comparison-title">Select an RFQ to compare supplier quotes</span>
-          </div>
-
-          <div class="comparison-table" id="business-comparison-table">
-            <p class="empty-state">Supplier quotes will appear here once received.</p>
-          </div>
-        </section>
-
-        <section class="app-panel app-panel-report">
-          <div class="panel-head">
-            <h2>Procurement report</h2>
-            <span>RFQ details, price comparison and decision guidance</span>
-          </div>
-
-          <div class="report-summary" id="procurement-report">
-            <p class="empty-state">Procurement report will appear once RFQs and quotes are available.</p>
-          </div>
-        </section>
-      </section>
-
-      <section class="app-panel">
-        <div class="panel-head">
-          <h2>Verified supplier directory</h2>
-          <span>Approved suppliers currently available on ELSATI</span>
-        </div>
-
-        <div class="supplier-directory-grid" id="business-supplier-directory">
-          <p class="empty-state">Loading verified suppliers...</p>
-        </div>
-      </section>
-
-      <section class="app-panel">
-        <div class="panel-head">
-          <h2>Recent activity</h2>
-          <span>Live procurement updates</span>
-        </div>
-
-        <div class="activity-list" id="business-activity-list">
-          <div class="activity-item"><strong>System</strong> ready for live RFQ creation.</div>
-        </div>
-      </section>
-
-    </main>
+<section id="section-suppliers" class="section">
+<div class="section-header">
+  <div>
+    <h2>Verified Suppliers</h2>
+    <p>Browse suppliers that have been verified on Elsati Connect and start a procurement request.</p>
   </div>
+</div>
+<div class="notice info" style="margin-bottom:18px">
+  Only supplier profiles marked as <strong>verified</strong> or with <strong>verification status = verified</strong> are shown here.
+</div>
+<div id="verifiedSuppliersContainer" class="supplier-grid">
+  <div class="empty">Loading verified suppliers...</div>
+</div>
+</section>
 
-<script src="script.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script src="dashboard.js"></script>
-<script src="direct-supplier-request.js"></script>
+<section id="section-profile" class="section">
+<div class="section-header"><div><h2>Company Profile</h2><p>Maintain your business information for procurement records.</p></div></div>
+<div class="panel"><div id="profileNotice"></div>
+<div class="form-grid">
+<div class="field"><label>Business Name</label><input id="companyName"></div>
+<div class="field"><label>Contact Person</label><input id="contactPerson"></div>
+<div class="field"><label>Email</label><input id="businessEmail" readonly></div>
+<div class="field"><label>Contact Phone</label><input id="contactPhone"></div>
+<div class="field"><label>City</label><input id="businessCity"></div>
+<div class="field"><label>Country</label><input id="businessCountry"></div>
+<div class="field full"><label>Business Address</label><input id="businessAddress"></div>
+<div class="field full"><label>Business Description</label><textarea id="businessDescription"></textarea></div>
+</div>
+<button class="btn btn-primary" style="margin-top:16px" onclick="saveProfile()">Save Company Profile</button>
+</div>
+</section>
+
+<section id="section-status" class="section">
+<div class="section-header"><div><h2>Procurement Status</h2><p>Follow a selected transaction from RFQ to invoice.</p></div></div>
+<div class="panel" id="statusContainer"><div class="empty">Select an awarded RFQ from Orders.</div></div>
+</section>
+</main>
+
+<div class="modal-overlay" id="rfqModal"><div class="modal">
+<div class="modal-head"><div><h2>Create RFQ</h2><p class="small">Publish a procurement request for suppliers.</p></div><button class="close" onclick="closeModal('rfqModal')">×</button></div>
+<div id="rfqNotice"></div>
+<div class="form-grid">
+<div class="field"><label>RFQ Title</label><input id="rfqTitle" placeholder="Office Furniture Supply"></div>
+<div class="field"><label>Category</label><input id="rfqCategory" placeholder="Furniture"></div>
+<div class="field"><label>Quantity</label><input id="rfqQuantity" placeholder="20 desks"></div>
+<div class="field"><label>Estimated Budget</label><input id="rfqBudget" type="number" placeholder="Optional"></div>
+<div class="field"><label>Delivery Location</label><input id="rfqDelivery" placeholder="Lusaka"></div>
+<div class="field"><label>Required Date</label><input id="rfqDeadline" type="date"></div>
+<div class="field full"><label>Requirements / Notes</label><textarea id="rfqNotes" placeholder="Specifications, delivery requirements and evaluation criteria"></textarea></div>
+</div>
+<div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('rfqModal')">Cancel</button><button class="btn btn-primary" onclick="createRFQ()">Publish RFQ</button></div>
+</div></div>
+
+<div class="modal-overlay" id="quoteModal"><div class="modal">
+<div class="modal-head"><div><h2>Supplier Quotation</h2><p class="small" id="quoteSub"></p></div><button class="close" onclick="closeModal('quoteModal')">×</button></div>
+<div id="quoteContent"></div>
+<div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('quoteModal')">Close</button><button class="btn btn-primary" id="awardBtn">Award Quote</button></div>
+</div></div>
+
+<div class="modal-overlay" id="paymentModal"><div class="modal">
+<div class="modal-head"><div><h2>Make Payment</h2><p class="small" id="paymentSub"></p></div><button class="close" onclick="closeModal('paymentModal')">×</button></div>
+<div id="paymentNotice"></div><div id="bankDetails"></div>
+<div class="form-grid" style="margin-top:16px">
+<div class="field"><label>Payment Reference</label><input id="paymentReference"></div>
+<div class="field"><label>Payment Date</label><input id="paymentDate" type="date"></div>
+<div class="field full"><label>Proof of Payment</label><input id="paymentProof" type="file" accept=".pdf,.png,.jpg,.jpeg"></div>
+</div>
+<div class="notice info" style="margin-top:14px">After upload, the supplier will see the proof and can confirm payment received.</div>
+<div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('paymentModal')">Cancel</button><button class="btn btn-primary" onclick="submitPayment()">Submit Proof of Payment</button></div>
+</div></div>
+
+<script>
+const db=supabase.createClient(window.ELSATI_SUPABASE.url,window.ELSATI_SUPABASE.publishableKey);
+let currentUser=null,currentBusiness=null,rfqs=[],quotes=[],payments=[],invoices=[],verifiedSuppliers=[],selectedPayment=null,rfqFilter="all";
+
+document.addEventListener("DOMContentLoaded",loadBusiness);
+
+async function loadBusiness(){
+ const {data,error}=await db.auth.getUser();
+ if(error||!data.user){location.href="customer-signin.html";return}
+ currentUser=data.user;
+ const {data:profile,error:pe}=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
+ if(pe||!profile||profile.role!=="business"){await db.auth.signOut();location.href="customer-signin.html";return}
+ currentBusiness=profile;
+ updateIdentity();populateProfile();
+ await refresh();
+}
+
+async function refresh(){
+ await loadRFQs();await loadQuotes();await loadPayments();await loadInvoices();await loadVerifiedSuppliers();
+ renderRFQs();renderQuotes();renderOrders();renderPayments();renderInvoices();updateStats();renderActivity();
+}
+
+function updateIdentity(){
+ const name=currentBusiness.company_name||currentUser.email||"Business";
+ document.getElementById("welcomeTitle").textContent="Hello, "+name;
+ document.getElementById("menuCompany").textContent=name;
+ document.getElementById("profileInitial").textContent=name.trim().charAt(0).toUpperCase()||"B";
+}
+
+async function loadRFQs(){
+ const {data,error}=await db.from("rfqs").select("*").eq("business_id",currentUser.id).order("created_at",{ascending:false});
+ rfqs=error?[]:(data||[]);
+}
+async function loadQuotes(){
+ if(!rfqs.length){quotes=[];return}
+ const {data,error}=await db.from("quotes").select("*").in("rfq_id",rfqs.map(r=>r.id)).order("created_at",{ascending:false});
+ quotes=error?[]:(data||[]);
+}
+async function loadPayments(){
+ const {data,error}=await db.from("supplier_payments").select("*").eq("customer_user_id",currentUser.id).order("created_at",{ascending:false});
+ payments=error?[]:(data||[]);
+}
+async function loadInvoices(){
+ if(!payments.length){invoices=[];return}
+ const {data,error}=await db.from("supplier_invoices").select("*").in("payment_id",payments.map(p=>p.id)).order("created_at",{ascending:false});
+ invoices=error?[]:(data||[]);
+}
+
+function showSection(section,button){
+ document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+ document.getElementById("section-"+section)?.classList.add("active");
+ document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
+ if(button)button.classList.add("active");
+ else document.querySelectorAll(".nav-item").forEach(x=>{if(x.textContent.trim().toLowerCase()===section.toLowerCase())x.classList.add("active")});
+ if(section==="status")renderStatus();if(section==="suppliers")renderVerifiedSuppliers();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function toggleMenu(e){e.stopPropagation();document.getElementById("profileMenu").classList.toggle("show")}
+function closeMenu(){document.getElementById("profileMenu").classList.remove("show")}
+document.addEventListener("click",e=>{const m=document.getElementById("profileMenu"),b=document.getElementById("profileInitial");if(m&&!m.contains(e.target)&&!b.contains(e.target))closeMenu()});
+function openCreateRFQ(){document.getElementById("rfqModal").classList.add("show")}
+function closeModal(id){document.getElementById(id)?.classList.remove("show")}
+document.querySelectorAll(".modal-overlay").forEach(x=>x.addEventListener("click",e=>{if(e.target===x)x.classList.remove("show")}));
+
+function openRFQStage(filter,button){
+  rfqFilter=filter;
+  document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+  document.getElementById("section-rfqs")?.classList.add("active");
+  document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(x=>{
+    if(x.textContent.trim().toLowerCase()==="rfqs")x.classList.add("active");
+  });
+  document.querySelectorAll("#section-rfqs .rfq-filter").forEach(x=>{
+    x.classList.remove("active");
+    x.setAttribute("aria-selected","false");
+  });
+  const selected=button||document.querySelector('#section-rfqs [data-rfq-filter="'+filter+'"]');
+  if(selected){
+    selected.classList.add("active");
+    selected.setAttribute("aria-selected","true");
+  }
+  renderRFQs();
+}
+
+function setRFQFilter(filter,button){
+  openRFQStage(filter,button);
+}
+
+function getRFQQuoteCount(rfqId){
+  return quotes.filter(q=>String(q.rfq_id)===String(rfqId)).length;
+}
+
+function isAwardedRFQ(r){
+  const s=String(r.status||"").toLowerCase().trim();
+  return ["awarded","accepted","award"].includes(s) ||
+    quotes.some(q=>String(q.rfq_id)===String(r.id) &&
+      ["awarded","accepted"].includes(String(q.status||"").toLowerCase().trim()));
+}
+
+function isProcessedRFQ(r){
+  const s=String(r.status||"").toLowerCase().trim();
+  return ["processed","processing","fulfilled","closed","completed","complete"].includes(s);
+}
+
+function isOpenRFQ(r){
+  const s=String(r.status||"").toLowerCase().trim();
+  return !isAwardedRFQ(r) && !isProcessedRFQ(r) &&
+    ["open","pending","new","published","active",""].includes(s);
+}
+
+function isQuotesReceivedRFQ(r){
+  return getRFQQuoteCount(r.id)>0 && !isAwardedRFQ(r) && !isProcessedRFQ(r);
+}
+
+function rfqMatchesFilter(r){
+  if(rfqFilter==="all")return true;
+  if(rfqFilter==="open")return isOpenRFQ(r);
+  if(rfqFilter==="quoted")return isQuotesReceivedRFQ(r);
+  if(rfqFilter==="awarded")return isAwardedRFQ(r);
+  if(rfqFilter==="processed")return isProcessedRFQ(r);
+  return true;
+}
+
+function renderRFQs(){
+ const search=(document.getElementById("rfqSearch")?.value||"").toLowerCase().trim();
+ const c=document.getElementById("rfqContainer");
+
+ const list=rfqs.filter(r=>{
+   if(!rfqMatchesFilter(r))return false;
+   if(!search)return true;
+   return [r.code,r.title,r.category,r.delivery_location,r.notes,r.status,r.business_name]
+     .filter(Boolean).join(" ").toLowerCase().includes(search);
+ });
+
+ if(!list.length){
+   const messages={
+     all:"No RFQs found.",
+     open:"No open RFQs yet.",
+     quoted:"No RFQs with supplier quotations yet.",
+     awarded:"No awarded RFQs yet.",
+     processed:"No processed RFQs yet."
+   };
+   c.innerHTML='<div class="empty">'+messages[rfqFilter]+'</div>';
+   return;
+ }
+
+ c.innerHTML=list.map(r=>{
+   const count=getRFQQuoteCount(r.id);
+   let displayStatus="Open",badgeClass="open";
+   if(isProcessedRFQ(r)){displayStatus="Processed";badgeClass="processed";}
+   else if(isAwardedRFQ(r)){displayStatus="Awarded";badgeClass="awarded";}
+   else if(count>0){displayStatus="Quotes Received";badgeClass="pending";}
+
+   const qs=quotes.filter(q=>String(q.rfq_id)===String(r.id));
+   let stage="";
+   if(rfqFilter==="quoted"){
+     stage='<div class="rfq-stage-quotes"><div class="stage-title">Supplier Quotes Received</div>'+
+       qs.map(q=>'<div class="mini-quote"><div><strong>'+esc(q.supplier_company||q.supplier_name||"Supplier")+'</strong><span>'+esc(q.delivery||q.delivery_period||"Delivery as quoted")+'</span></div><div class="mini-quote-right"><b>'+money(q.price)+'</b><span>'+esc(q.status||"Pending")+'</span></div></div>').join("")+
+       '</div>';
+   }
+   if(rfqFilter==="awarded"){
+     const aq=qs.find(q=>["awarded","accepted"].includes(String(q.status||"").toLowerCase()));
+     if(aq)stage='<div class="rfq-stage-quotes awarded-stage"><div class="stage-title">Awarded Supplier</div><div class="mini-quote"><div><strong>'+esc(aq.supplier_company||aq.supplier_name||"Supplier")+'</strong><span>Selected supplier</span></div><div class="mini-quote-right"><b>'+money(aq.price)+'</b><span>Awarded</span></div></div></div>';
+   }
+   if(rfqFilter==="processed"){
+     stage='<div class="rfq-stage-quotes processed-stage"><div class="stage-title">Procurement Processed</div><div class="small">This RFQ has moved through the procurement process.</div></div>';
+   }
+
+   return '<article class="card rfq-card">'+
+     '<div class="card-top"><span class="badge '+badgeClass+'">'+displayStatus+'</span><span class="code">'+esc(r.code||"")+'</span></div>'+
+     '<h3>'+esc(r.title||"Untitled RFQ")+'</h3>'+
+     '<div class="small">'+esc(r.business_name||currentBusiness?.company_name||"Your Business")+'</div>'+
+     '<div class="meta"><div><span>Category</span><strong>'+esc(r.category||"—")+'</strong></div><div><span>Quantity</span><strong>'+esc(r.quantity||"—")+'</strong></div><div><span>Required</span><strong>'+date(r.deadline)+'</strong></div><div><span>Quotes</span><strong>'+count+'</strong></div></div>'+
+     '<div class="small">Delivery: '+esc(r.delivery_location||"Not specified")+'</div>'+
+     '<div class="small" style="margin-top:6px">Created: '+dateTime(r.created_at)+'</div>'+
+     stage+
+     '<div class="card-actions">'+
+     (count?'<button class="btn btn-primary" onclick="viewRFQQuotes(\''+r.id+'\')">View Quotes ('+count+')</button>':'<button class="btn btn-light" onclick="details(\''+r.id+'\')">View RFQ</button>')+
+     (count?'<button class="btn btn-light" onclick="details(\''+r.id+'\')">View RFQ</button>':'')+
+     '</div></article>';
+ }).join("");
+}
+
+function renderQuotes(){
+ const c=document.getElementById("quotesContainer");
+ if(!quotes.length){c.innerHTML='<div class="empty">No supplier quotations yet.</div>';return}
+ const groups={};quotes.forEach(q=>(groups[q.rfq_id]??=[]).push(q));
+ c.innerHTML=Object.entries(groups).map(([id,qs])=>{
+  const r=rfqs.find(x=>String(x.id)===String(id));
+  return `<div style="margin-bottom:28px"><div class="panel-title">${esc(r?.title||"RFQ")}</div><div class="panel-sub">${esc(r?.code||"")} · ${qs.length} supplier quote(s)</div><div class="quote-list">${qs.map(q=>quoteCard(q,r)).join("")}</div></div>`
+ }).join("");
+}
+function quoteCard(q,r){
+ const awarded=String(q.status||"").toLowerCase()==="awarded";
+ return `<article class="quote-card"><div class="row"><div><div class="panel-title">${esc(q.supplier_company||q.supplier_name||"Supplier")}</div><div class="small">${esc(r?.code||"")}</div></div><div class="price">${money(q.price)}</div></div><div class="quote-meta"><div><span>Delivery</span><strong>${esc(q.delivery||q.delivery_period||"As stated")}</strong></div><div><span>Payment Terms</span><strong>${esc(q.payment_terms||"As agreed")}</strong></div><div><span>Validity</span><strong>${esc(q.quote_validity||"As stated")}</strong></div><div><span>Availability</span><strong>${esc(q.availability||"As stated")}</strong></div></div><div class="small">${esc(q.notes||"No additional supplier notes.")}</div><div class="card-actions"><button class="btn btn-light" onclick="openQuote('${q.id}')">View Full Quote</button>${awarded?'<span class="badge awarded">Awarded</span>':`<button class="btn btn-primary" onclick="awardQuote('${q.id}')">Award Quote</button>`}</div></article>`
+}
+function viewRFQQuotes(id){showSection("quotes");const r=rfqs.find(x=>String(x.id)===String(id)),qs=quotes.filter(q=>String(q.rfq_id)===String(id));document.getElementById("quotesContainer").innerHTML=qs.length?`<div class="panel-title">${esc(r?.title||"RFQ")}</div><div class="panel-sub">${esc(r?.code||"")}</div><div class="quote-list">${qs.map(q=>quoteCard(q,r)).join("")}</div>`:'<div class="empty">No supplier quotations yet.</div>'}
+function openQuote(id){
+ const q=quotes.find(x=>String(x.id)===String(id));if(!q)return;const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
+ document.getElementById("quoteSub").textContent=`${q.supplier_company||"Supplier"} · ${r?.code||""}`;
+ document.getElementById("quoteContent").innerHTML=`<div class="quote-card"><div class="row"><div class="panel-title">${esc(q.supplier_company||"Supplier")}</div><div class="price">${money(q.price)}</div></div><div class="quote-meta"><div><span>Delivery</span><strong>${esc(q.delivery||q.delivery_period||"As stated")}</strong></div><div><span>Payment</span><strong>${esc(q.payment_terms||"As agreed")}</strong></div><div><span>Validity</span><strong>${esc(q.quote_validity||"As stated")}</strong></div><div><span>Availability</span><strong>${esc(q.availability||"As stated")}</strong></div></div><div class="small">Warranty/Guarantee: ${esc(q.warranty||"As stated")}<br><br>${esc(q.notes||"No additional notes.")}</div></div>`;
+ document.getElementById("awardBtn").onclick=()=>{closeModal("quoteModal");awardQuote(q.id)};document.getElementById("quoteModal").classList.add("show");
+}
+
+async function awardQuote(id){
+ const q=quotes.find(x=>String(x.id)===String(id));if(!q)return;const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
+ if(!confirm(`Award ${r?.code||"this RFQ"} to ${q.supplier_company||"this supplier"}?`))return;
+ const {error:qe}=await db.from("quotes").update({status:"awarded"}).eq("id",q.id);
+ if(qe){alert(qe.message);return}
+ const {error:re}=await db.from("rfqs").update({status:"awarded",awarded_supplier_id:q.supplier_user_id}).eq("id",r.id).eq("business_id",currentUser.id);
+ if(re)console.warn(re);
+ await db.from("supplier_payments").insert({supplier_user_id:q.supplier_user_id,customer_user_id:currentUser.id,customer_name:currentBusiness.company_name,rfq_id:r.id,rfq_code:r.code,amount:Number(q.price||0),status:"awaiting_payment"});
+ await refresh();showSection("orders");alert("Quotation awarded. The supplier payment workflow is now ready.");
+}
+
+function renderOrders(){
+ const c=document.getElementById("ordersContainer"),list=rfqs.filter(r=>["awarded","completed"].includes(String(r.status||"").toLowerCase()));
+ if(!list.length){c.innerHTML='<div class="panel empty">No awarded orders yet.</div>';return}
+ c.innerHTML=list.map(r=>{const q=quotes.find(x=>String(x.rfq_id)===String(r.id)&&String(x.status||"").toLowerCase()==="awarded"),p=payments.find(x=>String(x.rfq_id)===String(r.id));return `<div class="workflow"><div class="row"><div><h3>${esc(r.title||"Order")}</h3><div class="small">${esc(r.code||"")}</div></div><span class="badge awarded">${esc(r.status||"Awarded")}</span></div><div class="details"><div class="detail"><span>Supplier</span><strong>${esc(q?.supplier_company||"Supplier")}</strong></div><div class="detail"><span>Value</span><strong>${money(q?.price)}</strong></div><div class="detail"><span>Delivery</span><strong>${esc(q?.delivery||q?.delivery_period||"As agreed")}</strong></div><div class="detail"><span>Payment</span><strong>${esc(p?.status||"Awaiting payment")}</strong></div></div><div class="small">After payment, the supplier confirms receipt and creates the invoice.</div><div class="card-actions"><button class="btn btn-primary" onclick="${p?`openPayment('${p.id}')`:`showSection('payments')`}">Go to Payment</button><button class="btn btn-light" onclick="showStatus('${r.id}')">Track Status</button></div></div>`}).join("");
+}
+
+async function openPayment(id){
+ const p=payments.find(x=>String(x.id)===String(id));if(!p)return;selectedPayment=p;
+ const {data:supplier}=await db.from("profiles").select("company_name,bank_name,account_name,account_number,bank_branch,branch_code,swift_code").eq("id",p.supplier_user_id).maybeSingle();
+ document.getElementById("paymentSub").textContent=`${p.rfq_code||""} · ${supplier?.company_name||"Supplier"}`;
+ document.getElementById("paymentDate").value=p.payment_date||today();
+ document.getElementById("paymentReference").value=p.payment_reference||"";
+ document.getElementById("bankDetails").innerHTML=supplier?`<div class="bank"><h4>${esc(supplier.company_name||"Awarded Supplier")}</h4><div class="small" style="margin-bottom:12px">Bank details are displayed here because this supplier was awarded the selected RFQ.</div><div class="bank-grid">${[["Bank Name",supplier.bank_name],["Account Name",supplier.account_name],["Account Number",supplier.account_number],["Bank Branch",supplier.bank_branch],["Branch Code",supplier.branch_code],["SWIFT Code",supplier.swift_code]].map(x=>`<div class="bank-detail"><span>${x[0]}</span><strong>${esc(x[1]||"Not provided")}</strong></div>`).join("")}</div></div>`:'<div class="notice warning">Supplier bank details are not available yet.</div>';
+ document.getElementById("paymentNotice").innerHTML="";document.getElementById("paymentModal").classList.add("show");
+}
+
+async function submitPayment(){
+ if(!selectedPayment)return;const ref=document.getElementById("paymentReference").value.trim(),pd=document.getElementById("paymentDate").value,file=document.getElementById("paymentProof").files[0],n=document.getElementById("paymentNotice");
+ if(!ref||!pd||!file){n.innerHTML='<div class="notice error">Enter payment reference, date and proof of payment.</div>';return}
+ if(file.size>10*1024*1024){n.innerHTML='<div class="notice error">Proof of payment must not exceed 10MB.</div>';return}
+ n.innerHTML='<div class="notice info">Uploading proof of payment...</div>';
+ const path=`${currentUser.id}/${selectedPayment.id}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`;
+ const {error:ue}=await db.storage.from("payment-proofs").upload(path,file,{upsert:true});
+ if(ue){n.innerHTML=`<div class="notice error">${esc(ue.message)}</div>`;return}
+ const {error:e}=await db.from("supplier_payments").update({payment_reference:ref,payment_date:pd,proof_path:path,status:"proof_uploaded"}).eq("id",selectedPayment.id).eq("customer_user_id",currentUser.id);
+ if(e){n.innerHTML=`<div class="notice error">${esc(e.message)}</div>`;return}
+ closeModal("paymentModal");await refresh();showSection("payments");alert("Proof of payment submitted. The supplier can now confirm receipt.");
+}
+
+function renderPayments(){
+ const c=document.getElementById("paymentsContainer");if(!payments.length){c.innerHTML='<div class="panel empty">No payments yet. Award a supplier quotation to begin payment.</div>';return}
+ c.innerHTML=payments.map(p=>{const q=quotes.find(x=>String(x.rfq_id)===String(p.rfq_id)&&String(x.status||"").toLowerCase()==="awarded");const cls=p.status==="confirmed"?"completed":p.status==="proof_uploaded"?"awarded":"pending";return `<div class="workflow"><div class="row"><div><h3>${esc(p.rfq_code||"Payment")}</h3><div class="small">${esc(q?.supplier_company||"Supplier")}</div></div><span class="badge ${cls}">${esc(p.status||"Awaiting payment")}</span></div><div class="details"><div class="detail"><span>Amount</span><strong>${money(p.amount)}</strong></div><div class="detail"><span>Reference</span><strong>${esc(p.payment_reference||"Not submitted")}</strong></div><div class="detail"><span>Payment Date</span><strong>${date(p.payment_date)}</strong></div><div class="detail"><span>Supplier</span><strong>${esc(q?.supplier_company||"Supplier")}</strong></div></div><div class="card-actions">${p.status==="awaiting_payment"?`<button class="btn btn-primary" onclick="openPayment('${p.id}')">Make Payment</button>`:""}${p.proof_path?`<button class="btn btn-light" onclick="viewProof('${p.id}')">View Proof</button>`:""}</div></div>`}).join("");
+}
+
+async function viewProof(id){
+ const p=payments.find(x=>String(x.id)===String(id));if(!p?.proof_path)return;
+ const {data,error}=await db.storage.from("payment-proofs").createSignedUrl(p.proof_path,3600);if(error||!data?.signedUrl){alert("Proof could not be opened.");return}window.open(data.signedUrl,"_blank");
+}
+
+function renderInvoices(){
+ const c=document.getElementById("invoicesContainer");if(!invoices.length){c.innerHTML='<div class="panel empty">No invoices yet. They become available after supplier payment confirmation.</div>';return}
+ c.innerHTML=invoices.map(i=>`<div class="workflow"><div class="row"><div><h3>${esc(i.invoice_number||"Invoice")}</h3><div class="small">${esc(i.description||"Supply against procurement request")}</div></div><span class="badge completed">${esc(i.status||"Submitted")}</span></div><div class="details"><div class="detail"><span>Amount</span><strong>${money(i.amount)}</strong></div><div class="detail"><span>Invoice Date</span><strong>${date(i.invoice_date)}</strong></div><div class="detail"><span>RFQ</span><strong>${esc(paymentCode(i.payment_id))}</strong></div><div class="detail"><span>Customer</span><strong>${esc(currentBusiness.company_name)}</strong></div></div></div>`).join("");
+}
+
+function paymentCode(id){return payments.find(p=>String(p.id)===String(id))?.rfq_code||"—"}
+
+function renderStatus(){
+ const c=document.getElementById("statusContainer"),awarded=rfqs.filter(r=>["awarded","completed"].includes(String(r.status||"").toLowerCase()));
+ if(!awarded.length){c.innerHTML='<div class="empty">No awarded procurement yet.</div>';return}
+ const r=awarded[0],q=quotes.find(x=>String(x.rfq_id)===String(r.id)&&String(x.status||"").toLowerCase()==="awarded"),p=payments.find(x=>String(x.rfq_id)===String(r.id)),hasInvoice=invoices.some(i=>String(i.payment_id)===String(p?.id)),ps=p?.status||"";
+ const steps=[["RFQ Created",true,"Your procurement request was published."],["Quote Received",!!q,q?"Supplier quotation received.":"Waiting for supplier quotation."],["Supplier Awarded",!!q,q?"Awarded to "+(q.supplier_company||"supplier")+".":"Waiting for award."],["Payment",ps==="confirmed",ps==="confirmed"?"Supplier confirmed payment.":ps==="proof_uploaded"?"Proof uploaded; awaiting supplier confirmation.":"Awaiting payment."],["Invoice",hasInvoice,hasInvoice?"Supplier invoice is available.":"Invoice follows payment confirmation."],["Completed",String(r.status).toLowerCase()==="completed",String(r.status).toLowerCase()==="completed"?"Transaction processed.":"Transaction in progress."]];
+ c.innerHTML=`<div class="panel-title">${esc(r.title||"Procurement")}</div><div class="panel-sub">${esc(r.code||"")}</div><div class="steps">${steps.map((s,i)=>`<div class="step ${s[1]?"done":i===steps.findIndex(x=>!x[1])?"current":""}"><div class="dot">${s[1]?"✓":i+1}</div><div><h4>${s[0]}</h4><p>${esc(s[2])}</p></div></div>`).join("")}</div>`;
+}
+
+function showStatus(id){const r=rfqs.find(x=>String(x.id)===String(id));if(r){window.selectedStatusRFQ=r}showSection("status");renderStatus()}
+
+function openCreateRFQ(){document.getElementById("rfqModal").classList.add("show")}
+async function createRFQ(){
+ const title=v("rfqTitle"),category=v("rfqCategory"),quantity=v("rfqQuantity"),budget=v("rfqBudget"),delivery=v("rfqDelivery"),deadline=v("rfqDeadline"),notes=v("rfqNotes"),n=document.getElementById("rfqNotice");
+ if(!title||!category||!quantity||!deadline){n.innerHTML='<div class="notice error">Complete title, category, quantity and required date.</div>';return}
+ const {error}=await db.from("rfqs").insert({code:"RFQ-"+Date.now().toString().slice(-7),title,category,quantity,deadline,delivery_location:delivery,estimated_budget:budget?Number(budget):null,notes,business_id:currentUser.id,business_name:currentBusiness.company_name,created_by:currentUser.id,status:"open"});
+ if(error){n.innerHTML=`<div class="notice error">${esc(error.message)}</div>`;return}
+ ["rfqTitle","rfqCategory","rfqQuantity","rfqBudget","rfqDelivery","rfqDeadline","rfqNotes"].forEach(x=>document.getElementById(x).value="");
+ n.innerHTML='<div class="notice success">RFQ published successfully.</div>';await refresh();setTimeout(()=>{closeModal("rfqModal");showSection("rfqs")},600);
+}
+function details(id){const r=rfqs.find(x=>String(x.id)===String(id));if(r)alert([`RFQ: ${r.code||""}`,`Title: ${r.title||""}`,`Category: ${r.category||""}`,`Quantity: ${r.quantity||""}`,`Required: ${date(r.deadline)}`,`Delivery: ${r.delivery_location||""}`,`Budget: ${money(r.estimated_budget)}`,`Notes: ${r.notes||"None"}`].join("\n"))}
+
+function populateProfile(){if(!currentBusiness)return;setv("companyName",currentBusiness.company_name);setv("contactPerson",currentBusiness.contact_person);setv("businessEmail",currentBusiness.email||currentUser.email);setv("contactPhone",currentBusiness.contact_phone||currentBusiness.phone);setv("businessCity",currentBusiness.city);setv("businessCountry",currentBusiness.country);setv("businessAddress",currentBusiness.business_address);setv("businessDescription",currentBusiness.business_description)}
+async function saveProfile(){
+ const updates={company_name:v("companyName"),contact_person:v("contactPerson"),contact_phone:v("contactPhone"),city:v("businessCity"),country:v("businessCountry"),business_address:v("businessAddress"),business_description:v("businessDescription")},n=document.getElementById("profileNotice");
+ const {data,error}=await db.from("profiles").update(updates).eq("id",currentUser.id).select().single();if(error){n.innerHTML=`<div class="notice error">${esc(error.message)}</div>`;return}currentBusiness=data;updateIdentity();n.innerHTML='<div class="notice success">Company profile saved.</div>';
+}
+
+function updateRFQFilterCounts(){
+ const counts={
+  all:rfqs.length,
+  open:rfqs.filter(isOpenRFQ).length,
+  quoted:rfqs.filter(isQuotesReceivedRFQ).length,
+  awarded:rfqs.filter(isAwardedRFQ).length,
+  processed:rfqs.filter(isProcessedRFQ).length
+ };
+ Object.entries(counts).forEach(([k,v])=>{
+  const el=document.getElementById("count-"+k);
+  if(el)el.textContent=v;
+ });
+}
+
+function updateStats(){
+ updateRFQFilterCounts();
+ document.getElementById("statRFQs").textContent=rfqs.filter(isOpenRFQ).length;
+ document.getElementById("statQuotes").textContent=quotes.length;
+ document.getElementById("statAwards").textContent=rfqs.filter(isAwardedRFQ).length;
+ document.getElementById("statPayments").textContent=payments.length;
+ const el=document.getElementById("statProcessed");
+ if(el)el.textContent=rfqs.filter(isProcessedRFQ).length;
+}
+function renderActivity(){const c=document.getElementById("activity"),items=[...rfqs.slice(0,3).map(r=>`<div class="notice info"><strong>RFQ</strong> ${esc(r.code||r.title||"")} created<br><span>${dateTime(r.created_at)}</span></div>`),...quotes.slice(0,3).map(q=>`<div class="notice info"><strong>Quote</strong> ${esc(q.supplier_company||"Supplier")} submitted a quotation<br><span>${dateTime(q.created_at)}</span></div>`)];c.innerHTML=items.length?items.join(""):'<div class="empty">No activity yet.</div>'}
+async function logoutBusiness(){await db.auth.signOut();location.href="customer-signin.html"}
+
+function statusClass(s){return s==="open"?"open":s==="awarded"?"awarded":s==="completed"?"completed":"pending"}
+function money(x){return "K "+Number(x||0).toLocaleString("en-ZM",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function date(x){if(!x)return"—";const d=new Date(x);return isNaN(d)? "—":d.toLocaleDateString("en-ZM",{day:"2-digit",month:"short",year:"numeric"})}
+function dateTime(x){if(!x)return"";const d=new Date(x);return isNaN(d)?"":d.toLocaleString("en-ZM",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}
+function v(id){return document.getElementById(id)?.value.trim()||""}function setv(id,x){document.getElementById(id).value=x||""}
+function esc(x){return String(x??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+</script>
 </body>
 </html>
