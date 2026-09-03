@@ -5365,6 +5365,8 @@ let allPayments = [];
 
 let allInvoices = [];
 
+let documents = [];
+
 let currentRFQ = null;
 
 let currentRFQFilter = "all";
@@ -12955,6 +12957,7 @@ function updateProfileCompletionTracker() {
 
     const documentsComplete =
         requiredDocumentTypes.every(type =>
+            Array.isArray(documents) &&
             documents.some(
                 doc =>
                     doc &&
