@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+
+<title>Supplier Verification | Elsati Connect</title>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+rel="stylesheet"
+>
+
+<script
+src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+<script src="supabase-config.js"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+
+    font-family:
+        "Manrope",
+        "Plus Jakarta Sans",
+        sans-serif;
+
+    background: #edf5f8;
+
+    color: #294052;
+
+    min-height: 100vh;
+
+}
+
+.header {
+
+    background: white;
+
+    padding: 25px 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    box-shadow:
+        0 8px 25px rgba(16,38,61,.06);
+
+}
+
+.logo {
+
+    width: 160px;
+
+}
+
+.header h1 {
+
+    color: #10263d;
+
+    font-size: 22px;
+
+}
+
+.container {
+
+    max-width: 1200px;
+
+    margin: 40px auto;
+
+    padding: 0 25px;
+
+}
+
+.intro {
+
+    margin-bottom: 25px;
+
+}
+
+.intro h2 {
+
+    color: #10263d;
+
+    margin-bottom: 5px;
+
+}
+
+.supplier {
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 12px 35px rgba(16,38,61,.06);
+
+}
+
+.supplier-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+
+}
+
+.supplier-name {
+
+    color: #10263d;
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+}
+
+.status {
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    background: #fff6df;
+
+    color: #9b6c12;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+}
+
+.documents {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 15px;
+
+}
+
+.document {
+
+    border: 1px solid #e1e9ed;
+
+    border-radius: 15px;
+
+    padding: 18px;
+
+}
+
+.document h3 {
+
+    font-size: 14px;
+
+    color: #10263d;
+
+    margin-bottom: 8px;
+
+}
+
+.document p {
+
+    font-size: 12px;
+
+    color: #718696;
+
+    margin-bottom: 15px;
+
+    word-break: break-word;
+
+}
+
+.document a {
+
+    display: inline-block;
+
+    margin-bottom: 12px;
+
+    color: #2f7eae;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+}
+
+.buttons {
+
+    display: flex;
+
+    gap: 8px;
+
+}
+
+button {
+
+    border: 0;
+
+    border-radius: 9px;
+
+    padding: 9px 13px;
+
+    cursor: pointer;
+
+    font-weight: 800;
+
+    font-size: 12px;
+
+}
+
+.verify {
+
+    background: #2fa463;
+
+    color: white;
+
+}
+
+.reject {
+
+    background: #fbedec;
+
+    color: #b74440;
+
+}
+
+.empty {
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 20px;
+
+    text-align: center;
+
+}
+
+@media(max-width:900px) {
+
+    .documents {
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:600px) {
+
+    .documents {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .header {
+
+        padding: 20px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+    <img
+        src="elsati.png"
+        class="logo"
+        alt="Elsati Connect"
+    >
+
+    <h1>
+        Supplier Verification
+    </h1>
+
+</header>
+
+
+<main class="container">
+
+    <div class="intro">
+
+        <h2>
+            Supplier Document Review
+        </h2>
+
+        <p>
+            Review uploaded supplier documents and
+            verify or reject each document.
+        </p>
+
+    </div>
+
+
+    <div id="content">
+
+        <div class="empty">
+            Loading suppliers...
+        </div>
+
+    </div>
+
+</main>
+
+
+<script>
+
+const db =
+    supabase.createClient(
+        window.ELSATI_SUPABASE.url,
+        window.ELSATI_SUPABASE.publishableKey
+    );
+
+
+async function checkAdmin() {
+
+    const {
+        data: {
+            user
+        }
+    } =
+        await db.auth.getUser();
+
+
+    if (!user) {
+
+        window.location.href =
+            "supplier-signin.html";
+
+        return false;
+    }
+
+
+    const {
+        data: profile
+    } =
+        await db
+
+            .from("profiles")
+
+            .select("role")
+
+            .eq("id", user.id)
+
+            .single();
+
+
+    if (!profile || profile.role !== "admin") {
+
+        document.getElementById("content").innerHTML = `
+            <div class="empty">
+                <h2>Access denied</h2>
+                <p>
+                    You do not have administrator access.
+                </p>
+            </div>
+        `;
+
+        return false;
+    }
+
+
+    return true;
+
+}
+
+
+async function loadSuppliers() {
+
+    const content =
+        document.getElementById("content");
+
+
+    const {
+        data,
+        error
+    } = await db
+
+        .from("supplier_documents")
+
+        .select("*")
+
+        .order(
+            "uploaded_at",
+            {
+                ascending: false
+            }
+        );
+
+
+    if (error) {
+
+        content.innerHTML = `
+            <div class="empty">
+                ${escapeHtml(error.message)}
+            </div>
+        `;
+
+        return;
+    }
+
+
+    if (!data || data.length === 0) {
+
+        content.innerHTML = `
+            <div class="empty">
+                No supplier documents have been uploaded yet.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    const grouped = {};
+
+
+    data.forEach(function(doc) {
+
+        if (!grouped[doc.supplier_user_id]) {
+
+            grouped[doc.supplier_user_id] = [];
+
+        }
+
+        grouped[doc.supplier_user_id].push(doc);
+
+    });
+
+
+    content.innerHTML = "";
+
+
+    for (
+        const supplierId
+        of Object.keys(grouped)
+    ) {
+
+        const documents =
+            grouped[supplierId];
+
+
+        let supplierName =
+            supplierId;
+
+
+        const {
+            data: profile
+        } = await db
+
+            .from("profiles")
+
+            .select(
+                "company_name, contact_person, verified, verification_status"
+            )
+
+            .eq(
+                "id",
+                supplierId
+            )
+
+            .single();
+
+
+        if (profile) {
+
+            supplierName =
+                profile.company_name
+                ||
+                profile.contact_person
+                ||
+                supplierId;
+
+        }
+
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "supplier";
+
+
+        card.innerHTML = `
+
+            <div class="supplier-header">
+
+                <div>
+
+                    <div class="supplier-name">
+                        ${escapeHtml(supplierName)}
+                    </div>
+
+                    <div>
+                        Supplier ID:
+                        ${escapeHtml(supplierId)}
+                    </div>
+
+                </div>
+
+                <div class="status">
+                    DOCUMENT REVIEW
+                </div>
+
+            </div>
+
+            <div class="documents"></div>
+
+        `;
+
+
+        const documentsContainer =
+            card.querySelector(".documents");
+
+
+        documents.forEach(function(doc) {
+
+            const documentCard =
+                document.createElement("div");
+
+            documentCard.className =
+                "document";
+
+
+            const readableType =
+                getDocumentName(
+                    doc.document_type
+                );
+
+
+            documentCard.innerHTML = `
+
+                <h3>
+                    ${readableType}
+                </h3>
+
+                <p>
+                    ${escapeHtml(doc.file_name)}
+                </p>
+
+                <p>
+                    Status:
+                    <strong>
+                        ${escapeHtml(doc.status)}
+                    </strong>
+                </p>
+
+                <a
+                    href="#"
+                    onclick="openDocument('${doc.file_path}'); return false;"
+                >
+                    View Document
+                </a>
+
+                <div class="buttons">
+
+                    <button
+                        class="verify"
+                        onclick="verifyDocument('${doc.id}')"
+                    >
+                        Verify
+                    </button>
+
+                    <button
+                        class="reject"
+                        onclick="rejectDocument('${doc.id}')"
+                    >
+                        Reject
+                    </button>
+
+                </div>
+
+            `;
+
+
+            documentsContainer.appendChild(
+                documentCard
+            );
+
+        });
+
+
+        content.appendChild(card);
+
+    }
+
+}
+
+
+function getDocumentName(type) {
+
+    const names = {
+
+        pacra:
+            "PACRA Certificate",
+
+        tax:
+            "Tax Clearance Certificate",
+
+        bank:
+            "Bank Confirmation",
+
+        residence:
+            "Proof of Residence"
+
+    };
+
+
+    return names[type] || type;
+
+}
+
+
+async function openDocument(path) {
+
+    const {
+        data,
+        error
+    } = await db.storage
+
+        .from("supplier-documents")
+
+        .createSignedUrl(
+            path,
+            300
+        );
+
+
+    if (error) {
+
+        alert(
+            "Unable to open document: "
+            + error.message
+        );
+
+        return;
+    }
+
+
+    window.open(
+        data.signedUrl,
+        "_blank"
+    );
+
+}
+
+
+async function verifyDocument(id) {
+
+    const {
+        data: {
+            user
+        }
+    } =
+        await db.auth.getUser();
+
+
+    const {
+        error
+    } = await db
+
+        .from("supplier_documents")
+
+        .update({
+
+            status: "verified",
+
+            verified_at:
+                new Date().toISOString(),
+
+            verified_by:
+                user.id,
+
+            verification_notes:
+                "Verified by administrator."
+
+        })
+
+        .eq(
+            "id",
+            id
+        );
+
+
+    if (error) {
+
+        alert(
+            "Verification failed: "
+            + error.message
+        );
+
+        return;
+    }
+
+
+    alert(
+        "Document verified."
+    );
+
+
+    loadSuppliers();
+
+}
+
+
+async function rejectDocument(id) {
+
+    const reason =
+        prompt(
+            "Enter the reason for rejection:"
+        );
+
+
+    if (!reason) {
+
+        return;
+
+    }
+
+
+    const {
+        data: {
+            user
+        }
+    } =
+        await db.auth.getUser();
+
+
+    const {
+        error
+    } = await db
+
+        .from("supplier_documents")
+
+        .update({
+
+            status: "rejected",
+
+            verified_at:
+                new Date().toISOString(),
+
+            verified_by:
+                user.id,
+
+            verification_notes:
+                reason
+
+        })
+
+        .eq(
+            "id",
+            id
+        );
+
+
+    if (error) {
+
+        alert(
+            "Rejection failed: "
+            + error.message
+        );
+
+        return;
+    }
+
+
+    alert(
+        "Document rejected."
+    );
+
+
+    loadSuppliers();
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(value || "")
+
+        .replaceAll("&", "&amp;")
+
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+
+}
+
+
+(async function() {
+
+    const allowed =
+        await checkAdmin();
+
+
+    if (allowed) {
+
+        await loadSuppliers();
+
+    }
+
+})();
+
+</script>
+
+</body>
+
+</html>
