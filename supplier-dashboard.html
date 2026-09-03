@@ -2916,157 +2916,6 @@ select:focus-visible {
 }
 
 
-/* =========================================================
-   PROFILE COMPLETION STATUS TRACKER
-========================================================= */
-
-.profile-progress-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    margin-bottom: 20px;
-}
-
-.profile-progress-head h3 {
-    color: var(--navy);
-    font-size: 20px;
-    font-weight: 800;
-    margin: 5px 0 5px;
-}
-
-.profile-progress-head p {
-    color: var(--muted);
-    font-size: 10px;
-    line-height: 1.6;
-    max-width: 650px;
-}
-
-.profile-progress-circle {
-    flex: 0 0 88px;
-    width: 88px;
-    height: 88px;
-    border-radius: 50%;
-    background: #f2f8fa;
-    border: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.profile-progress-circle strong {
-    color: var(--green-dark);
-    font-size: 20px;
-    font-weight: 800;
-    line-height: 1;
-}
-
-.profile-progress-circle span {
-    color: var(--muted);
-    font-size: 7px;
-    font-weight: 700;
-    margin-top: 5px;
-}
-
-.profile-progress-bar {
-    width: 100%;
-    height: 9px;
-    border-radius: 999px;
-    background: #e8f0f3;
-    overflow: hidden;
-    margin-bottom: 24px;
-}
-
-.profile-progress-fill {
-    height: 100%;
-    border-radius: 999px;
-    background: var(--green);
-    transition: width .35s ease;
-}
-
-.profile-checklist {
-    display: grid;
-    gap: 10px;
-}
-
-.profile-check-item {
-    display: grid;
-    grid-template-columns: 38px minmax(0,1fr) auto;
-    align-items: center;
-    gap: 13px;
-    padding: 14px 15px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: #fbfdfe;
-    transition: .2s ease;
-}
-
-.profile-check-item.complete {
-    background: #f2faf6;
-    border-color: #cfe9da;
-}
-
-.tracker-check {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #eef4f6;
-    color: var(--muted);
-    font-size: 10px;
-    font-weight: 800;
-}
-
-.profile-check-item.complete .tracker-check {
-    background: var(--green);
-    color: white;
-}
-
-.profile-check-item strong {
-    display: block;
-    color: var(--navy);
-    font-size: 10px;
-    font-weight: 800;
-}
-
-.profile-check-item span {
-    display: block;
-    color: var(--muted);
-    font-size: 8px;
-    line-height: 1.5;
-    margin-top: 2px;
-}
-
-.tracker-result {
-    color: var(--warning);
-    font-size: 8px;
-    white-space: nowrap;
-}
-
-.profile-check-item.complete .tracker-result {
-    color: var(--green-dark);
-}
-
-.tracker-next-step {
-    margin-top: 17px;
-    padding: 12px 14px;
-    border-radius: 11px;
-    background: var(--pale-blue);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 9px;
-    line-height: 1.6;
-}
-
-.status-tracker-actions {
-    display: flex;
-    gap: 9px;
-    flex-wrap: wrap;
-    margin-top: 17px;
-}
 
 @media (max-width: 850px) {
     .top-header {
@@ -3131,6 +2980,155 @@ select:focus-visible {
     }
 
     .profile-check-item {
+        grid-template-columns: 36px minmax(0,1fr);
+    }
+
+    .tracker-result {
+        grid-column: 2;
+    }
+}
+
+
+/* =========================================================
+   ACCOUNT VERIFICATION CHECKLIST
+========================================================= */
+
+.status-tracker-card {
+    background: rgba(255,255,255,.98);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+}
+
+.verification-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.verification-summary h3 {
+    color: var(--navy);
+    font-size: 19px;
+    font-weight: 800;
+    margin: 5px 0;
+}
+
+.verification-summary p {
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.6;
+    max-width: 700px;
+}
+
+.verification-count {
+    flex: 0 0 78px;
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    background: #f2f8fa;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.verification-count strong {
+    color: var(--green-dark);
+    font-size: 18px;
+    line-height: 1;
+    font-weight: 800;
+}
+
+.verification-count span {
+    color: var(--muted);
+    font-size: 7px;
+    margin-top: 4px;
+}
+
+.verification-list {
+    display: grid;
+    gap: 10px;
+}
+
+.verification-item {
+    display: grid;
+    grid-template-columns: 38px minmax(0,1fr) auto;
+    align-items: center;
+    gap: 13px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: #fbfdfe;
+}
+
+.verification-item.complete {
+    background: #f2faf6;
+    border-color: #cfe9da;
+}
+
+.verification-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef4f6;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.verification-item.complete .verification-icon {
+    background: var(--green);
+    color: white;
+}
+
+.verification-item-content strong {
+    display: block;
+    color: var(--navy);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.verification-item-content span {
+    display: block;
+    color: var(--muted);
+    font-size: 8px;
+    line-height: 1.5;
+    margin-top: 2px;
+}
+
+.tracker-result {
+    color: var(--warning);
+    font-size: 8px;
+    white-space: nowrap;
+}
+
+.verification-item.complete .tracker-result {
+    color: var(--green-dark);
+}
+
+.verification-next {
+    margin-top: 15px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: var(--pale-blue);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 9px;
+    line-height: 1.6;
+}
+
+@media (max-width: 650px) {
+    .verification-summary {
+        align-items: flex-start;
+    }
+
+    .verification-item {
         grid-template-columns: 36px minmax(0,1fr);
     }
 
@@ -4001,12 +3999,7 @@ select:focus-visible {
             </p>
 
 
-            <div class="bank-note">
-
-                Your bank details are sensitive financial information.
-                They should not be displayed publicly on your supplier profile.
-
-            </div>
+            
 
 
             <div class="form-grid">
@@ -4114,112 +4107,89 @@ select:focus-visible {
     ===================================================== -->
 
     
-<section
-        id="section-status"
-        class="section"
-    >
 
-        <div class="section-header">
+<section id="section-status" class="section">
 
+    <div class="section-header">
+        <div>
+            <h2>Account Verification</h2>
+            <p>Complete the items below to have your supplier account verified.</p>
+        </div>
+    </div>
+
+    <div class="status-tracker-card">
+
+        <div class="verification-summary">
             <div>
-                <h2>Status Tracker</h2>
-                <p>See your progress toward becoming a fully verified supplier on Elsati Connect.</p>
+                <span class="eyebrow">ACCOUNT VERIFICATION</span>
+                <h3 id="profileProgressTitle">Your verification checklist</h3>
+                <p id="profileProgressMessage">
+                    Complete the remaining items below before your account can be verified.
+                </p>
+            </div>
+
+            <div class="verification-count">
+                <strong id="profileProgressPercent">0%</strong>
+                <span>complete</span>
+            </div>
+        </div>
+
+        <div class="profile-progress-bar">
+            <div
+                id="profileProgressBar"
+                class="profile-progress-fill"
+                style="width:0%;"
+            ></div>
+        </div>
+
+        <div class="verification-list">
+
+            <div class="verification-item" id="trackerCompanyInfo">
+                <div class="verification-icon">1</div>
+                <div class="verification-item-content">
+                    <strong>Company information</strong>
+                    <span>Company name, contact person, supplier category, city and country.</span>
+                </div>
+                <b class="tracker-result">Left to complete</b>
+            </div>
+
+            <div class="verification-item" id="trackerBusinessInfo">
+                <div class="verification-icon">2</div>
+                <div class="verification-item-content">
+                    <strong>Business profile</strong>
+                    <span>Business address and business description.</span>
+                </div>
+                <b class="tracker-result">Left to complete</b>
+            </div>
+
+            <div class="verification-item" id="trackerDocuments">
+                <div class="verification-icon">3</div>
+                <div class="verification-item-content">
+                    <strong>Required supplier documents</strong>
+                    <span>Upload all documents required for supplier verification.</span>
+                </div>
+                <b class="tracker-result">Left to complete</b>
+            </div>
+
+            <div class="verification-item" id="trackerVerification">
+                <div class="verification-icon">4</div>
+                <div class="verification-item-content">
+                    <strong>Elsati Connect verification</strong>
+                    <span>Your completed profile and documents must be reviewed and verified by Elsati Connect.</span>
+                </div>
+                <b class="tracker-result">Awaiting verification</b>
             </div>
 
         </div>
 
-        <div class="status-tracker-card">
-
-            <div class="profile-progress-head">
-
-                <div>
-                    <span class="eyebrow">SUPPLIER PROFILE</span>
-                    <h3 id="profileProgressTitle">
-                        Complete your supplier profile
-                    </h3>
-                    <p id="profileProgressMessage">
-                        Complete the information and upload the required documents below.
-                    </p>
-                </div>
-
-                <div class="profile-progress-circle">
-                    <strong id="profileProgressPercent">0%</strong>
-                    <span>Complete</span>
-                </div>
-
-            </div>
-
-            <div class="profile-progress-bar">
-                <div
-                    id="profileProgressBar"
-                    class="profile-progress-fill"
-                    style="width:0%;"
-                ></div>
-            </div>
-
-            <div class="profile-checklist">
-
-                <div class="profile-check-item" id="trackerCompanyInfo">
-                    <div class="tracker-check">1</div>
-                    <div>
-                        <strong>Company information</strong>
-                        <span>Company name, contact person, category, city and country.</span>
-                    </div>
-                    <b class="tracker-result">Incomplete</b>
-                </div>
-
-                <div class="profile-check-item" id="trackerBusinessInfo">
-                    <div class="tracker-check">2</div>
-                    <div>
-                        <strong>Business profile</strong>
-                        <span>Business address and business description.</span>
-                    </div>
-                    <b class="tracker-result">Incomplete</b>
-                </div>
-
-                <div class="profile-check-item" id="trackerDocuments">
-                    <div class="tracker-check">3</div>
-                    <div>
-                        <strong>Required documents</strong>
-                        <span>PACRA, Tax Clearance, Proof of Residence and Bank Confirmation.</span>
-                    </div>
-                    <b class="tracker-result">Incomplete</b>
-                </div>
-
-                <div class="profile-check-item" id="trackerVerification">
-                    <div class="tracker-check">4</div>
-                    <div>
-                        <strong>Elsati Connect verification</strong>
-                        <span>Your profile is reviewed and marked complete by Elsati Connect.</span>
-                    </div>
-                    <b class="tracker-result">Pending Review</b>
-                </div>
-
-            </div>
-
-            <div class="tracker-next-step" id="trackerNextStep">
-                Complete your company profile and required documents to move to the next step.
-            </div>
-
-            <div class="status-tracker-actions">
-                <button
-                    class="btn btn-primary"
-                    onclick="showSection('profile')"
-                >
-                    Open Company Profile
-                </button>
-
-                <button
-                    class="btn btn-secondary"
-                    onclick="showSection('documents')"
-                >
-                    View Documents
-                </button>
-            </div>
-
+        <div class="verification-next" id="trackerNextStep">
+            Complete the items marked "Left to complete". Once everything is complete, Elsati Connect can verify your account.
         </div>
+
+    </div>
 
 </section>
+
 
 
 
@@ -11288,18 +11258,7 @@ function openStatusTracker() {
 
     closeProfileMenu();
 
-    if (!isSupplierProfileComplete()) {
-
-        showSection("profile");
-
-        showToast(
-            "Complete your company profile and verification to unlock the Status Tracker.",
-            "error"
-        );
-
-        return;
-
-    }
+    updateProfileCompletionTracker();
 
     showSection("status");
 
@@ -11944,10 +11903,7 @@ function showToast(
 
 
 /* =========================================================
-   PROFILE COMPLETION TRACKER
-   Tracks profile completion only.
-   Verification is only complete when Elsati Connect
-   marks the supplier verified.
+   ACCOUNT VERIFICATION CHECKLIST
 ========================================================= */
 
 function updateProfileCompletionTracker() {
@@ -11999,30 +11955,31 @@ function updateProfileCompletionTracker() {
     steps.forEach(([id, complete, completeText]) => {
 
         const item = document.getElementById(id);
-
         if (!item) return;
 
         const result = item.querySelector(".tracker-result");
+        const icon = item.querySelector(".verification-icon");
 
         item.classList.toggle("complete", complete);
 
-        if (result) {
-            result.textContent = complete
-                ? completeText
-                : id === "trackerVerification"
-                    ? "Pending Review"
-                    : "Incomplete";
+        if (icon) {
+            icon.textContent = complete
+                ? "✓"
+                : (
+                    id === "trackerCompanyInfo" ? "1" :
+                    id === "trackerBusinessInfo" ? "2" :
+                    id === "trackerDocuments" ? "3" : "4"
+                );
         }
 
-        const dot = item.querySelector(".tracker-check");
-
-        if (dot) {
-            const number =
-                id === "trackerCompanyInfo" ? "1" :
-                id === "trackerBusinessInfo" ? "2" :
-                id === "trackerDocuments" ? "3" : "4";
-
-            dot.textContent = complete ? "✓" : number;
+        if (result) {
+            if (complete) {
+                result.textContent = completeText;
+            } else if (id === "trackerVerification") {
+                result.textContent = "Awaiting verification";
+            } else {
+                result.textContent = "Left to complete";
+            }
         }
     });
 
@@ -12035,110 +11992,71 @@ function updateProfileCompletionTracker() {
         );
 
     const percent =
-        document.getElementById(
-            "profileProgressPercent"
-        );
+        document.getElementById("profileProgressPercent");
 
     const bar =
-        document.getElementById(
-            "profileProgressBar"
-        );
+        document.getElementById("profileProgressBar");
 
     if (percent) {
-        percent.textContent =
-            percentage + "%";
+        percent.textContent = percentage + "%";
     }
 
     if (bar) {
-        bar.style.width =
-            percentage + "%";
+        bar.style.width = percentage + "%";
     }
 
     const title =
-        document.getElementById(
-            "profileProgressTitle"
-        );
+        document.getElementById("profileProgressTitle");
 
     const message =
-        document.getElementById(
-            "profileProgressMessage"
-        );
+        document.getElementById("profileProgressMessage");
 
     const next =
-        document.getElementById(
-            "trackerNextStep"
-        );
+        document.getElementById("trackerNextStep");
 
-    if (percentage === 100) {
+    if (verified) {
 
         if (title) {
-            title.textContent =
-                "Your supplier profile is complete";
+            title.textContent = "Your account is verified";
         }
 
         if (message) {
             message.textContent =
-                "Your company information, documents and Elsati Connect verification are complete.";
+                "All verification requirements have been completed.";
         }
 
         if (next) {
             next.textContent =
-                "You are fully verified and ready to participate in procurement opportunities on Elsati Connect.";
-        }
-
-    } else if (!companyInfoComplete || !businessInfoComplete) {
-
-        if (title) {
-            title.textContent =
-                "Complete your supplier profile";
-        }
-
-        if (message) {
-            message.textContent =
-                "Finish your company and business information first, then upload the required documents.";
-        }
-
-        if (next) {
-            next.textContent =
-                "Next step: complete the missing company or business information in Company Profile.";
-        }
-
-    } else if (!documentsComplete) {
-
-        if (title) {
-            title.textContent =
-                "Your profile is almost ready";
-        }
-
-        if (message) {
-            message.textContent =
-                "Your company information is complete. Upload all required supplier documents to continue.";
-        }
-
-        if (next) {
-            next.textContent =
-                "Next step: upload the required PACRA, Tax Clearance, Proof of Residence and Bank Confirmation documents.";
+                "Your Elsati Connect supplier account is verified and ready for procurement opportunities.";
         }
 
     } else {
 
+        const remaining =
+            steps.filter(step => !step[1]).length;
+
         if (title) {
             title.textContent =
-                "Your profile is awaiting verification";
+                remaining === 0
+                    ? "Your account is ready for review"
+                    : "Your verification checklist";
         }
 
         if (message) {
             message.textContent =
-                "Your profile and documents are complete. Elsati Connect will review and mark your verification status.";
+                remaining === 0
+                    ? "All supplier requirements are complete. Elsati Connect verification is the final step."
+                    : `${remaining} item${remaining === 1 ? "" : "s"} left to complete before your account can be verified.`;
         }
 
         if (next) {
             next.textContent =
-                "Next step: Elsati Connect verification. You cannot mark this step complete yourself.";
+                remaining === 0
+                    ? "Everything required from you is complete. Your account is now awaiting Elsati Connect verification."
+                    : "Complete the items marked \"Left to complete\". Elsati Connect verification is completed by Elsati Connect.";
         }
     }
 }
-
 </script>
 
 </body>
