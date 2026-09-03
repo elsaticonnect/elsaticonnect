@@ -2378,6 +2378,55 @@ select:focus-visible {
 
 
 /* =========================================================
+   BANK DETAILS SAVED STATE
+========================================================= */
+
+.bank-save-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 190px;
+    transition: all .2s ease;
+}
+
+.bank-save-button.saved {
+    background: #2fa463 !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 22px rgba(47,164,99,.18);
+}
+
+.bank-save-button.saved #bankSaveIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #2fa463;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.bank-save-button.saving {
+    opacity: .7;
+    cursor: wait;
+}
+
+.bank-saved-status {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #eef9f2;
+    border: 1px solid #ccebd7;
+    color: #23834f;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+/* =========================================================
    STATUS TRACKER
 ========================================================= */
 
@@ -4387,12 +4436,22 @@ body {
 
 
             <button
-                class="btn btn-primary"
+                id="saveBankDetailsButton"
+                class="btn btn-primary bank-save-button"
                 style="margin-top:15px;"
                 onclick="saveBankDetails()"
             >
-                Save Bank Details
+                <span id="bankSaveIcon">✓</span>
+                <span id="bankSaveText">Save Bank Details</span>
             </button>
+
+            <div
+                id="bankSavedStatus"
+                class="bank-saved-status"
+                style="display:none;"
+            >
+                ✓ Bank details saved and ready for customer payment after award.
+            </div>
 
         </div>
 
@@ -5320,37 +5379,32 @@ let localResponses =
 let db = null;
 
 
+/*
+ * Create the actual Supabase client.
+ * The global `supabase` object from the CDN is the library,
+ * not the connected client, so calling supabase.from(...)
+ * directly will not work.
+ */
 try {
-
-    /*
-     * Some projects expose the Supabase client as
-     * window.supabaseClient.
-     */
 
     if (
         typeof supabase !== "undefined" &&
-        supabase.from
+        window.ELSATI_SUPABASE &&
+        window.ELSATI_SUPABASE.url &&
+        window.ELSATI_SUPABASE.publishableKey
     ) {
 
-        db = supabase;
-
-    }
-
-    else if (
-        window.supabaseClient &&
-        window.supabaseClient.from
-    ) {
-
-        db =
-            window.supabaseClient;
+        db = supabase.createClient(
+            window.ELSATI_SUPABASE.url,
+            window.ELSATI_SUPABASE.publishableKey
+        );
 
     }
 
 }
-
 catch(error) {
 
-    console.error(error);
+    console.error("Supabase client initialization failed:", error);
 
 }
 
@@ -5647,6 +5701,9 @@ function fillBankDetails() {
         p.swift_code ||
         "";
 
+
+    updateBankDetailsSavedState();
+
 }
 
 
@@ -5654,7 +5711,99 @@ function fillBankDetails() {
    SAVE BANK DETAILS
 ========================================================= */
 
+
+/* =========================================================
+   BANK DETAILS SAVED INDICATOR
+========================================================= */
+
+function updateBankDetailsSavedState() {
+
+    const p =
+        currentSupplier ||
+        {};
+
+    const saved =
+        Boolean(
+            (p.bank_name || "").trim() &&
+            (p.account_name || "").trim() &&
+            (p.account_number || "").trim()
+        );
+
+    const button =
+        document.getElementById("saveBankDetailsButton");
+
+    const icon =
+        document.getElementById("bankSaveIcon");
+
+    const text =
+        document.getElementById("bankSaveText");
+
+    const savedStatus =
+        document.getElementById("bankSavedStatus");
+
+    if (!button) {
+        return;
+    }
+
+    if (saved) {
+
+        button.classList.add("saved");
+
+        if (icon) icon.textContent = "✓";
+
+        if (text) text.textContent = "Bank Details Saved";
+
+        if (savedStatus) savedStatus.style.display = "block";
+
+    } else {
+
+        button.classList.remove("saved");
+
+        if (icon) icon.textContent = "✓";
+
+        if (text) text.textContent = "Save Bank Details";
+
+        if (savedStatus) savedStatus.style.display = "none";
+
+    }
+
+}
+
+
 async function saveBankDetails() {
+
+    if (!currentUser) {
+
+        showToast(
+            "Your supplier session could not be found. Please sign in again.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "saveBankDetailsButton"
+        );
+
+    const icon =
+        document.getElementById(
+            "bankSaveIcon"
+        );
+
+    const text =
+        document.getElementById(
+            "bankSaveText"
+        );
+
+    const savedStatus =
+        document.getElementById(
+            "bankSavedStatus"
+        );
+
 
     const updates = {
 
@@ -5697,24 +5846,14 @@ async function saveBankDetails() {
     };
 
 
-    const {
-        error
-    } =
-        await db
-            .from("profiles")
-            .update(updates)
-            .eq(
-                "id",
-                currentUser.id
-            );
-
-
-    if (error) {
-
-        console.error(error);
+    if (
+        !updates.bank_name ||
+        !updates.account_name ||
+        !updates.account_number
+    ) {
 
         showToast(
-            "Bank details could not be saved. Make sure the bank columns exist in Supabase.",
+            "Please enter the bank name, account name and account number.",
             "error"
         );
 
@@ -5723,22 +5862,130 @@ async function saveBankDetails() {
     }
 
 
-    currentSupplier = {
+    if (button) {
+        button.disabled = true;
+        button.classList.add("saving");
+    }
 
-        ...currentSupplier,
+    if (icon) {
+        icon.textContent = "…";
+    }
 
-        ...updates
+    if (text) {
+        text.textContent = "Saving...";
+    }
 
-    };
+    if (savedStatus) {
+        savedStatus.style.display = "none";
+    }
 
 
-    showToast(
-        "Bank details saved.",
-        "success"
-    );
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await db
+                .from("profiles")
+                .update(updates)
+                .eq(
+                    "id",
+                    currentUser.id
+                )
+                .select(
+                    "id,bank_name,account_name,account_number,bank_branch,branch_code,swift_code"
+                )
+                .single();
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (!data) {
+            throw new Error(
+                "The bank details were not saved. Your supplier profile could not be updated."
+            );
+        }
+
+
+        currentSupplier = {
+            ...currentSupplier,
+            ...updates
+        };
+
+
+        if (button) {
+            button.classList.remove("saving");
+            button.classList.add("saved");
+        }
+
+        if (icon) {
+            icon.textContent = "✓";
+        }
+
+        if (text) {
+            text.textContent = "Bank Details Saved";
+        }
+
+        if (savedStatus) {
+            savedStatus.style.display = "block";
+        }
+
+
+        showToast(
+            "Bank details saved successfully.",
+            "success"
+        );
+
+
+        if (
+            typeof updateProfileCompletionTracker ===
+            "function"
+        ) {
+            updateProfileCompletionTracker();
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Bank details save error:",
+            error
+        );
+
+
+        if (button) {
+            button.classList.remove("saved");
+            button.classList.remove("saving");
+        }
+
+        if (icon) {
+            icon.textContent = "✓";
+        }
+
+        if (text) {
+            text.textContent = "Save Bank Details";
+        }
+
+
+        showToast(
+            "Bank details could not be saved: " +
+            (error.message || "Unknown error"),
+            "error"
+        );
+
+    } finally {
+
+        if (button) {
+            button.disabled = false;
+        }
+
+    }
 
 }
-
 
 /* =========================================================
    LOAD RFQS
@@ -10920,49 +11167,45 @@ async function loadDocuments() {
         }
 
 
-        (data || [])
-            .forEach(
-                document => {
+        (data || []).forEach(doc => {
 
-                    const element =
-                        document.getElementById(
-                            "doc-status-" +
-                            document.document_type
-                        );
+            const element =
+                window.document.getElementById(
+                    "doc-status-" +
+                    doc.document_type
+                );
 
+            if (!element) {
+                return;
+            }
 
-                    if (!element) {
+            if (doc.status === "verified") {
 
-                        return;
+                element.className =
+                    "document-status verified";
 
-                    }
+                element.textContent = "Verified";
 
+            }
+            else if (doc.status === "rejected") {
 
-                    if (
-                        document.status ===
-                        "verified"
-                    ) {
+                element.className =
+                    "document-status rejected";
 
-                        element.className =
-                            "document-status verified";
+                element.textContent = "Rejected – Please upload again";
 
-                        element.textContent =
-                            "Verified";
+            }
+            else {
 
-                    }
+                element.className =
+                    "document-status pending";
 
-                    else {
+                element.textContent =
+                    "Uploaded – Pending Verification";
 
-                        element.className =
-                            "document-status pending";
+            }
 
-                        element.textContent =
-                            "Uploaded – Pending Verification";
-
-                    }
-
-                }
-            );
+        });
 
     }
 
@@ -10979,90 +11222,230 @@ async function loadDocuments() {
    UPLOAD DOCUMENT
 ========================================================= */
 
-async function uploadDocument(
-    documentType
-) {
+async function uploadDocument(documentType) {
+
+    if (!currentUser) {
+
+        showToast(
+            "Your session has expired. Please sign in again.",
+            "error"
+        );
+
+        window.location.href = "supplier-signin.html";
+
+        return;
+    }
+
 
     const input =
-        document.getElementById(
-            "doc-" +
-            documentType
+        window.document.getElementById(
+            "doc-" + documentType
         );
 
 
-    if (
-        !input ||
-        !input.files.length
-    ) {
+    if (!input || !input.files || !input.files.length) {
 
         showToast(
-            "Please choose a document.",
+            "Please choose a document first.",
             "error"
         );
 
         return;
-
     }
 
 
-    const file =
-        input.files[0];
+    const file = input.files[0];
 
 
-    const extension =
-        file.name
-            .split(".")
-            .pop();
+    const allowedTypes = [
+        "application/pdf",
+        "image/jpeg",
+        "image/png"
+    ];
 
 
-    const path =
-        `${currentUser.id}/${documentType}_${Date.now()}.${extension}`;
+    if (!allowedTypes.includes(file.type)) {
+
+        showToast(
+            "Only PDF, JPG and PNG files are accepted.",
+            "error"
+        );
+
+        return;
+    }
 
 
-    const {
-        error:
-            uploadError
-    } =
-        await db.storage
-            .from(
-                "supplier-documents"
-            )
+    if (file.size > 10 * 1024 * 1024) {
+
+        showToast(
+            "File is too large. Maximum size is 10MB.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (!db) {
+
+        showToast(
+            "Supabase is not connected. Please check supabase-config.js.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const safeName =
+        file.name.replace(
+            /[^a-zA-Z0-9._-]/g,
+            "_"
+        );
+
+
+    const filePath =
+        `${currentUser.id}/${documentType}/${Date.now()}-${safeName}`;
+
+
+    showToast(
+        "Uploading document...",
+        "success"
+    );
+
+
+    try {
+
+        /* -------------------------------------------------
+           1. UPLOAD FILE TO PRIVATE STORAGE
+        ------------------------------------------------- */
+
+        const {
+            error: storageError
+        } = await db.storage
+            .from("supplier-documents")
             .upload(
-                path,
+                filePath,
                 file,
                 {
-                    upsert:
-                        true
+                    cacheControl: "3600",
+                    upsert: false,
+                    contentType: file.type
                 }
             );
 
 
-    if (uploadError) {
+        if (storageError) {
 
-        console.error(
-            uploadError
-        );
+            console.error(
+                "Supplier document storage error:",
+                storageError
+            );
 
-        showToast(
-            "Document upload failed: " +
-            uploadError.message,
-            "error"
-        );
+            showToast(
+                "Document upload failed: " +
+                storageError.message,
+                "error"
+            );
 
-        return;
+            return;
+        }
 
-    }
+
+        /* -------------------------------------------------
+           2. CHECK FOR AN EXISTING DOCUMENT RECORD
+        ------------------------------------------------- */
+
+        const {
+            data: existing,
+            error: existingError
+        } = await db
+            .from("supplier_documents")
+            .select("id,file_path")
+            .eq("supplier_user_id", currentUser.id)
+            .eq("document_type", documentType)
+            .maybeSingle();
 
 
-    const {
-        error:
-            insertError
-    } =
-        await db
-            .from(
-                "supplier_documents"
-            )
-            .upsert({
+        if (existingError) {
+
+            console.error(
+                "Existing document lookup error:",
+                existingError
+            );
+
+            await db.storage
+                .from("supplier-documents")
+                .remove([filePath]);
+
+            showToast(
+                "Could not check your previous document: " +
+                existingError.message,
+                "error"
+            );
+
+            return;
+        }
+
+
+        /* -------------------------------------------------
+           3. IF RE-UPLOADING, REMOVE THE OLD DB RECORD
+              FIRST. This avoids needing a supplier UPDATE
+              policy that could let suppliers change status.
+        ------------------------------------------------- */
+
+        if (existing) {
+
+            const {
+                error: deleteError
+            } = await db
+                .from("supplier_documents")
+                .delete()
+                .eq("id", existing.id)
+                .eq("supplier_user_id", currentUser.id);
+
+
+            if (deleteError) {
+
+                console.error(
+                    "Old document record delete error:",
+                    deleteError
+                );
+
+                await db.storage
+                    .from("supplier-documents")
+                    .remove([filePath]);
+
+                showToast(
+                    "Could not replace your previous document: " +
+                    deleteError.message,
+                    "error"
+                );
+
+                return;
+            }
+
+
+            /* Remove the old file too. */
+            if (existing.file_path) {
+
+                await db.storage
+                    .from("supplier-documents")
+                    .remove([existing.file_path]);
+
+            }
+        }
+
+
+        /* -------------------------------------------------
+           4. SAVE NEW DOCUMENT RECORD
+        ------------------------------------------------- */
+
+        const {
+            error: insertError
+        } = await db
+            .from("supplier_documents")
+            .insert({
 
                 supplier_user_id:
                     currentUser.id,
@@ -11074,42 +11457,68 @@ async function uploadDocument(
                     file.name,
 
                 file_path:
-                    path,
+                    filePath,
 
                 status:
-                    "pending"
+                    "pending",
 
-            }, {
-
-                onConflict:
-                    "supplier_user_id,document_type"
+                uploaded_at:
+                    new Date().toISOString()
 
             });
 
 
-    if (insertError) {
+        if (insertError) {
+
+            console.error(
+                "Supplier document database error:",
+                insertError
+            );
+
+            await db.storage
+                .from("supplier-documents")
+                .remove([filePath]);
+
+            showToast(
+                "The file uploaded, but its record could not be saved: " +
+                insertError.message,
+                "error"
+            );
+
+            return;
+        }
+
+
+        input.value = "";
+
+
+        showToast(
+            "Document uploaded successfully and is awaiting verification.",
+            "success"
+        );
+
+
+        await loadDocuments();
+
+        updateStats();
+
+        updateProfileCompletionTracker();
+
+    }
+    catch (error) {
 
         console.error(
-            insertError
+            "Supplier document upload error:",
+            error
         );
 
         showToast(
-            "File uploaded but the document record could not be saved.",
+            "Something went wrong during the document upload: " +
+            (error.message || "Unknown error"),
             "error"
         );
 
-        return;
-
     }
-
-
-    showToast(
-        "Document uploaded successfully.",
-        "success"
-    );
-
-
-    await loadDocuments();
 
 }
 
