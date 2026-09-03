@@ -5800,8 +5800,13 @@ async function saveSupplierProfile() {
 
     try {
 
+        /*
+         * Update the existing supplier profile.
+         * Do not use .select().single() here because Supabase can
+         * return PGRST116 when the updated row is not visible in
+         * the response because of Row Level Security.
+         */
         const {
-            data,
             error
         } =
             await db
@@ -5810,23 +5815,21 @@ async function saveSupplierProfile() {
                 .eq(
                     "id",
                     currentUser.id
-                )
-                .select("*")
-                .single();
+                );
 
         if (error) {
             throw error;
         }
 
         /*
-         * Refresh the in-memory profile with the actual
-         * database record so the tracker reads the saved data.
+         * Keep the saved values in memory so the tracker updates
+         * immediately after the successful database update.
          */
-        currentSupplier =
-            data || {
-                ...currentSupplier,
-                ...updates
-            };
+        currentSupplier = {
+            ...(currentSupplier || {}),
+            ...updates,
+            id: currentUser.id
+        };
 
         fillProfile();
         updateSupplierMenuName();
