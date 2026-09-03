@@ -1,593 +1,470 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supplier Sign In | Elsati Connect</title>
 
-  <title>Supplier Sign In | Elsati Connect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <meta
-    name="description"
-    content="Supplier sign in for Elsati Connect vendors and quotation responders."
-  >
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
+body{
+    min-height:100vh;
+    font-family:"Manrope","Plus Jakarta Sans",Arial,sans-serif;
+    color:#10263d;
+    background:
+        radial-gradient(circle at 15% 15%,rgba(191,224,211,.65),transparent 30%),
+        radial-gradient(circle at 85% 25%,rgba(196,218,238,.75),transparent 35%),
+        linear-gradient(135deg,#eaf4f2 0%,#edf5f8 50%,#e7f0f5 100%);
+    padding:15px 2px 35px;
+    overflow-x:hidden;
+}
 
-  <!-- ORIGINAL ELSATI CONNECT STYLES -->
-  <link rel="stylesheet" href="styles.css">
+.page{width:100%;max-width:1400px;margin:0 auto}
+
+.top-header{
+    min-height:202px;
+    width:100%;
+    background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(248,251,253,.96));
+    border-radius:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    box-shadow:0 25px 60px rgba(24,50,69,.13);
+    border:1px solid rgba(255,255,255,.85);
+}
+
+.logo{
+    width:205px;
+    height:auto;
+    display:block;
+}
+
+.profile-circle{
+    position:absolute;
+    right:30%;
+    top:50%;
+    transform:translateY(-50%);
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    background:linear-gradient(145deg,#fff,#f5f8fa);
+    border:1px solid #e5eaed;
+    box-shadow:0 12px 28px rgba(16,38,61,.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.profile-icon{width:28px;height:28px;position:relative}
+.profile-icon:before{
+    content:"";
+    position:absolute;
+    width:11px;height:11px;border-radius:50%;
+    background:#10263d;top:0;left:50%;
+    transform:translateX(-50%);
+}
+.profile-icon:after{
+    content:"";
+    position:absolute;
+    width:22px;height:12px;
+    border-radius:12px 12px 8px 8px;
+    background:#10263d;bottom:1px;left:50%;
+    transform:translateX(-50%);
+}
+
+.login-area{
+    width:100%;
+    max-width:1350px;
+    margin:145px auto 0;
+    background:#fff;
+    border-radius:32px;
+    padding:0 32px 42px;
+    box-shadow:0 22px 60px rgba(24,50,69,.09);
+}
+
+.intro{margin-bottom:34px}
+.intro h1{
+    font-size:54px;
+    line-height:1.05;
+    letter-spacing:-2.5px;
+    color:#10263d;
+    font-weight:800;
+    margin-bottom:22px;
+}
+.intro h1 span{display:block}
+.intro p{
+    max-width:1100px;
+    font-size:21px;
+    line-height:1.7;
+    color:#66809a;
+    font-weight:500;
+}
+
+.form-group{margin-bottom:22px}
+label{
+    display:block;
+    color:#10263d;
+    font-size:17px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.input{
+    width:100%;
+    height:68px;
+    border-radius:20px;
+    border:1px solid #cfdaeb;
+    background:#e7eefb;
+    padding:0 20px;
+    font-family:"Manrope",sans-serif;
+    font-size:19px;
+    color:#10263d;
+    outline:none;
+}
+.input::placeholder{color:#10263d;opacity:1}
+.input:focus{
+    background:#f1f5fc;
+    border-color:#2fa463;
+    box-shadow:0 0 0 4px rgba(47,164,99,.10);
+}
+
+.password-wrapper{position:relative}
+.password-wrapper .input{padding-right:65px}
+.password-toggle{
+    position:absolute;right:18px;top:50%;
+    transform:translateY(-50%);
+    border:0;background:transparent;
+    width:35px;height:35px;
+    cursor:pointer;color:#62788b;
+    font-size:17px;
+}
+
+.options{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:40px;
+    margin-bottom:42px;
+}
+
+.remember{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    font-size:17px;
+    font-weight:600;
+    color:#10263d;
+    cursor:pointer;
+}
+.remember input{
+    appearance:none;
+    width:21px;height:21px;
+    border:1.5px solid #7c858c;
+    border-radius:3px;
+    background:#fff;
+    cursor:pointer;
+    position:relative;
+}
+.remember input:checked{background:#2fa463;border-color:#2fa463}
+.remember input:checked:after{
+    content:"✓";position:absolute;color:#fff;
+    font-size:14px;font-weight:800;left:3px;top:0;
+}
+
+.need-account{
+    color:#14834d;
+    text-decoration:none;
+    font-size:17px;
+    font-weight:800;
+}
+.need-account:hover{text-decoration:underline}
+
+.signin-button{
+    width:100%;
+    height:61px;
+    border:0;
+    border-radius:32px;
+    background:linear-gradient(90deg,#38aa62,#237d47);
+    color:#fff;
+    font-family:"Manrope",sans-serif;
+    font-size:16px;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 15px 30px rgba(47,164,99,.20);
+}
+.signin-button:hover{transform:translateY(-2px)}
+.signin-button:disabled{opacity:.65;cursor:not-allowed}
+
+.register-text{
+    margin-top:78px;
+    font-size:20px;
+    color:#66809a;
+    font-weight:500;
+}
+.register-text a{color:#14834d;font-weight:800;text-decoration:none}
+.register-text a:hover{text-decoration:underline}
+
+.message{
+    display:none;
+    margin-top:20px;
+    padding:15px 18px;
+    border-radius:13px;
+    font-size:14px;
+    font-weight:600;
+}
+.message.error{display:block;background:#fff0ef;color:#a63c37;border:1px solid #f2d0cd}
+.message.success{display:block;background:#edf9f1;color:#237d47;border:1px solid #c9ead5}
+
+@media(max-width:1100px){
+    .profile-circle{right:10%}
+}
+@media(max-width:800px){
+    body{padding:8px 2px 25px}
+    .top-header{min-height:150px;border-radius:28px}
+    .logo{width:165px}
+    .profile-circle{right:30px;width:58px;height:58px}
+    .login-area{margin-top:80px;border-radius:25px;padding:0 22px 35px}
+    .intro h1{font-size:39px;letter-spacing:-1.5px}
+    .intro p{font-size:17px;line-height:1.6}
+    .input{height:60px;font-size:16px;border-radius:16px}
+    .options{margin-top:28px;margin-bottom:30px;align-items:flex-start;gap:20px}
+    .remember,.need-account{font-size:14px}
+    .need-account{white-space:nowrap}
+    .register-text{margin-top:50px;font-size:16px}
+}
+@media(max-width:520px){
+    .profile-circle{right:18px;width:52px;height:52px}
+    .logo{width:145px}
+    .login-area{margin-top:55px}
+    .intro h1{font-size:34px}
+    .options{flex-direction:column;align-items:flex-start}
+    .need-account{align-self:flex-end}
+}
+</style>
 </head>
 
-
 <body>
+<div class="page">
 
-  <div class="site-shell auth-shell">
+<header class="top-header">
+    <img
+        class="logo"
+        alt="Elsati Connect"
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANIAAABGCAYAAAC5bsoXAAAjVUlEQVR4nO2dd5gVRdq37+ruEybnCDNkZlCCoGIACaKYFXPgNYBxzauirr5rWtFdzLLKGhAzuoi6YlwFDLBKznFgmMREJocz53R4vj/OMIKShFH29ev7uuaamdPV1VXd/at66qmn6igRwcXF5cDQDnYBXFx+D7hCcnHpAFwhubh0AK6QXFw6AFdILi4dgCskF5cOwBWSi0sH4ArJxaUDcIXk4tIBGAfz4vnVRZu/r1jYvaq1nKSIBI5KO5reiT3UwSyTi8v+oA5WiNCy8rXyvz88TKtqxPDYeA2I9URyXc9bOC7rOFdMLv+nOCim3baWunvu//4xau0GTBwscbDFIuA0MrXgKQrqipccjHK5uOwvB0VI+bVFE5towhZBBAQQFA6CSStFLfmDDka5XFz2l4MiJEcEywZE4YjCEQ1bFI7QJiyHddUbZEXlSjc03eX/BL+5kIprKz7vFp/1ZLwWhyNgO2ALOEKbqAyyIruRV7+WqcVPsL5mnSsml/96fnUh1TTXT5izeYE8NHeKnPj2NXLZF3ed1GK1DrnnyBtIMhIAheOA7Sh8xHBBxngS/YnXfF7+L7a1ljKr9J1fu4guLgfMr+a1q29tvuTDVXPeemrZdFo8QWwslLLx6BrndTuB24+8cmxLqGX0jDUfXl4YKCQ7uhNjep6xNCEy/onXNrzw1rz6L9CVRZTPx8XptzIq6yTVMO8liR16tevRc/mv41cR0rTFs+TdTXPY2FiCRQilOSgl6JqgaRDt9XF0aj/OyBpBbnKPDdG+6JlBq/Xw1VVrTvqm6ks2t67GUUE8ukOEocjwZ3BbrycmR8175Sat+FvodyG+o8a5gnL5r6FDhbShskgmfvMaX29bjamFUJqgaw6KsIiUJmhK8GgKj66I8nnwOho6gmbYGH4bVBCPx8HQBa8u+A0hxuPjfzrfwaAGP9qsq0B3sLJOwBhxN0ZiF1dQLgedDhsjfbNpuVz04cN8UbmCoFg4AChEFAqFUhqG0jE0HUPT0BS0mibNEqBRa6ZZBQjYwbY5JRV2ibd58WzH4ruqWUh6nxucoIYKBfAUfQIzL8YsW+s6I1wOOh0SIvTRyvnyv9+/TqlZi6Y0NCUoQBNBFyHVF0Vuchcyo5NIjYpH1zQEh22ttWxtLmV93QYcLBwNRAu7x8NzS+EfG4uC1nXUEDg5ofPRaGVzUJaFaimCL67BPHGKeDr1c3sml4PGAZt2325aIVd9+Ry1VjO22GgOeBQoQxiS3Ilxh53Ocd2OOjvGG/XhnvJ5dd2b8mHhx9Ra1fh8Dh7DwW+Az4AI3SHKo3FO6i0ctbYQ79JnQbWCrsALxGTinPomntTerphcDgoHJKTVWwvkys+mUB1sJCsyiUFpXemf1pVO8clEeb2kRsbkge3fWluapRs6Q7oO3uOLXhmomvRZ8b8nvLnldQyPhdcQIgzBbzhEejSGxZ7EGeoYfNPHoekhxKPAsNG8Ok5iP+SUaRixaa6YXH5zDkhIb/zwtWhejf7p3YiNiJmxrck6v6ZFUMqD4fEQ6dVIi9bpEuf9RS/3jC3vy6tbXkbTQ/gNhwiP4DfgyOghXJI6Hs+0S9GDRaALeARlAD4vTu9LMYY/9KsJafHKzTLzi+XYts0pww5l5LGHHlTRLl9bJO98sgC/18s5Jw2if26W24gcJA5ojHTGgGMuaAw6//xwZTlvry04f2PAwPT5EUNHPBqaR8NnCUOTPHLjgDiOSPcPi/Nq3+0t3/O7naO8ui4vb5mC5ZjYTjjyIaQMNH/ixerU+6Yz6w6QesABBGwTlT8DK+d8MdL3fbz05IsfSyBo4TgOSilQhC+GAgSlKQYcksXpo45Q6zaXM/nt7zFNi7TkWEYee+h+37uO4KHnP+GL+XkopbF5aw1vTBq313Oqmxrurg80jl9XtLFXUzBAhOGjR2YX0hNTb0+KjH3yNyj275L9FtKKoip5cn4lnxcGqHY8iOEBQ0fZDqIUaAp0odmj+KjZ4pP51QyM8377p5xoxvSI2uuLflb2Werbym8kr2UltkjbjyLCH/+Ok9ZzOmc8jXx6PdAcPkFAWc3Id7fC+bP3qQ5VNY2Tnn59PlX1AaRNO0oplFKIE3Z4aAhXnHMEp486AlTY/RHuxX99Z+HGLeXy3mcLaWgJ0aNTAldfPKr9vtU3BsY3NLYgAkoJDU0te8xra3XVR9MW/+uM2YWLKWwqx1EKRbi+OA6dopKeOL3H0CeuH3LhBTERkTN+7br93vjFQqprCV70/Ndbpv/1h2oCeHA0HYw2PzUQbslBRFAOoIc/swxYErC4eGktf6oLyX2HJ+xVTFf0GMd9q+9ECCIokr3p4QOmoOWMUvaqEcLWj9s6D0GJg9ZajLX5czF6nLzX/EXwQlgwkX6dXl1S0HV9+9FwHTRFVnp8+CMHpL23+vWtqPySKiZN+45QyOLCk/tz9cU/HouLiXjltiuOnxrxznxAuO2KEbvNZ2VRntw7+3nW1BUgIuhKkRWdQpTHj+3YbAvUU9JSzbKKjUjbE/u9sXTzWnlx6fuU1lby93Pv/SY7KW1ER+b/i4UUH+l756wB6dMbAibT1rZQbQqOLSjNQTQHZWjgSLjxdgTdBo8Ghq1ACaIrnt7SRCBoy6PHJu/xbeyX0E91i+gpxa1rQdPoFpWLWblBdH8CANopDyMvzUWpFkQJKEE5IbRNb0KPk/daF6VUq9M2WZUa7+P956+d5fcZS0HZ4eOYIuL3ejxrwif82GP9FogjOI6D4ziwi2ueOnKgGnJE7nilVGtstP/tXeVRUl35+e1fPcOmuq1oCnKjOnH/6Gvpnpz9iK7r5eI4MSHH6vrt+gVXN7Q2ExsR+bsMbiyvLufb8pWIaWOKnd7R+e+zkJZtKpfPl22l3oSeGbFcP6I7ZxwW5JaPClhVL1h2OHIBK2z2RGrCyDQPJ3eLok+cl6QIDa+hqG51KG6xWFEdZHFZQI7IiNjjW9k9uidFLevxEc8xKcOVVb5etNhUBaCiUpRkHSNUzgm/Z5qOeOKR+F77VCcR8YcvrvB6DGKi/DNioyPe2P0J7ef9zLJbm7dVPvhyBfnF1bQGg/i8PjJSYjiyXxYjjznkyriYiFcAfli+Seb+kEd+cTUtgVZ03SAjNZYRg3tyyvD+CmBbXfOfp/5z3kNrNm3FsgVBsXpjGfc/O0ts2yY9JY7Lxhwzdv7SvLe+XbgRw9C56NTD3zq098+dDW8u+fikLfVloCA3vgtTzrz7u+yk9GE/TXfh4FOv+elnVY11E9eV5t1T2lKDEkiLSqRfp973JkXHPdKepqF2UmVd1QRHICu50zVBK9RvafGam6oD9aRExDEou+/fUmLj7waoa266rqS6dIotQkZ86jOarlcuLlw1sby5hjhvFIO79Hu/U0LKuT8tx4ayAllTmU+zGSA1MoEBmbkvpccn/qy8RdvK568qyzu2NthApDeCrJhUeqV3G1dctXVaQX0Zpm0htk1e6eac6voa8RkeuqdmnxsTEfH+bp/5PrJPQvpg3nq5eeoiKoMgHh+eqEi6f1PCu1cPZPKYbpz5xiZqLAXKQdMdukbq/GVIEhf2i9utSC7qGU1Vi3Xp3q4d54lHicEpmeeHC5yeu3Oe6f2g6mvQHCSmO87xU1BYWIufFNVahHhiUdmnoWcc9bOyKEVo+9/iOJi2nbWnsojabsHKTpbdV/NWyf/c+RZNAStsOmkK2sZZEREeHrhh9NTrx4585d1Z/5EbHv6IkG2He3HChqVlC1NnLuCB68vl8nOHn9vcEjztlfd/YGtFPbbtIAKrN1exruBrAPrnZHLeSYNGf79sC0++9h1er4ej+2dxaO+di7+tof6hN9Z8gelYRBl+/jLyWnYlop/S0Np80ff5K6ZP+u5VyqwGHMsGBYZukKhFTrxz6GUTT+83XAF8tXnBhEd+eB1Riut6n/bi2xv+TY3VjG3bGIbOYQk973rmjDs9qbEJt68q2zjlpq+ewHKEsT2Ov+Wr4sWUBqqxbQeU0D0645zJp90lvdKzFUB1Y8M9z82fPnFG3hwscRARNKVI8sZc/cCwa68edUj4mda1NI//eOXcqc8tm0md2YyIgwL8Pj+3Drxg2qxN/2Ft7Za268Ctc/+OzzBI9Mcybcz9d/4mQtpYUiN/fGURZfVBHN2D0gU7aLFxW5C/fr6J1688QvVLMOTbChul63TV4KNzOpOb6t+r/ZMSaey+9W9DHCGCGIalnnD7ro6r+K4oTUM8HqT/TaiWGrQlN4NViyjQdIGqDwl1vVG8fa/ZqUwieFXboLumMcjEybMmer3GRNoeGihio/3ce+NZ4R6QNkcEOwwJgQcmf0pdUxBDU1w4+hCGDOxCTUOQ+UvyWbiugkN6ZgAwqG93LNPk6H6dGHFkN+KiveSXNvDqh0tpaAry4JQ59OnZaWa/3Ownx4zIPWp13lZmLypCROjeKY4hh2UjImSmx+Hx6Jt/7CGdtpHezqwu2fjnkGaDA73iO9EzrcvFP0u0C95e9On0p5a8S0hs4jw+hnUfRMAMMb94FcXONibMfY7KumoZf9w5KmSZ1Dc3ojSNp1e8h9LACAliED6ncg1/+fIft00+90+3m45NU2sLpmMzbd1niA5a0MLRNGzlsK6+mNs+e5xXzvvLQ17dk3fHR5Mmzi1fiVc3GJY5gARfDHOLl1ASqObOOc/yScazr6YnJF3x5qKPpj6zbAaW2ERqPoZmDsCj6WyoLSI+MpZDE7KR1hDLQvmIwOCknvg9fmL9UXh0o2Bf7sne2KuQ1uaXU1LRAIaBUhpYFmgadlDxycoqAIZ2jeb7ilriDeGdC7L3SURl1c3Pjp/0yU3dOicxuHcaA7ulMKD3zydTzZDDHX3/TKIvcdeuWV9CeJl6ZE9I7od8NQ7sbYimh2sngNWEnv8sVvpxYiT3ab/G9h5JFGxrMHn+3QXQJhZHHBSKnK5J3HD56KvjYyJe2u5jaFMVAI0twTFL15YiaPTISuDhO86bkZkafwHABKCodNvChNjoJwF6dUtXC2bcLjk9MneqZ2pyvDz4/Gwam4N8v6yAUcceevvf7r7w9s+/WSnfLXuDoGly+CGdePGRn0S8K/VQuCiKtuDGnahpbUAcB0GRFp20T+OfdaVbZOrKjwiJzeFpvZh82h1vZ8SljgXIqy6Sqz58iIL6Kl5c8zHDcwcXtLn+UAKdY1KYdPwNDO7RXy0v3iDXffwIZa21LKvLp6i6/Fug3SSO8Pj46/DrOaXvUFWwrWzJjR89MmhVXSFbmioprC39c12gkflV60Ap7jnqMq44ZowCyKsorr7iX/cnljRXM3XB+5ef1ue4y6eunIXp2ByW1IMnT76tuHta5+wd63RWvxHMWjhbVn8/BXEc7jvp+sKeKZ267u1e/BL2KqTGxhbEtFDb/cOaBkpDlEag2QYgaDp4xOGqPrEMytq7axsgv7TmptlritA2VzJt/iY0XSNORE4d1JnrzxzIoN4ZCuDErJPmZMd2GrXbjBw7/E5nDkHqi9HsWpQKm0zhgNnweEYpB6lZBMl92k8VwSttzoZIr06n5AgMQ0fTVNgMAFJjdeJjIl6CsPm33S2+nZhI34fZGfEUlDWQV1THyeOfPX/8mMNl5JB+ZKQmPJOdmTx4x+Lm9MhUJRW1nwQC5qmWZWM7QkpiVLhXcRxqGpp/TKyAtvLvet58+4YXEp5y+Am60ggHDgtBK/Sz47ti1tqvqTWbiDA83HLsRWwXEUCvpGx121EXyM1f/J2qljoK68q7SJtjSdM1LulzAoN7hMd5h2XlqIEpvaWsaAGtoRAtZutxAEppKISh6X05pe9QBdA1OePw0d2PllVLCwnZJvXBRhYUriDkWERpfob0OLyqsKbia4UKKU1rTPTEJJZIFbM3fY/X66XRasXQdMYNPJOfiqj9Ton82AgiHb6gda9C6tu7E/EROvVBu703Qil0TXF0j2Rqm4OXzllfS7IGNxzfaZ8v/OaHC7FNMzydqtuIoRPUNN5dXswJh3dlUO+wObRHEQE0lYbNmsh0lN0CjoRv03bvmqh29/jPPAQKu01qpMT7mf3OXZMjvN4fwvuwiAeUvbM3LJxaoXbK6sGbT+Xmie/TFLDYVFzHn5+fi//lb8hKT7jlhKO733LXdaffmxQf9UhJWc3suybNPH7JulJqapsIWeHJZBFwHGkbV+1Qvh18GruKQFGoNm8lu1RaRnQyStfAFkrqK6kLNF8RHxH16p5u54ryjVi2Q5TXS1Zs2tKfHh/e85grnU+fnuoYGgXlReANe8uVUmTF7OwMi9b9hIVsh+u3vdwCWdEpO6WN90S3WwKWbVNaW4k4Qou0cvGMe1KUUsO3349GswUBAlisqdiM5dj4vF6yY/fgjNvuIAqbE7vovw+MvQqpe2bC2EtH9nzrtdl5NFs2YtvohkFShMZtJ/diZVH96wXVAUb0TCJ9H0OBKmuaJn0ybz0ErfCmDYaDcgxE08CGgd1T97kCUrkGJQ7SkA+pA8ExfpzlcdjBDtMgJucnJ6Nvd2nrGvi9nqW7cyMD7eOjHZ4IABeefpTK7Z4ur3+4kJUbSikqq6G8upm1myvZVFxNcmLcxCvOHZJ67X1vHz9n4WYMXeOwnEx6ZicSFemnqLSaf/9nc/uykR+Lt/237FJIIsL2hmBX5GR2uyZW+V8MKZPipipmr5k/7dwjRr+6p/tpO044v92Ejgnoqm1Epun6TtfWlPazxGFUm5XQ/i+6tvOr1z72bPvRNY3wvL6iR1JnDKUT9l/+mHWKJ4YmK9ieh7OHSfKd799B6JHiovxvP33ryW+PHJglT89YSkFNkOH907hz7GDiIv0vnPb4/Gsbmh1ykn17vVhRTVCyE31qxerCCTXNAbAFsW1wHHAcNF3RNd5LTpc9zy/tiJQtQjk2qugrGHQj0vkMVOkMHMdGtbXyaAZ24mg8GUfvlG+7104AFOFeaPeoNtHx40ntDDiki3rikC40NreeH2g1h8z6avEtNz0yi9aQzRfz1jPymNxbFqwqxraFbpnRzHj2qtfSU+KuAJj7/VqZvaAAy7Z2chpoqt0WwbJ38ZLsZM79/HhcVPRL4/ue9uJTy2cQciweWfAm/TvntnvFdsUhKd1ZVJ1HyDEpbqgY1DVxZyvj6w3/eVHpHgwU3dOzyd9WzPYO+qeZtkt8x+OKHRq4HdO2BY4oha40uiVnQfEP2LbD/x4zji4pncfGRka2N3KNLS0XxURGvvP47Nfk660rcByH/LqtHE4fdkV7+JcCB/Hvrv77yz4r86zhh6q5f79UbXn7KvXAuGPmzFlRxkmPzr12dXkLlmkSscdXEK5+M19CIQuA1RsKMZsaUWYIzQxBKAShIIZtcfnow/a58PaCV4T6TWG3qLUNWfsmHDPhbLvn1YiehJgKMdKwu12LZ+hTP3t5wpENAEIwZLJ6XeGLS1dukiUr82TJijxZvHyjLFmRJ8tXbxYIt7jbvd9VNU3t+Xw+d7kUllSuB4iJ8s9ITYq5ddSQvhs8ukKJYFoWoZBNIBBqc8v6MIwfvUXvfLwoPOmKorm5tT1fr89oGyYpisobqK5r+vNPatDWK4HSdv0ozx80enKf2CwQobq1gSs+eJDJ30yX/NKiduVV1G579d2Fn8l7S76UMYeOIFb30WqFeHzem5TWV/xze7qNVQXy9KIZYedFZCLZselLldLaxqC7uLjaIcol/EHYXFU/7/CkrQlRgK7rDOzcB7/hAU3xzMLphByr647p12zNmw5wQu+jiTZ8mLbFPxbNZP3WLTvlvK4kXwA8Xh9KQDTFvHULd7YrO4BfHNlw2V8/lZmLS7E8PmzNQHQv4gihoLXL9LUt9pgbZxZ/sKk2RM/0sCPi0nOOeywtMXbCJ9+uYd3WWoprWqgNmkT5Dcac0K94X8ohW1eK/PAUSgTlCBIy0dZOxfalfqD6j79YP2ZCu4dqt62Fwt7ekpfVmoy++mVU2+pdccIPV1OK5Hg/C2beOalrp4T2hnTKO9+zcn2RPPanC5g0dS7L1m/N6dM1QXK6hZ/Rd0sLCYZsNE0xYnAv0pJi6JwWx5bSOjZs2cbld7x8f5fMhPu/WbyZgrImdA0cS/j46zVcedfLct/NZ63qmplY7DW0rFYFyzeUMvSixx7q0TnxoUi/zj8eHven9r5R2nr2XZAal3jzc2fdffjtnz517JKqDZQ0V/HUkn/yzLL38NpKvLpBk92KGBo5MZ145dwHXxg34IxrJy99j5WV+Zz6xi3nj+w6SIJWiG8LV9DkhIjxRnD74Ivompxx+Nf5bTNrjvy8S2prdX4cwoUNN9X+9w5JHaHduBMYmJl75fDU/lO/KFnM7JJlnDrt+olHpOVO1JRifXUh+cEqnhp2kxyfe8y5F+eeOPPl1bPY3LiVc2bexeCUXIkx/BQ2VrCpuZR/j33uk75dc7/wfWecVGe18OiiN1hYskZ0ZXDbqMsLe6QeuAfvFwspIdLAsiwsUWCAiAa6TlnNroMm31xe98FHWwNc0DWy/bPkpJg7Lzl36J2XnDuUqprGSQ1NwYsWrczPWr+lgtSE6Lv3Vga7eKOYU65D6XXoiW0DdRyU2YK+9C/Iulemh9JPnK6yhqEy+481ohN3Oe7RlGqO9HuJ8FntQauIoOkKu+2hagp0XaFretWxR+Sqi04+VN77ci2WZbM2vxrLEqL9Cl03WL25mpV528LjB6WIjvJy/gl9uPHSkZNTk2JvfujGE+T2SR9T32wyd3Ehhl6Mz+9lwrihbKtp4vVZy2lsCTFnYQF/bA7269u7s3ryzjNkwuMf0xwwKSxroKSikZyuKbS0Bo/3GBoRPgOPoXbdI7SRnZw+5Lkxdz/x2Ypvbnth5b+otVswLZMQgumEMAyDWD2SM7sPJT0u8brLjzzrh5SIuGlPLZlBXbCJTzcvRKHQNY1sbzL3jbiGE/qEJ0M9mo5f92IYBobaOUxPVzoRuhevMtA1DU1pRBh+LMfC0Hc2YQzNwK970dHRNY24qKhX/nr6H2O7fPfOU2/nfUWd3cKXpUvayqGT7ovHr3uIiYh4/9pjL7ghyR/73PPL36fZbuW78hVoSsPQDNJ8cTS2NJ3ap3N3dXq3Y+WDgnkEzRCzy5aii8GFtSd36ZG6706y3fGL1yO9/slSuf6lBQREB8MDhg8MncMy4pj70PFnx0Z6PwRYWtQoKJ0x04upCDnc2C+GJ87qfMBBaqHvPhXzX5OgNh80Qfc5aBESXpbrUSgjbJuLPwqVcxqMuu8CIypht9HMX81bJa3BsJCUFm45NRV2GYfbSMHvMRg9LLw0o6q68Yn/LNlwW2lVA7FREZx43KGTDV0vXbm+4NGNW6qoqG5EBJITozkstxN9c7LH7ujAWLuxROYtyaeyuoGY6AgG9slk2FF9VFlV/eufzl15aW19C10yExg15NA/JcZH/RVg/uKNsmJ9CfVNQWIivfTpmcHgAT3OLSmvnrm5sAJd1xmQ2+nTzLSk0/Z2/8pqt72VX1V0SUljFUHHREcnLSqePuk9ZnVKTD1zx7SbK4oq11UWpNQGm1CEQ4QO65z7SEpM/L3b0xRUlS3P21Y4QAH90nu9kpaQdGV7XUs2S0lDJT7DS/9OOTeELDN3TWneTY4SsuMz6L3DWK2gonT9ptqiHFD0y+z9TFpswq3t+ZRukVXlG6k3W/CgkxGdxKHpPedkJaXt5NFdV7pF1lVtoaKlBp/uJSMqiQGZOe9mJiRfBNDQGjhnyZbVM/PrS7Fti0R/HEN7DNpluNEv5RcLqaCsdv7Rf3jj2CpTB48XDC/oOhEeD29edzRjhnZRFTWBiVvrQvf8c20zTy+rQxyH6/rF8sw5ux/kAtjV227FMp9S4SUZYwHEtpMIBp51ivJoff8lnNJFKDu8Q5HSFUpz0IywH0YZgKGhewzoewLeK178baJLXf6/5xebdl0zEoaM6p8h7y4sDU8CCiAGrTg8PGM5Q/umTSiubL7niNxkNWFOtZiWg+7YbKrY83oZAGUY5c0v/x1r7fcoXb3lAEqzoaUWp7EK5dHCe+RpbeNYG5SmcMywU1Z5NDTlR066Ed+pN7kicvnN2C9/+tnDc/FK2wStbYEZQkIma8vqeeq9VZPKKhoprzelrNEE28YOWczPr6e0LrjH7k+Li38n5q4HlPeE8zCrqzCLNmAWb8Kq3Qa24JggIYUTBCcEdhDs1ra/LQ/0HIZ+zVRXRC6/OfslpKGHdX0+LcIJC8mxEccGcQg5Dk9/tZ5vNlbQGLRoCoSFhOPQZAmPf1K4T/lHXXq1Spr27z9EjBqLZsShKR9iaogpOJaEf5sKBw/iiUV6DMH30Meo65/7Q31a7vvbahom7U+9XFz2l/3e/OTjb9fIRQ9/RgADNB08HtANPD4vd5zahzHDenPya1uoDdhgWmDbpHgdPr+hP4d1jd3nHsMqLRG7eAt2ZSmh4s04rc1okVGohCS0jGwkLZtATMqcrxbkHf/ptxuI9SumPOpuZ+zy27LfezacPuxQderhq+TDRVvD8XJW27SxbeHYNl6PagvTcdge+1LVbPM/U5bzxnUDZGC33a9V2qmAmZ2VkdmZguLqNc1dBh0iKEw06ptDlFTVM//LpXy1KP/4qrpWslOj+fSFP8zZ3zq5uOwvB7SL0MTrRvL18tepMyE8HagQXVHfGCDKqxOlCzXOj8GiAqyvMzln8lL+cXGunHRkxj6JadbsNXLHlDkELRPbNGkNBGkNmgRNC9sKCzXSo3H3uOF0zkjcc5Cri8uvwAEJqVeXNPX8bSfKtU/Opi5kAwqxFAWVDUR61GMpUfqE4rrQj8sAJLz/QFG9ydnPL2V0zzgZMzCVUYdnzshKi75gx7yXry+XrxcX8NH3m5i3diuWbaNJOGhWLAvltAXwSjgA+f6rhnHJ2UNdk87loHDAe3+fd+JhqnBrjTw6Yzk1rTaOpbG6oBqvrhXnJBksL9faIg+2r50BRAiJ8Om6bXyxpgztpQXnp0bokh6tY9sOm8prCDg2IoJjW+HezmlbtSoSXiphOygFXs3h+rMGcM0lIy870Lq4uOwvHfa1Ls+9M0/unbaARkdD93h464/DISaeKz8qpTngIJYNlgmWjRebaIIM7xFDdryH5pYQc1eWUt5kEmgNhRe5WSbKbnOv2xYSCqEhiBPukTQR/B6duy49ilvGjx4bGxWx2+UPLi6/Nh36/UjvfL5UHnhjIVtqQvTLTmDGg2dx/bsb+bLQxLEcME2iNZtxg5O5blQXLNuhvDFEhK7ISPDz7wVbeOqDFeRXtiBmCGwzLCTLAtNEiY04DgYOnRL93HnFMK4be7xrzrkcdDr8G/tKKuo+uurRWWcsLw3w3A0jiE6I48K382kMCIZYPDQqlctHdHlw8heb75+6qoWAgKFpHJ8Bk87JxTZDDLttJpW1zW1iCosIy0RXgleDvtmxvPzwJfTNcfe6dvnvoMNXCnZOiz9zxsTzL5h220i+WLCRWC3EvcOT0TWhV4qPi4Zk8fRXhfc/viRApa3TbGvUBWw+2BRi/FvriI2OuO/ak3ujO+EJX2VZaOKgi5CbGcUL957BrBeuf8wVkct/E7/alzFvp7q+ZUJSXORjd723XmqbTR44s+djQ55cOqHI9IGmhZeJ2w5YJtFYfHrNIejBJkbe+k9CLa0kRmoM7JnMeSNzuODMo6+Jj4586VctsIvLftAh39i3J5LiIh8D+Nt5uaqiPvBnR/DXB+zw9sbbNySxLcR2sBVs2lrDCX1TZ106vMsZo4/qwZAjcl6LjPB8HRcd8eqvXVYXl/3lV++Rfkp9S+ic4U8smrmqVgMtvHWHWGFPXJwy+fzG/hyV435ZmMv/LTp8jLQ34iK97192ZCrRuoVmW2BaKMvEJxbHZkfQKzPuD791mVxcDpTfXEgAVw7revZL53YhJ8oiUkLEOgH+eGwCL44f+EJijP8fB6NMLi4Hwm9u2v2U6obArUmxEU8f1EK4uBwgB11ILi6/Bw6Kaefi8nvDFZKLSwfgCsnFpQNwheTi0gG4QnJx6QBcIbm4dACukFxcOgBXSC4uHYArJBeXDuD/ASuaIPDkMzBXAAAAAElFTkSuQmCC"
+    >
 
+    <div class="profile-circle" aria-hidden="true">
+        <div class="profile-icon"></div>
+    </div>
+</header>
 
-    <!-- ==========================================
-         HEADER
-    =========================================== -->
+<main class="login-area">
 
-    <header class="topbar auth-topbar">
+<section class="intro">
+    <h1>
+        <span>Welcome back.</span>
+        <span>Sign in with confidence.</span>
+    </h1>
 
-      <a
-        class="brand brand-image"
-        href="index.html"
-        aria-label="Elsati Connect home"
-      >
+    <p>
+        Track invitations, submit quotations, and see award
+        progress in your supplier workspace.
+    </p>
+</section>
 
-        <img
-          src="elsati.png"
-          alt="Elsati Connect logo"
+<form id="loginForm">
+
+    <div class="form-group">
+        <label for="email">Supplier email</label>
+        <input
+            type="email"
+            id="email"
+            class="input"
+            placeholder="ExampleB@gmail.com"
+            autocomplete="email"
+            required
         >
+    </div>
 
-      </a>
+    <div class="form-group">
+        <label for="password">Password</label>
 
+        <div class="password-wrapper">
+            <input
+                type="password"
+                id="password"
+                class="input"
+                placeholder="••••••••"
+                autocomplete="current-password"
+                required
+            >
 
-      <div class="topbar-actions topbar-actions-compact">
+            <button
+                type="button"
+                id="passwordToggle"
+                class="password-toggle"
+                aria-label="Show password"
+            >◉</button>
+        </div>
+    </div>
 
-        <a
-          class="login-icon-link"
-          href="signin.html"
-          aria-label="Log in"
-        >
+    <div class="options">
 
-          <span class="login-icon"></span>
+        <label class="remember">
+            <input type="checkbox" id="rememberDevice">
+            <span>Remember this device</span>
+        </label>
 
+        <a href="register-supplier.html" class="need-account">
+            Need an account?
         </a>
 
-      </div>
-
-    </header>
-
-
-    <!-- ==========================================
-         SUPPLIER SIGN IN
-    =========================================== -->
-
-    <main class="auth-layout supplier-auth reveal">
-
-
-      <!-- ========================================
-           LEFT SIGN-IN PANEL
-      ========================================= -->
-
-      <section class="auth-panel">
-
-
-        <p class="eyebrow">
-          Supplier Sign In
-        </p>
-
-
-        <h1>
-          Respond to requests with confidence.
-        </h1>
-
-
-        <p class="auth-copy">
-
-          Track invitations, submit quotations,
-          and see award progress in your supplier workspace.
-
-        </p>
-
-
-        <form
-          class="contact-form auth-form"
-          id="supplier-signin-form"
-        >
-
-
-          <!-- SUPPLIER EMAIL -->
-
-          <label>
-
-            Supplier email
-
-            <input
-              type="email"
-              name="email"
-              placeholder="supplier@company.com"
-              required
-            >
-
-          </label>
-
-
-          <!-- PASSWORD -->
-
-          <label>
-
-            Password
-
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter password"
-              required
-            >
-
-          </label>
-
-
-          <!-- OPTIONS -->
-
-          <div class="auth-options">
-
-
-            <label class="checkbox-row">
-
-              <input
-                type="checkbox"
-                name="remember"
-              >
-
-              Remember this device
-
-            </label>
-
-
-            <a href="register-supplier.html">
-              Need an account?
-            </a>
-
-
-          </div>
-
-
-          <!-- SIGN IN -->
-
-          <button
-            class="button button-primary"
-            type="submit"
-          >
-
-            Sign in as Supplier
-
-          </button>
-
-
-        </form>
-
-
-        <!-- FEEDBACK -->
-
-        <p
-          class="form-feedback"
-          id="supplier-signin-feedback"
-        ></p>
-
-
-        <!-- REGISTER -->
-
-        <p class="auth-note">
-
-          Need access?
-
-          <a href="register-supplier.html">
-            Register as a supplier
-          </a>
-
-        </p>
-
-
-      </section>
-
-
-      <!-- ==========================================
-           RIGHT DASHBOARD PREVIEW
-      =========================================== -->
-
-      <section class="dashboard-preview supplier-preview">
-
-
-        <!-- PREVIEW TOP -->
-
-        <div class="preview-topbar">
-
-
-          <span class="preview-brand">
-            Elsati Connect
-          </span>
-
-
-          <nav>
-
-            <span>
-              Dashboard
-            </span>
-
-            <span>
-              Open Bids
-            </span>
-
-            <span>
-              My Quotes
-            </span>
-
-            <span>
-              Awards
-            </span>
-
-          </nav>
-
-
-          <button
-            class="mini-cta"
-            type="button"
-          >
-
-            Submit Quote
-
-          </button>
-
-
-        </div>
-
-
-        <!-- PREVIEW BODY -->
-
-        <div class="preview-body">
-
-
-          <!-- SIDEBAR -->
-
-          <aside class="preview-sidebar">
-
-
-            <span>
-              Dashboard
-            </span>
-
-
-            <span class="active">
-              Open Bids
-            </span>
-
-
-            <span>
-              My Quotes
-            </span>
-
-
-            <span>
-              Orders
-            </span>
-
-
-            <span>
-              Capacity
-            </span>
-
-
-            <span>
-              Messages
-            </span>
-
-
-            <span>
-              Settings
-            </span>
-
-
-          </aside>
-
-
-          <!-- MAIN PREVIEW -->
-
-          <div class="preview-main">
-
-
-            <div class="preview-stat-row supplier-stats">
-
-
-              <article>
-
-                <small>
-                  Open Invitations
-                </small>
-
-                <strong>
-                  8
-                </strong>
-
-              </article>
-
-
-              <article>
-
-                <small>
-                  Submitted Quotes
-                </small>
-
-                <strong>
-                  12
-                </strong>
-
-              </article>
-
-
-              <article>
-
-                <small>
-                  Won Orders
-                </small>
-
-                <strong>
-                  5
-                </strong>
-
-              </article>
-
-
-              <article>
-
-                <small>
-                  Response Rate
-                </small>
-
-                <strong>
-                  93%
-                </strong>
-
-              </article>
-
-
-            </div>
-
-
-          </div>
-
-
-        </div>
-
-
-      </section>
-
-
-    </main>
-
-  </div>
-
-
-  <!-- ==========================================
-       ORIGINAL SCRIPT
-  =========================================== -->
-
-  <script src="script.js"></script>
-
-
-  <!-- ==========================================
-       SUPABASE
-  =========================================== -->
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <script src="supabase-config.js"></script>
-
-
-  <!-- ==========================================
-       SUPPLIER SIGN-IN LOGIC
-  =========================================== -->
-
-  <script>
-
-    const supabaseClient =
-      supabase.createClient(
-        window.ELSATI_SUPABASE.url,
-        window.ELSATI_SUPABASE.publishableKey
-      );
-
-
-    const form =
-      document.getElementById(
-        "supplier-signin-form"
-      );
-
-
-    const feedback =
-      document.getElementById(
-        "supplier-signin-feedback"
-      );
-
-
-    form.addEventListener(
-      "submit",
-      async function(event) {
-
-        event.preventDefault();
-
-
-        /* ======================================
-           GET LOGIN DETAILS
-        ====================================== */
-
-        const email =
-          document
-            .querySelector(
-              'input[name="email"]'
-            )
-            .value
-            .trim();
-
-
-        const password =
-          document
-            .querySelector(
-              'input[name="password"]'
-            )
-            .value;
-
-
-        feedback.textContent =
-          "Signing in...";
-
-
-        feedback.className =
-          "form-feedback";
-
-
-        /* ======================================
-           SIGN IN WITH SUPABASE
-        ====================================== */
-
-        const {
-          data,
-          error
-        } =
-          await supabaseClient
-            .auth
-            .signInWithPassword({
-
-              email: email,
-
-              password: password
-
+    </div>
+
+    <button
+        type="submit"
+        id="signinButton"
+        class="signin-button"
+    >
+        Sign in as Supplier
+    </button>
+
+    <div id="message" class="message"></div>
+
+</form>
+
+<div class="register-text">
+    Need access?
+    <a href="register-supplier.html">Register as a supplier</a>
+</div>
+
+</main>
+</div>
+
+<script>
+const supabaseClient = supabase.createClient(
+    window.ELSATI_SUPABASE.url,
+    window.ELSATI_SUPABASE.publishableKey
+);
+
+const loginForm = document.getElementById("loginForm");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const passwordToggle = document.getElementById("passwordToggle");
+const signinButton = document.getElementById("signinButton");
+const message = document.getElementById("message");
+const rememberDevice = document.getElementById("rememberDevice");
+
+passwordToggle.addEventListener("click", function () {
+    passwordInput.type =
+        passwordInput.type === "password" ? "text" : "password";
+});
+
+const savedEmail = localStorage.getItem("elsati_supplier_email");
+
+if (savedEmail) {
+    emailInput.value = savedEmail;
+    rememberDevice.checked = true;
+}
+
+function showMessage(text, type) {
+    message.textContent = text;
+    message.className = "message " + type;
+}
+
+function clearMessage() {
+    message.textContent = "";
+    message.className = "message";
+}
+
+loginForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    clearMessage();
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+        showMessage("Please enter your email and password.", "error");
+        return;
+    }
+
+    signinButton.disabled = true;
+    signinButton.textContent = "Signing in...";
+
+    try {
+        const { data, error } =
+            await supabaseClient.auth.signInWithPassword({
+                email,
+                password
             });
 
+        if (error) throw error;
 
-        /* ======================================
-           LOGIN ERROR
-        ====================================== */
+        const user = data.user;
 
-        if(error){
-
-          feedback.textContent =
-            error.message;
-
-          feedback.className =
-            "form-feedback error";
-
-          return;
-
+        if (!user) {
+            throw new Error("Unable to sign in. Please try again.");
         }
 
-
-        /* ======================================
-           FIND SUPPLIER PROFILE
-        ====================================== */
-
-        const {
-          data: profile,
-          error: profileError
-        } =
-          await supabaseClient
-            .from("profiles")
-            .select("*")
-            .eq(
-              "id",
-              data.user.id
-            )
-            .maybeSingle();
-
-
-        /* ======================================
-           PROFILE NOT FOUND
-        ====================================== */
-
-        if(
-          profileError ||
-          !profile
-        ){
-
-          feedback.textContent =
-            "Supplier profile not found. Please contact administrator.";
-
-          feedback.className =
-            "form-feedback error";
-
-
-          await supabaseClient
-            .auth
-            .signOut();
-
-
-          return;
-
+        if (rememberDevice.checked) {
+            localStorage.setItem("elsati_supplier_email", email);
+        } else {
+            localStorage.removeItem("elsati_supplier_email");
         }
 
+        const { data: profile, error: profileError } =
+            await supabaseClient
+                .from("profiles")
+                .select("*")
+                .eq("id", user.id)
+                .single();
 
-        /* ======================================
-           CONFIRM SUPPLIER ROLE
-        ====================================== */
-
-        if(
-          profile.role !== "supplier"
-        ){
-
-          feedback.textContent =
-            "This account is not registered as a supplier.";
-
-          feedback.className =
-            "form-feedback error";
-
-
-          await supabaseClient
-            .auth
-            .signOut();
-
-
-          return;
-
+        if (profileError) {
+            await supabaseClient.auth.signOut();
+            throw new Error("Your supplier profile could not be found.");
         }
 
+        if (!profile || profile.role !== "supplier") {
+            await supabaseClient.auth.signOut();
+            throw new Error("This account is not registered as a supplier.");
+        }
 
-        /* ======================================
-           LOGIN SUCCESSFUL
-        ====================================== */
-
-        feedback.textContent =
-          "Login successful. Opening supplier dashboard...";
-
-
-        feedback.className =
-          "form-feedback ok";
-
-
-        /* ======================================
-           GO TO NEW SUPPLIER DASHBOARD
-        ====================================== */
-
-        setTimeout(
-          function(){
-
-            window.location.href =
-              "supplier-dashboard-new.html";
-
-          },
-          500
+        showMessage(
+            "Sign in successful. Opening your supplier workspace...",
+            "success"
         );
 
-      }
-    );
+        signinButton.textContent = "Opening dashboard...";
 
-  </script>
+        setTimeout(function() {
+            window.location.href = "supplier-dashboard-new.html";
+        }, 500);
+
+    } catch (error) {
+        console.error("Supplier sign-in error:", error);
+
+        showMessage(
+            error.message ||
+            "Unable to sign in. Please check your details and try again.",
+            "error"
+        );
+
+        signinButton.disabled = false;
+        signinButton.textContent = "Sign in as Supplier";
+    }
+});
+</script>
 
 </body>
 </html>
