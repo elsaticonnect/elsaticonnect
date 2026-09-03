@@ -4670,6 +4670,24 @@ body {
 
             </div>
 
+            <button
+                id="saveSupplierProfileButton"
+                class="btn btn-primary"
+                style="margin-top:15px;"
+                onclick="saveSupplierProfile()"
+            >
+                <span id="profileSaveIcon">✓</span>
+                <span id="profileSaveText">Save Company Profile</span>
+            </button>
+
+            <div
+                id="profileSavedStatus"
+                class="bank-saved-status"
+                style="display:none;"
+            >
+                ✓ Company profile saved. Your verification tracker has been updated.
+            </div>
+
         </div>
 
     </section>
@@ -5347,6 +5365,8 @@ let allPayments = [];
 
 let allInvoices = [];
 
+let documents = [];
+
 let currentRFQ = null;
 
 let currentRFQFilter = "all";
@@ -5645,6 +5665,221 @@ function fillProfile() {
     ).value =
         p.business_description ||
         "";
+
+}
+
+
+/* =========================================================
+   SAVE SUPPLIER COMPANY PROFILE
+========================================================= */
+
+async function saveSupplierProfile() {
+
+    if (!currentUser || !db) {
+
+        showToast(
+            "Your session has expired. Please sign in again.",
+            "error"
+        );
+
+        return;
+    }
+
+    const button =
+        document.getElementById(
+            "saveSupplierProfileButton"
+        );
+
+    const buttonText =
+        document.getElementById(
+            "profileSaveText"
+        );
+
+    const buttonIcon =
+        document.getElementById(
+            "profileSaveIcon"
+        );
+
+    const savedStatus =
+        document.getElementById(
+            "profileSavedStatus"
+        );
+
+    const updates = {
+
+        company_name:
+            document
+                .getElementById("profileCompany")
+                .value
+                .trim(),
+
+        contact_person:
+            document
+                .getElementById("profileContact")
+                .value
+                .trim(),
+
+        contact_phone:
+            document
+                .getElementById("profilePhone")
+                .value
+                .trim(),
+
+        city:
+            document
+                .getElementById("profileCity")
+                .value
+                .trim(),
+
+        country:
+            document
+                .getElementById("profileCountry")
+                .value
+                .trim(),
+
+        supplier_category:
+            document
+                .getElementById("profileCategory")
+                .value
+                .trim(),
+
+        business_address:
+            document
+                .getElementById("profileAddress")
+                .value
+                .trim(),
+
+        business_description:
+            document
+                .getElementById("profileDescription")
+                .value
+                .trim()
+
+    };
+
+    const requiredFields = [
+        ["Company Name", updates.company_name],
+        ["Contact Person", updates.contact_person],
+        ["Supplier Category", updates.supplier_category],
+        ["City", updates.city],
+        ["Country", updates.country],
+        ["Business Address", updates.business_address],
+        ["Business Description", updates.business_description]
+    ];
+
+    const missing =
+        requiredFields
+            .filter(
+                item =>
+                    !item[1]
+            )
+            .map(
+                item =>
+                    item[0]
+            );
+
+    if (missing.length) {
+
+        showToast(
+            "Please complete: " +
+            missing.join(", "),
+            "error"
+        );
+
+        return;
+    }
+
+    if (button) {
+        button.disabled = true;
+    }
+
+    if (buttonText) {
+        buttonText.textContent =
+            "Saving...";
+    }
+
+    try {
+
+        /*
+         * Update the existing supplier profile.
+         * Do not use .select().single() here because Supabase can
+         * return PGRST116 when the updated row is not visible in
+         * the response because of Row Level Security.
+         */
+        const {
+            error
+        } =
+            await db
+                .from("profiles")
+                .update(updates)
+                .eq(
+                    "id",
+                    currentUser.id
+                );
+
+        if (error) {
+            throw error;
+        }
+
+        /*
+         * Keep the saved values in memory so the tracker updates
+         * immediately after the successful database update.
+         */
+        currentSupplier = {
+            ...(currentSupplier || {}),
+            ...updates,
+            id: currentUser.id
+        };
+
+        fillProfile();
+        updateSupplierMenuName();
+        updateProfileCompletionTracker();
+
+        if (buttonIcon) {
+            buttonIcon.textContent = "✓";
+        }
+
+        if (buttonText) {
+            buttonText.textContent =
+                "Company Profile Saved";
+        }
+
+        if (savedStatus) {
+            savedStatus.style.display = "block";
+        }
+
+        showToast(
+            "Company profile saved successfully.",
+            "success"
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "Supplier profile save error:",
+            error
+        );
+
+        if (buttonText) {
+            buttonText.textContent =
+                "Save Company Profile";
+        }
+
+        showToast(
+            "Company profile could not be saved: " +
+            error.message,
+            "error"
+        );
+
+    }
+    finally {
+
+        if (button) {
+            button.disabled = false;
+        }
+
+    }
 
 }
 
@@ -11140,6 +11375,10 @@ function downloadInvoicePDF(
 
 async function loadDocuments() {
 
+    if (!currentUser || !db) {
+        return;
+    }
+
     try {
 
         const {
@@ -11152,66 +11391,125 @@ async function loadDocuments() {
                 .eq(
                     "supplier_user_id",
                     currentUser.id
+                )
+                .order(
+                    "uploaded_at",
+                    {
+                        ascending: false
+                    }
                 );
-
 
         if (error) {
 
-            console.warn(
-                "Supplier documents unavailable:",
-                error.message
+            console.error(
+                "Supplier documents error:",
+                error
             );
 
-            return;
+            documents = [];
 
+            updateProfileCompletionTracker();
+
+            return;
         }
 
+        /*
+         * Keep the complete database document list in memory.
+         * The tracker uses this list to determine whether all
+         * four required documents have been uploaded.
+         */
+        documents =
+            data || [];
 
-        (data || []).forEach(doc => {
+        const types =
+            [
+                "pacra",
+                "tax",
+                "bank",
+                "residence"
+            ];
 
-            const element =
-                window.document.getElementById(
-                    "doc-status-" +
-                    doc.document_type
-                );
+        types.forEach(
+            type => {
 
-            if (!element) {
-                return;
+                const doc =
+                    documents.find(
+                        item =>
+                            item.document_type === type
+                    );
+
+                const element =
+                    window.document.getElementById(
+                        "doc-status-" + type
+                    );
+
+                if (!element) {
+                    return;
+                }
+
+                if (!doc) {
+
+                    element.className =
+                        "document-status pending";
+
+                    element.textContent =
+                        "Not Uploaded";
+
+                    return;
+                }
+
+                const status =
+                    String(
+                        doc.status || "pending"
+                    ).toLowerCase();
+
+                if (status === "verified") {
+
+                    element.className =
+                        "document-status verified";
+
+                    element.textContent =
+                        "Verified";
+
+                }
+                else if (status === "rejected") {
+
+                    element.className =
+                        "document-status rejected";
+
+                    element.textContent =
+                        "Rejected – Please upload again";
+
+                }
+                else {
+
+                    element.className =
+                        "document-status pending";
+
+                    element.textContent =
+                        "Uploaded – Pending Verification";
+
+                }
+
             }
+        );
 
-            if (doc.status === "verified") {
-
-                element.className =
-                    "document-status verified";
-
-                element.textContent = "Verified";
-
-            }
-            else if (doc.status === "rejected") {
-
-                element.className =
-                    "document-status rejected";
-
-                element.textContent = "Rejected – Please upload again";
-
-            }
-            else {
-
-                element.className =
-                    "document-status pending";
-
-                element.textContent =
-                    "Uploaded – Pending Verification";
-
-            }
-
-        });
+        /*
+         * This is the important part:
+         * immediately update the Account Verification tracker
+         * after the documents are loaded.
+         */
+        updateProfileCompletionTracker();
 
     }
-
     catch(error) {
 
-        console.error(error);
+        console.error(
+            "Document loading error:",
+            error
+        );
+
+        updateProfileCompletionTracker();
 
     }
 
@@ -11499,6 +11797,8 @@ async function uploadDocument(documentType) {
 
 
         await loadDocuments();
+
+    updateProfileCompletionTracker();
 
         updateStats();
 
@@ -12615,6 +12915,11 @@ function updateProfileCompletionTracker() {
 
     const p = currentSupplier || {};
 
+    /*
+     * PROFILE:
+     * Company information is complete when all five required
+     * supplier identity/location fields have been saved.
+     */
     const companyInfoComplete = [
         p.company_name,
         p.contact_person,
@@ -12627,6 +12932,10 @@ function updateProfileCompletionTracker() {
         String(value).trim() !== ""
     );
 
+    /*
+     * BUSINESS PROFILE:
+     * Address and business description must also be completed.
+     */
     const businessInfoComplete = [
         p.business_address,
         p.business_description
@@ -12636,10 +12945,33 @@ function updateProfileCompletionTracker() {
         String(value).trim() !== ""
     );
 
-    const documentsComplete =
-        p.documents_uploaded === true ||
-        p.documents_uploaded === "true";
+    /*
+     * DOCUMENTS:
+     * Do NOT rely on profiles.documents_uploaded.
+     * The actual source of truth is supplier_documents.
+     * All four required documents must exist.
+     */
+    const requiredDocumentTypes = [
+        "pacra",
+        "tax",
+        "bank",
+        "residence"
+    ];
 
+    const documentsComplete =
+        requiredDocumentTypes.every(type =>
+            Array.isArray(documents) &&
+            documents.some(
+                doc =>
+                    doc &&
+                    doc.document_type === type
+            )
+        );
+
+    /*
+     * VERIFICATION:
+     * This remains an Elsati/admin-controlled step.
+     */
     const verificationStatus =
         String(p.verification_status || "")
             .toLowerCase()
@@ -12647,8 +12979,12 @@ function updateProfileCompletionTracker() {
 
     const verified =
         p.verified === true ||
-        ["approved", "verified", "complete", "completed"]
-            .includes(verificationStatus);
+        [
+            "approved",
+            "verified",
+            "complete",
+            "completed"
+        ].includes(verificationStatus);
 
     const steps = [
         ["trackerCompanyInfo", companyInfoComplete, "Complete"],
@@ -12657,39 +12993,76 @@ function updateProfileCompletionTracker() {
         ["trackerVerification", verified, "Verified"]
     ];
 
-    steps.forEach(([id, complete, completeText]) => {
+    steps.forEach(
+        ([id, complete, completeText]) => {
 
-        const item = document.getElementById(id);
-        if (!item) return;
+            const item =
+                document.getElementById(id);
 
-        const result = item.querySelector(".tracker-result");
-        const icon = item.querySelector(".verification-icon");
+            if (!item) return;
 
-        item.classList.toggle("complete", complete);
+            const result =
+                item.querySelector(".tracker-result");
 
-        if (icon) {
-            icon.textContent = complete
-                ? "✓"
-                : (
-                    id === "trackerCompanyInfo" ? "1" :
-                    id === "trackerBusinessInfo" ? "2" :
-                    id === "trackerDocuments" ? "3" : "4"
-                );
-        }
+            const icon =
+                item.querySelector(".verification-icon");
 
-        if (result) {
-            if (complete) {
-                result.textContent = completeText;
-            } else if (id === "trackerVerification") {
-                result.textContent = "Awaiting verification";
-            } else {
-                result.textContent = "Left to complete";
+            item.classList.toggle(
+                "complete",
+                complete
+            );
+
+            if (icon) {
+
+                icon.textContent =
+                    complete
+                        ? "✓"
+                        : (
+                            id === "trackerCompanyInfo"
+                                ? "1"
+                                : id === "trackerBusinessInfo"
+                                    ? "2"
+                                    : id === "trackerDocuments"
+                                        ? "3"
+                                        : "4"
+                        );
+
             }
+
+            if (result) {
+
+                if (complete) {
+
+                    result.textContent =
+                        completeText;
+
+                }
+
+                else if (
+                    id === "trackerVerification"
+                ) {
+
+                    result.textContent =
+                        "Awaiting verification";
+
+                }
+
+                else {
+
+                    result.textContent =
+                        "Left to complete";
+
+                }
+
+            }
+
         }
-    });
+    );
 
     const completedCount =
-        steps.filter(step => step[1]).length;
+        steps.filter(
+            step => step[1]
+        ).length;
 
     const percentage =
         Math.round(
@@ -12697,32 +13070,49 @@ function updateProfileCompletionTracker() {
         );
 
     const percent =
-        document.getElementById("profileProgressPercent");
+        document.getElementById(
+            "profileProgressPercent"
+        );
 
     const bar =
-        document.getElementById("profileProgressBar");
+        document.getElementById(
+            "profileProgressBar"
+        );
 
     if (percent) {
-        percent.textContent = percentage + "%";
+
+        percent.textContent =
+            percentage + "%";
+
     }
 
     if (bar) {
-        bar.style.width = percentage + "%";
+
+        bar.style.width =
+            percentage + "%";
+
     }
 
     const title =
-        document.getElementById("profileProgressTitle");
+        document.getElementById(
+            "profileProgressTitle"
+        );
 
     const message =
-        document.getElementById("profileProgressMessage");
+        document.getElementById(
+            "profileProgressMessage"
+        );
 
     const next =
-        document.getElementById("trackerNextStep");
+        document.getElementById(
+            "trackerNextStep"
+        );
 
     if (verified) {
 
         if (title) {
-            title.textContent = "Your account is verified";
+            title.textContent =
+                "Your account is verified";
         }
 
         if (message) {
@@ -12735,32 +13125,43 @@ function updateProfileCompletionTracker() {
                 "Your Elsati Connect supplier account is verified and ready for procurement opportunities.";
         }
 
-    } else {
+    }
+    else {
 
         const remaining =
-            steps.filter(step => !step[1]).length;
+            steps.filter(
+                step => !step[1]
+            ).length;
 
         if (title) {
+
             title.textContent =
                 remaining === 0
                     ? "Your account is ready for review"
                     : "Your verification checklist";
+
         }
 
         if (message) {
+
             message.textContent =
                 remaining === 0
                     ? "All supplier requirements are complete. Elsati Connect verification is the final step."
                     : `${remaining} item${remaining === 1 ? "" : "s"} left to complete before your account can be verified.`;
+
         }
 
         if (next) {
+
             next.textContent =
                 remaining === 0
                     ? "Everything required from you is complete. Your account is now awaiting Elsati Connect verification."
                     : "Complete the items marked \"Left to complete\". Elsati Connect verification is completed by Elsati Connect.";
+
         }
+
     }
+
 }
 </script>
 
