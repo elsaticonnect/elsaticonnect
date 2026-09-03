@@ -1,4 +1,4 @@
 window.ELSATI_SUPABASE = {
-    url: "PASTE_YOUR_SUPABASE_PROJECT_URL_HERE",
-    publishableKey: "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE"
+    url: "https://hsuhprfcitvadvplksso.supabase.co",
+    publishableKey: "sb_publishable_C3CCWuaudWa5uKgWDBAokg_qTZE8FYI"
 };
