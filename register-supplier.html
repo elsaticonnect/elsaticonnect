@@ -1,1627 +1,619 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>Register Supplier | Elsati Connect</title>
-
-  <meta
-    name="description"
-    content="Register your supplier business on Elsati Connect."
-  >
-
-
-  <!-- ==========================================
-       FONTS
-  =========================================== -->
-
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  >
-
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  >
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
-
-
-  <!-- ==========================================
-       ORIGINAL ELSATI STYLES
-  =========================================== -->
-
-  <link
-    rel="stylesheet"
-    href="styles.css"
-  >
-
-
-  <!-- ==========================================
-       DATA PROTECTION CONSENT POP-UP
-  =========================================== -->
-
-  <style>
-
-    .consent-overlay {
-      position: fixed;
-
-      inset: 0;
-
-      z-index: 99999;
-
-      display: none;
-
-      align-items: center;
-
-      justify-content: center;
-
-      padding: 24px;
-
-      background: rgba(13, 31, 48, 0.62);
-
-      backdrop-filter: blur(5px);
-
-      -webkit-backdrop-filter: blur(5px);
-    }
-
-
-    .consent-overlay.show {
-      display: flex;
-    }
-
-
-    .consent-modal {
-
-      width: 100%;
-
-      max-width: 600px;
-
-      max-height: 90vh;
-
-      overflow-y: auto;
-
-      background: #ffffff;
-
-      border-radius: 20px;
-
-      box-shadow:
-        0 30px 80px rgba(16, 42, 67, 0.28);
-
-      font-family: "Manrope", sans-serif;
-
-      animation: consentAppear 0.22s ease;
-
-    }
-
-
-    @keyframes consentAppear {
-
-      from {
-
-        opacity: 0;
-
-        transform:
-          translateY(14px)
-          scale(0.98);
-
-      }
-
-      to {
-
-        opacity: 1;
-
-        transform:
-          translateY(0)
-          scale(1);
-
-      }
-
-    }
-
-
-    /* ==========================================
-       CONSENT HEADER
-    =========================================== */
-
-    .consent-header {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 13px;
-
-      padding: 23px 26px 20px;
-
-      border-bottom:
-        1px solid #e5ebf0;
-
-    }
-
-
-    .consent-icon {
-
-      width: 43px;
-
-      height: 43px;
-
-      flex-shrink: 0;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      border-radius: 12px;
-
-      background: #eaf7ef;
-
-      color: #299c5a;
-
-      font-size: 18px;
-
-      font-weight: 800;
-
-    }
-
-
-    .consent-heading h2 {
-
-      margin: 0;
-
-      color: #10243a;
-
-      font-family: "Manrope", sans-serif;
-
-      font-size: 18px;
-
-      line-height: 1.2;
-
-      font-weight: 800;
-
-    }
-
-
-    .consent-heading span {
-
-      display: block;
-
-      margin-top: 4px;
-
-      color: #718096;
-
-      font-size: 10px;
-
-      font-weight: 600;
-
-    }
-
-
-    /* ==========================================
-       CONSENT CONTENT
-    =========================================== */
-
-    .consent-body {
-
-      padding: 23px 26px 8px;
-
-    }
-
-
-    .consent-body p {
-
-      margin: 0 0 14px;
-
-      color: #526a7d;
-
-      font-size: 11px;
-
-      line-height: 1.72;
-
-    }
-
-
-    .consent-body strong {
-
-      color: #10243a;
-
-      font-weight: 800;
-
-    }
-
-
-    .consent-notice {
-
-      margin-top: 17px;
-
-      padding: 12px 14px;
-
-      background: #f4f8fa;
-
-      border-left:
-        3px solid #2fa35d;
-
-      border-radius: 8px;
-
-      color: #617587;
-
-      font-size: 10px;
-
-      line-height: 1.6;
-
-    }
-
-
-    /* ==========================================
-       CHECKBOX
-    =========================================== */
-
-    .consent-confirm {
-
-      padding: 15px 26px 4px;
-
-    }
-
-
-    .consent-confirm label {
-
-      display: flex;
-
-      align-items: flex-start;
-
-      gap: 9px;
-
-      cursor: pointer;
-
-      color: #243b53;
-
-      font-size: 10px;
-
-      font-weight: 600;
-
-      line-height: 1.55;
-
-    }
-
-
-    .consent-confirm input {
-
-      width: 16px;
-
-      height: 16px;
-
-      flex-shrink: 0;
-
-      margin-top: 1px;
-
-      accent-color: #2fa35d;
-
-      cursor: pointer;
-
-    }
-
-
-    /* ==========================================
-       ERROR
-    =========================================== */
-
-    .consent-error {
-
-      display: none;
-
-      padding: 7px 26px 0;
-
-      color: #c0392b;
-
-      font-size: 10px;
-
-      font-weight: 700;
-
-    }
-
-
-    .consent-error.show {
-
-      display: block;
-
-    }
-
-
-    /* ==========================================
-       CONSENT BUTTONS
-    =========================================== */
-
-    .consent-footer {
-
-      display: flex;
-
-      justify-content: flex-end;
-
-      gap: 9px;
-
-      padding: 18px 26px 24px;
-
-    }
-
-
-    .consent-btn {
-
-      border: none;
-
-      border-radius: 9px;
-
-      padding: 11px 18px;
-
-      font-family: "Manrope", sans-serif;
-
-      font-size: 10px;
-
-      font-weight: 800;
-
-      cursor: pointer;
-
-      transition: 0.2s ease;
-
-    }
-
-
-    .consent-decline {
-
-      background: #f1f4f6;
-
-      color: #65798a;
-
-    }
-
-
-    .consent-decline:hover {
-
-      background: #e6ebee;
-
-      color: #10243a;
-
-    }
-
-
-    .consent-accept {
-
-      background: #31a65f;
-
-      color: #ffffff;
-
-      opacity: 0.45;
-
-      pointer-events: none;
-
-    }
-
-
-    .consent-accept.enabled {
-
-      opacity: 1;
-
-      pointer-events: auto;
-
-    }
-
-
-    .consent-accept.enabled:hover {
-
-      background: #23894c;
-
-      transform: translateY(-1px);
-
-      box-shadow:
-        0 8px 20px rgba(47, 163, 93, 0.22);
-
-    }
-
-
-    /* ==========================================
-       MOBILE
-    =========================================== */
-
-    @media(max-width: 600px) {
-
-      .consent-overlay {
-
-        padding: 16px;
-
-      }
-
-
-      .consent-modal {
-
-        max-height: 92vh;
-
-      }
-
-
-      .consent-header {
-
-        padding: 20px;
-
-      }
-
-
-      .consent-body {
-
-        padding: 20px 20px 8px;
-
-      }
-
-
-      .consent-confirm {
-
-        padding: 14px 20px 4px;
-
-      }
-
-
-      .consent-footer {
-
-        padding: 17px 20px 20px;
-
-        flex-direction: column-reverse;
-
-      }
-
-
-      .consent-btn {
-
-        width: 100%;
-
-      }
-
-    }
-
-  </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register Supplier | Elsati Connect</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;font-family:"Manrope","Plus Jakarta Sans",Arial,sans-serif;
+  color:#10263d;
+  background:radial-gradient(circle at 10% 10%,rgba(191,224,211,.62),transparent 30%),
+             radial-gradient(circle at 90% 20%,rgba(196,218,238,.75),transparent 35%),
+             linear-gradient(135deg,#edf6f3 0%,#eef5f8 50%,#e8f1f5 100%);
+  padding:15px 2px 35px;
+}
+.site-shell{width:100%;max-width:1400px;margin:0 auto}
+.topbar{
+  min-height:155px;background:rgba(255,255,255,.97);border-radius:34px;
+  display:flex;align-items:center;justify-content:center;position:relative;
+  box-shadow:0 25px 60px rgba(24,50,69,.12);
+}
+.brand-image img{width:205px;height:auto;display:block}
+.login-icon-link{
+  position:absolute;right:30%;top:50%;transform:translateY(-50%);
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(145deg,#fff,#f5f8fa);
+  border:1px solid #e5eaed;box-shadow:0 12px 28px rgba(16,38,61,.08);
+  display:flex;align-items:center;justify-content:center;text-decoration:none;
+}
+.login-icon{width:28px;height:28px;position:relative}
+.login-icon:before{
+  content:"";position:absolute;width:11px;height:11px;border-radius:50%;
+  background:#10263d;top:0;left:50%;transform:translateX(-50%);
+}
+.login-icon:after{
+  content:"";position:absolute;width:22px;height:12px;border-radius:12px 12px 8px 8px;
+  background:#10263d;bottom:1px;left:50%;transform:translateX(-50%);
+}
+.auth-layout{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:24px;margin-top:80px;
+}
+.auth-panel{
+  background:#fff;border-radius:30px;padding:45px 42px 40px;
+  box-shadow:0 22px 60px rgba(24,50,69,.09);
+}
+.eyebrow{
+  color:#2f9860;font-size:13px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:13px;
+}
+.auth-panel h1{
+  font-size:44px;line-height:1.08;letter-spacing:-2px;color:#10263d;margin-bottom:18px;
+}
+.auth-copy{color:#66809a;font-size:17px;line-height:1.65;margin-bottom:30px}
+.auth-form label{
+  display:block;color:#10263d;font-size:14px;font-weight:800;margin-bottom:17px;
+}
+.auth-form input{
+  width:100%;height:57px;margin-top:8px;padding:0 17px;border-radius:14px;
+  border:1px solid #d5e0e7;background:#f7fafb;color:#10263d;
+  font-family:"Manrope",sans-serif;font-size:15px;outline:none;
+}
+.auth-form input:focus{
+  border-color:#31a65f;box-shadow:0 0 0 4px rgba(49,166,95,.10);background:#fff;
+}
+.button{
+  width:100%;height:57px;border:0;border-radius:30px;cursor:pointer;
+  font-family:"Manrope",sans-serif;font-weight:800;font-size:15px;
+}
+.button-primary{
+  background:linear-gradient(90deg,#38aa62,#237d47);color:#fff;
+  box-shadow:0 14px 28px rgba(47,164,99,.18);
+}
+.button-primary:hover{transform:translateY(-1px)}
+.button-primary:disabled{opacity:.65;cursor:not-allowed}
+.form-feedback{min-height:22px;margin-top:15px;font-size:13px;font-weight:700}
+.form-feedback.ok{color:#23834f}
+.form-feedback.error{color:#a33b37}
+.auth-note{margin-top:25px;color:#66809a;font-size:14px}
+.auth-note a{color:#14834d;font-weight:800;text-decoration:none}
+.dashboard-preview{
+  background:#10263d;border-radius:30px;padding:24px;min-height:570px;
+  box-shadow:0 22px 60px rgba(24,50,69,.12);
+}
+.preview-topbar{
+  background:#173650;border-radius:18px;padding:17px 18px;display:flex;
+  align-items:center;gap:16px;color:#fff;
+}
+.preview-brand{font-weight:800;font-size:14px}
+.preview-topbar nav{display:flex;gap:12px;flex:1;justify-content:center}
+.preview-topbar nav span{color:#b9cad6;font-size:10px;font-weight:700}
+.mini-cta{
+  border:0;background:#31a65f;color:#fff;padding:9px 12px;border-radius:9px;
+  font-size:10px;font-weight:800;
+}
+.preview-body{padding:25px 5px}
+.register-highlight-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.register-highlight-grid article{
+  background:#fff;border-radius:16px;padding:23px;min-height:145px;
+}
+.register-highlight-grid strong{display:block;color:#10263d;font-size:15px;margin-bottom:10px}
+.register-highlight-grid p{color:#6c8293;font-size:12px;line-height:1.6}
+
+.consent-overlay{
+  position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;
+  padding:24px;background:rgba(13,31,48,.68);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+}
+.consent-overlay.show{display:flex}
+.consent-modal{
+  width:100%;max-width:600px;max-height:90vh;overflow-y:auto;background:#fff;
+  border-radius:20px;box-shadow:0 30px 80px rgba(16,42,67,.30);
+  animation:consentAppear .22s ease;
+}
+@keyframes consentAppear{
+  from{opacity:0;transform:translateY(14px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.consent-header{
+  display:flex;align-items:center;gap:13px;padding:23px 26px 20px;border-bottom:1px solid #e5ebf0;
+}
+.consent-icon{
+  width:43px;height:43px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  border-radius:12px;background:#eaf7ef;color:#299c5a;font-size:18px;font-weight:800;
+}
+.consent-heading h2{color:#10243a;font-size:18px;line-height:1.2;font-weight:800}
+.consent-heading span{display:block;margin-top:4px;color:#718096;font-size:10px;font-weight:600}
+.consent-body{padding:23px 26px 8px}
+.consent-body p{color:#536b7e;font-size:13px;line-height:1.65;margin-bottom:15px}
+.consent-body strong{color:#10263d}
+.consent-notice{
+  padding:14px 15px;border-radius:11px;background:#f0f8f3;border:1px solid #d5ebdc;
+  color:#526b5b;font-size:12px;line-height:1.55;
+}
+.consent-confirm{padding:14px 26px 5px}
+.consent-confirm label{
+  display:flex;align-items:flex-start;gap:10px;color:#41596b;font-size:12px;line-height:1.5;cursor:pointer;
+}
+.consent-confirm input{width:17px;height:17px;flex-shrink:0;margin-top:2px;accent-color:#31a65f}
+.consent-error{
+  display:none;margin:10px 26px 0;padding:10px 12px;border-radius:9px;
+  background:#fff0ef;color:#a33b37;font-size:12px;font-weight:700;
+}
+.consent-error.show{display:block}
+.consent-footer{display:flex;justify-content:flex-end;gap:10px;padding:18px 26px 24px}
+.consent-btn{
+  border:0;border-radius:9px;padding:11px 18px;font-family:"Manrope",sans-serif;
+  font-size:11px;font-weight:800;cursor:pointer;
+}
+.consent-decline{background:#f1f4f6;color:#65798a}
+.consent-accept{background:#31a65f;color:#fff;opacity:.45;pointer-events:none}
+.consent-accept.enabled{opacity:1;pointer-events:auto}
+.consent-accept.enabled:hover{background:#23894c;transform:translateY(-1px)}
+@media(max-width:950px){
+  .auth-layout{grid-template-columns:1fr}
+  .dashboard-preview{display:none}
+  .login-icon-link{right:8%}
+}
+@media(max-width:600px){
+  body{padding:8px 2px 25px}
+  .topbar{min-height:135px;border-radius:27px}
+  .brand-image img{width:160px}
+  .login-icon-link{width:56px;height:56px;right:20px}
+  .auth-layout{margin-top:45px}
+  .auth-panel{border-radius:25px;padding:32px 22px}
+  .auth-panel h1{font-size:34px;letter-spacing:-1.3px}
+  .auth-copy{font-size:15px}
+  .consent-overlay{padding:16px}
+  .consent-modal{max-height:92vh}
+  .consent-header{padding:20px}
+  .consent-body{padding:20px 20px 8px}
+  .consent-confirm{padding:14px 20px 4px}
+  .consent-footer{padding:17px 20px 20px;flex-direction:column-reverse}
+  .consent-btn{width:100%}
+}
+</style>
 </head>
 
-
 <body>
-
-
-  <div class="site-shell auth-shell">
-
-
-    <!-- ==========================================
-         ORIGINAL HEADER
-    =========================================== -->
-
-    <header class="topbar auth-topbar">
-
-      <a
-        class="brand brand-image"
-        href="index.html"
-        aria-label="Elsati Connect home"
-      >
-
-        <img
-          src="elsati.png"
-          alt="Elsati Connect logo"
-        >
-
-      </a>
-
-
-      <div class="topbar-actions topbar-actions-compact">
-
-        <a
-          class="login-icon-link"
-          href="signin.html"
-          aria-label="Log in"
-        >
-
-          <span class="login-icon"></span>
-
-        </a>
-
-      </div>
-
-    </header>
-
-
-    <!-- ==========================================
-         REGISTRATION PAGE
-    =========================================== -->
-
-    <main class="auth-layout reveal">
-
-
-      <!-- ========================================
-           LEFT REGISTRATION PANEL
-      ========================================= -->
-
-      <section class="auth-panel">
-
-
-        <p class="eyebrow">
-          Supplier registration
-        </p>
-
-
-        <h1>
-          Join the verified supplier network.
-        </h1>
-
-
-        <p class="auth-copy">
-
-          Register your supplier profile to receive
-          client RFQs, submit quotations digitally,
-          and track decisions transparently.
-
-        </p>
-
-
-        <form
-          class="contact-form auth-form"
-          id="supplier-register-form"
-        >
-
-
-          <!-- COMPANY -->
-
-          <label>
-
-            Supplier company
-
-            <input
-              type="text"
-              name="company"
-              placeholder="Supplier company"
-              required
-            >
-
-          </label>
-
-
-          <!-- CONTACT PERSON -->
-
-          <label>
-
-            Contact person
-
-            <input
-              type="text"
-              name="name"
-              placeholder="Full name"
-              required
-            >
-
-          </label>
-
-
-          <!-- EMAIL -->
-
-          <label>
-
-            Supplier email
-
-            <input
-              type="email"
-              name="email"
-              placeholder="supplier@company.com"
-              required
-            >
-
-          </label>
-
-
-          <!-- PASSWORD -->
-
-          <label>
-
-            Password
-
-            <input
-              type="password"
-              name="password"
-              placeholder="Create password"
-              minlength="6"
-              required
-            >
-
-          </label>
-
-
-          <!-- REGISTER BUTTON -->
-
-          <button
-            class="button button-primary"
-            type="submit"
-          >
-
-            Register Supplier
-
-          </button>
-
-
-        </form>
-
-
-        <p
-          class="form-feedback"
-          id="supplier-register-feedback"
-        ></p>
-
-
-        <p class="auth-note">
-
-          Already registered?
-
-          <a href="supplier-signin.html">
-            Sign in as supplier
-          </a>
-
-        </p>
-
-
-      </section>
-
-
-      <!-- ==========================================
-           RIGHT SIDE PREVIEW
-      =========================================== -->
-
-      <section
-        class="dashboard-preview supplier-preview register-preview"
-      >
-
-
-        <div class="preview-topbar">
-
-
-          <span class="preview-brand">
-            Elsati Connect
-          </span>
-
-
-          <nav>
-
-            <span>
-              Open RFQs
-            </span>
-
-            <span>
-              Quote tracking
-            </span>
-
-            <span>
-              Award visibility
-            </span>
-
-          </nav>
-
-
-          <button
-            class="mini-cta"
-            type="button"
-          >
-
-            Join network
-
-          </button>
-
-
-        </div>
-
-
-        <div class="preview-body register-body">
-
-
-          <div class="register-highlight-grid">
-
-
-            <article>
-
-              <strong>
-                Market visibility
-              </strong>
-
-              <p>
-                Get discovered by businesses looking
-                for verified suppliers.
-              </p>
-
-            </article>
-
-
-            <article>
-
-              <strong>
-                Standardized submissions
-              </strong>
-
-              <p>
-                Respond to RFQs with a cleaner
-                digital quotation process.
-              </p>
-
-            </article>
-
-
-            <article>
-
-              <strong>
-                Trust advantage
-              </strong>
-
-              <p>
-                Verification builds confidence
-                across multiple buyers.
-              </p>
-
-            </article>
-
-
-            <article>
-
-              <strong>
-                Status clarity
-              </strong>
-
-              <p>
-                Track review and award progress
-                without manual chasing.
-              </p>
-
-            </article>
-
-
-          </div>
-
-
-        </div>
-
-
-      </section>
-
-
-    </main>
-
+<div class="site-shell auth-shell">
+
+<header class="topbar auth-topbar">
+  <a class="brand brand-image" href="index.html" aria-label="Elsati Connect home">
+    <img src="data:image/png;base64,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" alt="Elsati Connect logo">
+  </a>
+  <div class="topbar-actions topbar-actions-compact">
+    <a class="login-icon-link" href="supplier-signin.html" aria-label="Log in">
+      <span class="login-icon"></span>
+    </a>
+  </div>
+</header>
+
+<main class="auth-layout reveal">
+
+<section class="auth-panel">
+  <p class="eyebrow">Supplier registration</p>
+
+  <h1>Join the verified supplier network.</h1>
+
+  <p class="auth-copy">
+    Register your supplier profile to receive client RFQs,
+    submit quotations digitally, and track decisions transparently.
+  </p>
+
+  <form class="contact-form auth-form" id="supplier-register-form" novalidate>
+
+    <label>
+      Supplier company
+      <input type="text" name="company" placeholder="Supplier company"
+             autocomplete="organization" required>
+    </label>
+
+    <label>
+      Contact person
+      <input type="text" name="name" placeholder="Full name"
+             autocomplete="name" required>
+    </label>
+
+    <label>
+      Supplier email
+      <input type="email" name="email" placeholder="supplier@company.com"
+             autocomplete="email" required>
+    </label>
+
+    <label>
+      Password
+      <input type="password" name="password" placeholder="Create password"
+             minlength="6" autocomplete="new-password" required>
+    </label>
+
+    <button class="button button-primary" type="submit" id="registerButton">
+      Register Supplier
+    </button>
+  </form>
+
+  <p class="form-feedback" id="supplier-register-feedback"></p>
+
+  <p class="auth-note">
+    Already registered?
+    <a href="supplier-signin.html">Sign in as supplier</a>
+  </p>
+</section>
+
+<section class="dashboard-preview supplier-preview register-preview">
+
+  <div class="preview-topbar">
+    <span class="preview-brand">Elsati Connect</span>
+    <nav>
+      <span>Open RFQs</span>
+      <span>Quote tracking</span>
+      <span>Award visibility</span>
+    </nav>
+    <button class="mini-cta" type="button">Join network</button>
   </div>
 
-
-  <!-- ==========================================
-       DATA PROTECTION CONSENT POP-UP
-    =========================================== -->
-
-  <div
-    class="consent-overlay"
-    id="consentOverlay"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="consentTitle"
-  >
-
-
-    <div class="consent-modal">
-
-
-      <!-- HEADER -->
-
-      <div class="consent-header">
-
-
-        <div class="consent-icon">
-
-          ✓
-
-        </div>
-
-
-        <div class="consent-heading">
-
-          <h2 id="consentTitle">
-
-            Data Protection Consent
-
-          </h2>
-
-
-          <span>
-
-            Elsati Connect Supplier Registration
-
-          </span>
-
-        </div>
-
-
-      </div>
-
-
-      <!-- ========================================
-           CONSENT TEXT
-      ========================================= -->
-
-      <div class="consent-body">
-
-
-        <p>
-
-          In accordance with the
-          <strong>
-            Data Protection Act No. 3 of 2021
-            of the Laws of Zambia
-          </strong>,
-          Elsati Connect is committed to protecting
-          the personal and business information
-          provided by its users.
-
-        </p>
-
-
-        <p>
-
-          By clicking
-          <strong>
-            “I Consent & Create Account”
-          </strong>,
-          you acknowledge and agree that Elsati Connect
-          may collect, store, use and process your
-          personal and business information for purposes
-          related to the operation and provision of
-          services through the Elsati Connect
-          procurement platform.
-
-        </p>
-
-
-        <p>
-
-          This includes supplier registration and
-          verification, responding to requests for
-          quotation, quotation processing, communication,
-          transaction management, payment-related
-          processes, account administration and other
-          legitimate purposes necessary for the operation
-          of the platform.
-
-        </p>
-
-
-        <p>
-
-          Your information will be handled in accordance
-          with applicable data protection requirements
-          and Elsati Connect's privacy practices.
-
-        </p>
-
-
-        <div class="consent-notice">
-
-          <strong>
-            Please note:
-          </strong>
-
-          The information you provide may be used to
-          verify your supplier business, facilitate
-          procurement opportunities and enable
-          communication and transactions between
-          suppliers and businesses using the
-          Elsati Connect platform.
-
-        </div>
-
-
-      </div>
-
-
-      <!-- ========================================
-           CONFIRMATION
-      ========================================= -->
-
-      <div class="consent-confirm">
-
-
-        <label>
-
-
-          <input
-            type="checkbox"
-            id="consentCheckbox"
-          >
-
-
-          <span>
-
-            I confirm that I have read and understood
-            this notice and consent to Elsati Connect
-            collecting, storing, using and processing
-            my information for the purposes stated above.
-
-          </span>
-
-
-        </label>
-
-
-      </div>
-
-
-      <!-- ERROR -->
-
-      <div
-        class="consent-error"
-        id="consentError"
-      >
-
-        Please confirm your consent before creating
-        your supplier account.
-
-      </div>
-
-
-      <!-- ========================================
-           BUTTONS
-      ========================================= -->
-
-      <div class="consent-footer">
-
-
-        <button
-          type="button"
-          class="consent-btn consent-decline"
-          id="declineConsent"
-        >
-
-          Decline
-
-        </button>
-
-
-        <button
-          type="button"
-          class="consent-btn consent-accept"
-          id="acceptConsent"
-        >
-
-          I Consent & Create Account
-
-        </button>
-
-
-      </div>
-
+  <div class="preview-body register-body">
+    <div class="register-highlight-grid">
+
+      <article>
+        <strong>Market visibility</strong>
+        <p>Get discovered by businesses looking for verified suppliers.</p>
+      </article>
+
+      <article>
+        <strong>Standardized submissions</strong>
+        <p>Respond to RFQs with a cleaner digital quotation process.</p>
+      </article>
+
+      <article>
+        <strong>Trust advantage</strong>
+        <p>Verification builds confidence across multiple buyers.</p>
+      </article>
+
+      <article>
+        <strong>Status clarity</strong>
+        <p>Track review and award progress without manual chasing.</p>
+      </article>
 
     </div>
+  </div>
 
+</section>
+</main>
+</div>
+
+
+<div class="consent-overlay" id="consentOverlay"
+     role="dialog" aria-modal="true" aria-labelledby="consentTitle">
+
+<div class="consent-modal">
+
+  <div class="consent-header">
+    <div class="consent-icon">✓</div>
+    <div class="consent-heading">
+      <h2 id="consentTitle">Data Protection Consent</h2>
+      <span>Elsati Connect Supplier Registration</span>
+    </div>
+  </div>
+
+  <div class="consent-body">
+
+    <p>
+      In accordance with the
+      <strong>Data Protection Act No. 3 of 2021 of the Laws of Zambia</strong>,
+      Elsati Connect is committed to protecting the personal and business
+      information provided by its users.
+    </p>
+
+    <p>
+      By clicking <strong>“I Consent &amp; Create Account”</strong>,
+      you acknowledge and agree that Elsati Connect may collect, store,
+      use and process your personal and business information for purposes
+      related to the operation and provision of services through the
+      Elsati Connect procurement platform.
+    </p>
+
+    <p>
+      This includes supplier registration and verification, responding
+      to requests for quotation, quotation processing, communication,
+      transaction management, payment-related processes, account
+      administration and other legitimate purposes necessary for the
+      operation of the platform.
+    </p>
+
+    <p>
+      Your information will be handled in accordance with applicable
+      data protection requirements and Elsati Connect's privacy practices.
+    </p>
+
+    <div class="consent-notice">
+      <strong>Please note:</strong>
+      Your consent enables Elsati Connect to process the information
+      necessary to create and manage your supplier account and facilitate
+      procurement activities through the platform.
+    </div>
 
   </div>
 
+  <div class="consent-confirm">
+    <label>
+      <input type="checkbox" id="consentCheckbox">
+      <span>
+        I confirm that I have read and understood this notice and consent
+        to Elsati Connect collecting, storing, using and processing my
+        information for the purposes stated above.
+      </span>
+    </label>
+  </div>
 
-  <!-- ==========================================
-       ORIGINAL SCRIPTS
-  =========================================== -->
+  <div class="consent-error" id="consentError">
+    Please confirm your consent before creating your supplier account.
+  </div>
 
-  <script src="script.js"></script>
+  <div class="consent-footer">
+    <button type="button" class="consent-btn consent-decline" id="declineConsent">
+      Decline
+    </button>
 
+    <button type="button" class="consent-btn consent-accept" id="acceptConsent">
+      I Consent &amp; Create Account
+    </button>
+  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-  <script src="supabase-config.js"></script>
-
-
-  <!-- ==========================================
-       SUPPLIER REGISTRATION LOGIC
-  =========================================== -->
-
-  <script>
-
-
-    const supabaseClient =
-      supabase.createClient(
-
-        window.ELSATI_SUPABASE.url,
-
-        window.ELSATI_SUPABASE.publishableKey
-
-      );
+</div>
+</div>
 
 
-    const form =
-      document.getElementById(
-        "supplier-register-form"
-      );
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  if (typeof supabase === "undefined" || !window.ELSATI_SUPABASE) {
+    alert("Supabase configuration could not be loaded. Please check supabase-config.js.");
+    return;
+  }
+
+  const supabaseClient = supabase.createClient(
+    window.ELSATI_SUPABASE.url,
+    window.ELSATI_SUPABASE.publishableKey
+  );
+
+  const form = document.getElementById("supplier-register-form");
+  const feedback = document.getElementById("supplier-register-feedback");
+  const registerButton = document.getElementById("registerButton");
+  const consentOverlay = document.getElementById("consentOverlay");
+  const consentCheckbox = document.getElementById("consentCheckbox");
+  const acceptConsent = document.getElementById("acceptConsent");
+  const declineConsent = document.getElementById("declineConsent");
+  const consentError = document.getElementById("consentError");
+
+  let pendingSupplierRegistration = null;
+
+  function showFeedback(text, type) {
+    feedback.textContent = text;
+    feedback.className = "form-feedback " + type;
+  }
+
+  function openConsent() {
+    consentCheckbox.checked = false;
+    acceptConsent.classList.remove("enabled");
+    consentError.classList.remove("show");
+    consentOverlay.classList.add("show");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeConsent() {
+    consentOverlay.classList.remove("show");
+    document.body.style.overflow = "";
+  }
+
+  /* REGISTER BUTTON -> SHOW CONSENT FIRST */
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const companyName = form.elements["company"].value.trim();
+    const contactName = form.elements["name"].value.trim();
+    const email = form.elements["email"].value.trim().toLowerCase();
+    const password = form.elements["password"].value;
+
+    if (!companyName || !contactName || !email || !password) {
+      showFeedback("Please complete all registration fields.", "error");
+      return;
+    }
+
+    if (password.length < 6) {
+      showFeedback("Password must contain at least 6 characters.", "error");
+      return;
+    }
+
+    pendingSupplierRegistration = {
+      companyName,
+      contactName,
+      email,
+      password
+    };
+
+    showFeedback("", "");
+    openConsent();
+  });
 
 
-    const feedback =
-      document.getElementById(
-        "supplier-register-feedback"
-      );
+  /* CONSENT CHECKBOX */
+  consentCheckbox.addEventListener("change", function () {
+    if (consentCheckbox.checked) {
+      acceptConsent.classList.add("enabled");
+      consentError.classList.remove("show");
+    } else {
+      acceptConsent.classList.remove("enabled");
+    }
+  });
 
 
-    const consentOverlay =
-      document.getElementById(
-        "consentOverlay"
-      );
+  /* CREATE ACCOUNT AFTER CONSENT */
+  acceptConsent.addEventListener("click", async function () {
 
+    if (!consentCheckbox.checked) {
+      consentError.classList.add("show");
+      return;
+    }
 
-    const consentCheckbox =
-      document.getElementById(
-        "consentCheckbox"
-      );
+    if (!pendingSupplierRegistration) {
+      closeConsent();
+      return;
+    }
 
+    acceptConsent.disabled = true;
+    acceptConsent.textContent = "Creating Account...";
+    consentError.classList.remove("show");
 
-    const acceptConsent =
-      document.getElementById(
-        "acceptConsent"
-      );
+    try {
 
-
-    const declineConsent =
-      document.getElementById(
-        "declineConsent"
-      );
-
-
-    const consentError =
-      document.getElementById(
-        "consentError"
-      );
-
-
-    /*
-     * ==========================================
-     * TEMPORARILY STORE REGISTRATION DETAILS
-     *
-     * The account is NOT created when the
-     * supplier clicks "Register Supplier".
-     *
-     * First, we show the consent notice.
-     * ==========================================
-     */
-
-    let pendingSupplierRegistration = null;
-
-
-    /* ==========================================
-       STEP 1 — SUPPLIER CLICKS REGISTER
-    =========================================== */
-
-    form.addEventListener(
-      "submit",
-      function(event) {
-
-        event.preventDefault();
-
-
-        /*
-         * Collect registration information.
-         */
-
-        const companyName =
-          document
-            .querySelector(
-              'input[name="company"]'
-            )
-            .value
-            .trim();
-
-
-        const contactName =
-          document
-            .querySelector(
-              'input[name="name"]'
-            )
-            .value
-            .trim();
-
-
-        const email =
-          document
-            .querySelector(
-              'input[name="email"]'
-            )
-            .value
-            .trim()
-            .toLowerCase();
-
-
-        const password =
-          document
-            .querySelector(
-              'input[name="password"]'
-            )
-            .value;
-
-
-        /*
-         * Basic validation.
-         */
-
-        if(
-          !companyName ||
-          !contactName ||
-          !email ||
-          !password
-        ){
-
-          feedback.textContent =
-            "Please complete all registration fields.";
-
-          feedback.className =
-            "form-feedback error";
-
-          return;
-
+      const { data, error } = await supabaseClient.auth.signUp({
+        email: pendingSupplierRegistration.email,
+        password: pendingSupplierRegistration.password,
+        options: {
+          data: {
+            role: "supplier",
+            company_name: pendingSupplierRegistration.companyName,
+            contact_person: pendingSupplierRegistration.contactName
+          }
         }
+      });
 
-
-        if(
-          password.length < 6
-        ){
-
-          feedback.textContent =
-            "Password must contain at least 6 characters.";
-
-          feedback.className =
-            "form-feedback error";
-
-          return;
-
-        }
-
-
-        /*
-         * Store the information temporarily.
-         *
-         * The actual Supabase account will only
-         * be created AFTER consent is provided.
-         */
-
-        pendingSupplierRegistration = {
-
-          companyName:
-            companyName,
-
-          contactName:
-            contactName,
-
-          email:
-            email,
-
-          password:
-            password
-
-        };
-
-
-        /*
-         * Clear previous messages.
-         */
-
-        feedback.textContent = "";
-
-        feedback.className =
-          "form-feedback";
-
-
-        /*
-         * Show Data Protection consent.
-         */
-
-        consentOverlay.classList.add(
-          "show"
-        );
-
-
-        document.body.style.overflow =
-          "hidden";
-
-
-        consentCheckbox.checked =
-          false;
-
-
-        acceptConsent.classList.remove(
-          "enabled"
-        );
-
-
-        consentError.classList.remove(
-          "show"
-        );
-
+      if (error) {
+        throw error;
       }
-    );
 
-
-    /* ==========================================
-       STEP 2 — CHECK CONSENT
-    =========================================== */
-
-    consentCheckbox.addEventListener(
-      "change",
-      function(){
-
-        if(
-          consentCheckbox.checked
-        ){
-
-          acceptConsent.classList.add(
-            "enabled"
-          );
-
-
-          consentError.classList.remove(
-            "show"
-          );
-
-        }else{
-
-          acceptConsent.classList.remove(
-            "enabled"
-          );
-
-        }
-
+      if (!data || !data.user) {
+        throw new Error("Supplier account could not be created.");
       }
-    );
 
+      /*
+       * If Supabase has an active session, create the supplier
+       * profile immediately. Upsert is used so this also works
+       * if a database trigger has already created the profile.
+       */
+      const { error: profileError } = await supabaseClient
+        .from("profiles")
+        .upsert({
+          id: data.user.id,
+          email: pendingSupplierRegistration.email,
+          role: "supplier",
+          company_name: pendingSupplierRegistration.companyName,
+          contact_person: pendingSupplierRegistration.contactName,
+          verification_status: "pending",
+          verified: false
+        }, {
+          onConflict: "id"
+        });
 
-    /* ==========================================
-       STEP 3 — ACCEPT CONSENT
-    =========================================== */
-
-    acceptConsent.addEventListener(
-      "click",
-      async function(){
-
-        /*
-         * Make absolutely sure the checkbox
-         * has been selected.
-         */
-
-        if(
-          !consentCheckbox.checked
-        ){
-
-          consentError.classList.add(
-            "show"
-          );
-
-          return;
-
-        }
-
-
-        if(
-          !pendingSupplierRegistration
-        ){
-
-          consentOverlay.classList.remove(
-            "show"
-          );
-
-          document.body.style.overflow =
-            "";
-
-          return;
-
-        }
-
-
-        /*
-         * Disable button while account is
-         * being created.
-         */
-
-        acceptConsent.disabled =
-          true;
-
-
-        acceptConsent.textContent =
-          "Creating Account...";
-
-
-        consentError.classList.remove(
-          "show"
+      if (profileError) {
+        console.error("Supplier profile error:", profileError);
+        throw new Error(
+          "The account was created, but the supplier profile could not be completed: " +
+          profileError.message
         );
-
-
-        /*
-         * ======================================
-         * CREATE SUPABASE AUTH ACCOUNT
-         * ======================================
-         */
-
-        const {
-          data,
-          error
-        } =
-          await supabaseClient
-            .auth
-            .signUp({
-
-              email:
-                pendingSupplierRegistration.email,
-
-              password:
-                pendingSupplierRegistration.password
-
-            });
-
-
-        /*
-         * Re-enable button if there is an error.
-         */
-
-        acceptConsent.disabled =
-          false;
-
-
-        acceptConsent.textContent =
-          "I Consent & Create Account";
-
-
-        if(error){
-
-          console.error(
-            "Supplier registration error:",
-            error
-          );
-
-
-          feedback.textContent =
-            error.message;
-
-          feedback.className =
-            "form-feedback error";
-
-
-          consentOverlay.classList.remove(
-            "show"
-          );
-
-
-          document.body.style.overflow =
-            "";
-
-
-          pendingSupplierRegistration =
-            null;
-
-
-          return;
-
-        }
-
-
-        if(
-          !data.user
-        ){
-
-          feedback.textContent =
-            "Supplier account could not be created.";
-
-          feedback.className =
-            "form-feedback error";
-
-
-          return;
-
-        }
-
-
-        /*
-         * ======================================
-         * CREATE SUPPLIER PROFILE
-         * ======================================
-         */
-
-        const {
-          error: profileError
-        } =
-          await supabaseClient
-            .from("profiles")
-            .insert({
-
-              id:
-                data.user.id,
-
-              email:
-                pendingSupplierRegistration.email,
-
-              role:
-                "supplier",
-
-              company_name:
-                pendingSupplierRegistration.companyName,
-
-              contact_person:
-                pendingSupplierRegistration.contactName,
-
-              contact_phone:
-                null,
-
-              verification_status:
-                "pending",
-
-              verified:
-                false
-
-            });
-
-
-        if(profileError){
-
-          console.error(
-            "Supplier profile error:",
-            profileError
-          );
-
-
-          feedback.textContent =
-            "Account was created, but the supplier profile could not be completed. Please contact the administrator.";
-
-          feedback.className =
-            "form-feedback error";
-
-
-          consentOverlay.classList.remove(
-            "show"
-          );
-
-
-          document.body.style.overflow =
-            "";
-
-
-          pendingSupplierRegistration =
-            null;
-
-
-          return;
-
-        }
-
-
-        /*
-         * ======================================
-         * RECORD CONSENT
-         * ======================================
-         *
-         * For now we save the consent information
-         * locally.
-         *
-         * A proper Supabase consent table should
-         * be added so Elsati has an auditable record.
-         * ======================================
-         */
-
-        localStorage.setItem(
-          "elsati_supplier_consent",
-          "accepted"
-        );
-
-
-        localStorage.setItem(
-          "elsati_supplier_consent_date",
-          new Date().toISOString()
-        );
-
-
-        localStorage.setItem(
-          "elsati_supplier_consent_version",
-          "2026-09-03"
-        );
-
-
-        /*
-         * Close consent.
-         */
-
-        consentOverlay.classList.remove(
-          "show"
-        );
-
-
-        document.body.style.overflow =
-          "";
-
-
-        /*
-         * Clear pending registration data.
-         */
-
-        pendingSupplierRegistration =
-          null;
-
-
-        /*
-         * Show success message.
-         */
-
-        feedback.textContent =
-          "Supplier account created successfully. You can now sign in.";
-
-        feedback.className =
-          "form-feedback ok";
-
-
-        /*
-         * Redirect to supplier sign-in.
-         */
-
-        setTimeout(
-          function(){
-
-            window.location.href =
-              "supplier-signin.html";
-
-          },
-          1800
-        );
-
       }
-    );
 
+      localStorage.setItem("elsati_supplier_consent", "accepted");
+      localStorage.setItem("elsati_supplier_consent_date", new Date().toISOString());
+      localStorage.setItem("elsati_supplier_consent_version", "2026-09-03");
 
-    /* ==========================================
-       STEP 4 — DECLINE CONSENT
-    =========================================== */
+      const { data: sessionData } =
+        await supabaseClient.auth.getSession();
 
-    declineConsent.addEventListener(
-      "click",
-      function(){
+      closeConsent();
+      pendingSupplierRegistration = null;
 
-        /*
-         * Do NOT create the account.
-         */
+      /*
+       * EMAIL CONFIRMATION OFF:
+       * Supabase gives us a session and we go directly
+       * to the supplier dashboard.
+       */
+      if (sessionData && sessionData.session) {
 
-        pendingSupplierRegistration =
-          null;
-
-
-        /*
-         * Close the consent window.
-         */
-
-        consentOverlay.classList.remove(
-          "show"
+        showFeedback(
+          "Supplier account created successfully. Opening your dashboard...",
+          "ok"
         );
 
+        registerButton.disabled = true;
+        registerButton.textContent = "Opening dashboard...";
 
-        document.body.style.overflow =
-          "";
+        setTimeout(function () {
+          window.location.href = "supplier-dashboard-new.html";
+        }, 500);
 
-
-        /*
-         * Inform supplier.
-         */
-
-        feedback.textContent =
-          "Consent is required to create a supplier account on Elsati Connect.";
-
-        feedback.className =
-          "form-feedback error";
-
+        return;
       }
+
+      /*
+       * EMAIL CONFIRMATION ON:
+       * There is no active session yet, so the supplier
+       * must confirm the email before accessing the dashboard.
+       */
+      showFeedback(
+        "Account created successfully. Please check your email to confirm your account, then sign in as a supplier.",
+        "ok"
+      );
+
+      registerButton.disabled = false;
+      registerButton.textContent = "Register Supplier";
+
+    } catch (error) {
+
+      console.error("Supplier registration error:", error);
+
+      closeConsent();
+
+      showFeedback(
+        error.message ||
+        "Unable to create the supplier account. Please try again.",
+        "error"
+      );
+
+      acceptConsent.disabled = false;
+      acceptConsent.textContent = "I Consent & Create Account";
+    }
+  });
+
+
+  /* DECLINE */
+  declineConsent.addEventListener("click", function () {
+
+    pendingSupplierRegistration = null;
+
+    closeConsent();
+
+    showFeedback(
+      "Consent is required to create a supplier account on Elsati Connect.",
+      "error"
     );
+  });
 
 
-  </script>
+  /* ESCAPE */
+  document.addEventListener("keydown", function (event) {
 
+    if (
+      event.key === "Escape" &&
+      consentOverlay.classList.contains("show")
+    ) {
+      pendingSupplierRegistration = null;
+      closeConsent();
+    }
+  });
+
+});
+</script>
 
 </body>
 </html>
