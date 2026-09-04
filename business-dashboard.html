@@ -571,17 +571,359 @@ function openQuote(id){
 }
 
 async function awardQuote(id){
- const q=quotes.find(x=>String(x.id)===String(id));if(!q)return;const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
+ const q=quotes.find(x=>String(x.id)===String(id));
+ if(!q)return;
+
+ const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
+ if(!r)return;
+
  if(!confirm(`Award ${r?.code||"this RFQ"} to ${q.supplier_company||"this supplier"}?`))return;
- const {error:qe}=await db.from("quotes").update({status:"awarded"}).eq("id",q.id);
- if(qe){alert(qe.message);return}
- const {error:re}=await db.from("rfqs").update({status:"awarded",awarded_supplier_id:q.supplier_user_id}).eq("id",r.id).eq("business_id",currentUser.id);
- if(re)console.warn(re);
- await db.from("supplier_payments").insert({supplier_user_id:q.supplier_user_id,customer_user_id:currentUser.id,customer_name:currentBusiness.company_name,rfq_id:r.id,rfq_code:r.code,amount:Number(q.price||0),status:"awaiting_payment"});
- await refresh();showSection("orders");alert("Quotation awarded. The supplier payment workflow is now ready.");
+
+ const {error:qe}=await db
+   .from("quotes")
+   .update({status:"awarded"})
+   .eq("id",q.id);
+
+ if(qe){
+   alert("The quotation could not be awarded: "+qe.message);
+   return;
+ }
+
+ const {error:re}=await db
+   .from("rfqs")
+   .update({
+      status:"awarded",
+      awarded_supplier_id:q.supplier_user_id
+   })
+   .eq("id",r.id)
+   .eq("business_id",currentUser.id);
+
+ if(re){
+   console.error("RFQ award update error:",re);
+   alert("The quotation was marked awarded, but the RFQ status could not be updated: "+re.message);
+   return;
+ }
+
+ /*
+  * Create the payment workflow record immediately.
+  * The old version ignored errors here, which could leave
+  * the Orders page without a payment record and therefore
+  * without the payment upload window.
+  */
+
+ const {data:existingPayment,error:existingError}=await db
+   .from("supplier_payments")
+   .select("id")
+   .eq("rfq_id",r.id)
+   .eq("customer_user_id",currentUser.id)
+   .maybeSingle();
+
+ if(existingError){
+   console.error("Payment lookup error:",existingError);
+ }
+
+ if(!existingPayment){
+
+   const {error:paymentError}=await db
+     .from("supplier_payments")
+     .insert({
+       supplier_user_id:q.supplier_user_id,
+       customer_user_id:currentUser.id,
+       customer_name:currentBusiness.company_name,
+       rfq_id:r.id,
+       rfq_code:r.code,
+       amount:Number(q.price||0),
+       status:"awaiting_payment"
+     });
+
+   if(paymentError){
+     console.error("Payment creation error:",paymentError);
+
+     alert(
+       "The quotation was awarded, but the payment step could not be created.\n\n"+
+       "Please check the supplier_payments permissions in Supabase.\n\n"+
+       paymentError.message
+     );
+
+     await refresh();
+     showSection("orders");
+     return;
+   }
+ }
+
+ await refresh();
+ showSection("orders");
+
+ alert(
+   "Quotation awarded successfully. The payment upload step is now ready."
+ );
 }
 
+
+/*
+ * Create a payment record for an already-awarded order if
+ * an older award did not create one.
+ */
+async function prepareOrderPayment(rfqId){
+
+ const r=rfqs.find(x=>String(x.id)===String(rfqId));
+
+ if(!r){
+   alert("The order could not be found.");
+   return;
+ }
+
+ const q=quotes.find(
+   x =>
+     String(x.rfq_id)===String(rfqId) &&
+     String(x.status||"").toLowerCase()==="awarded"
+ );
+
+ if(!q){
+   alert("The awarded supplier could not be found.");
+   return;
+ }
+
+ const {data:existing,error:lookupError}=await db
+   .from("supplier_payments")
+   .select("*")
+   .eq("rfq_id",r.id)
+   .eq("customer_user_id",currentUser.id)
+   .maybeSingle();
+
+ if(lookupError){
+   alert("Payment record could not be checked: "+lookupError.message);
+   return;
+ }
+
+ let payment=existing;
+
+ if(!payment){
+
+   const {data:newPayment,error:createError}=await db
+     .from("supplier_payments")
+     .insert({
+       supplier_user_id:q.supplier_user_id,
+       customer_user_id:currentUser.id,
+       customer_name:currentBusiness.company_name,
+       rfq_id:r.id,
+       rfq_code:r.code,
+       amount:Number(q.price||0),
+       status:"awaiting_payment"
+     })
+     .select()
+     .single();
+
+   if(createError){
+     alert(
+       "The payment record could not be created.\n\n"+
+       createError.message
+     );
+     return;
+   }
+
+   payment=newPayment;
+ }
+
+ payments=payments.filter(
+   p=>String(p.id)!==String(payment.id)
+ );
+
+ payments.unshift(payment);
+
+ await openPayment(payment.id);
+}
+
+
 function renderOrders(){
+ const c=document.getElementById("ordersContainer"),
+ list=rfqs.filter(
+   r=>["awarded","completed"].includes(
+     String(r.status||"").toLowerCase()
+   )
+ );
+
+ if(!list.length){
+   c.innerHTML='<div class="panel empty">No awarded orders yet.</div>';
+   return;
+ }
+
+ c.innerHTML=list.map(r=>{
+
+   const q=quotes.find(
+     x =>
+       String(x.rfq_id)===String(r.id) &&
+       String(x.status||"").toLowerCase()==="awarded"
+   );
+
+   const p=payments.find(
+     x=>String(x.rfq_id)===String(r.id)
+   );
+
+   let paymentButton;
+
+   if(p){
+
+     if(p.status==="awaiting_payment"){
+
+       paymentButton=`
+         <button
+           class="btn btn-primary"
+           onclick="openPayment('${p.id}')"
+         >
+           Go to Payment
+         </button>
+       `;
+
+     }else if(p.status==="proof_uploaded"){
+
+       paymentButton=`
+         <button
+           class="btn btn-primary"
+           onclick="openPayment('${p.id}')"
+         >
+           View Payment
+         </button>
+       `;
+
+     }else if(p.status==="confirmed"){
+
+       paymentButton=`
+         <button
+           class="btn btn-light"
+           onclick="showSection('payments')"
+         >
+           Payment Confirmed
+         </button>
+       `;
+
+     }else{
+
+       paymentButton=`
+         <button
+           class="btn btn-primary"
+           onclick="openPayment('${p.id}')"
+         >
+           Go to Payment
+         </button>
+       `;
+
+     }
+
+   }else{
+
+     /*
+      * Older awarded orders may not have a payment row.
+      * Clicking Go to Payment now creates it and immediately
+      * opens the payment upload form.
+      */
+
+     paymentButton=`
+       <button
+         class="btn btn-primary"
+         onclick="prepareOrderPayment('${r.id}')"
+       >
+         Go to Payment
+       </button>
+     `;
+
+   }
+
+   return `
+     <div class="workflow">
+
+       <div class="row">
+
+         <div>
+
+           <h3>
+             ${esc(r.title||"Order")}
+           </h3>
+
+           <div class="small">
+             ${esc(r.code||"")}
+           </div>
+
+         </div>
+
+         <span class="badge awarded">
+           ${esc(r.status||"Awarded")}
+         </span>
+
+       </div>
+
+
+       <div class="details">
+
+         <div class="detail">
+           <span>Supplier</span>
+           <strong>
+             ${esc(q?.supplier_company||"Supplier")}
+           </strong>
+         </div>
+
+         <div class="detail">
+           <span>Value</span>
+           <strong>
+             ${money(q?.price)}
+           </strong>
+         </div>
+
+         <div class="detail">
+           <span>Delivery</span>
+           <strong>
+             ${esc(
+               q?.delivery||
+               q?.delivery_period||
+               "As agreed"
+             )}
+           </strong>
+         </div>
+
+         <div class="detail">
+           <span>Payment</span>
+           <strong>
+             ${esc(
+               p?.status||
+               "Payment not yet started"
+             )}
+           </strong>
+         </div>
+
+       </div>
+
+
+       <div class="small">
+
+         ${
+           p?.status==="proof_uploaded"
+           ? "Proof of payment has been submitted. The supplier can now confirm receipt."
+           : p?.status==="confirmed"
+           ? "Payment has been confirmed by the supplier. The supplier can now create the invoice."
+           : "Upload your payment reference, payment date and proof of payment."
+         }
+
+       </div>
+
+
+       <div class="card-actions">
+
+         ${paymentButton}
+
+         <button
+           class="btn btn-light"
+           onclick="showStatus('${r.id}')"
+         >
+           Track Status
+         </button>
+
+       </div>
+
+     </div>
+   `;
+
+ }).join("");
+}(){
  const c=document.getElementById("ordersContainer"),list=rfqs.filter(r=>["awarded","completed"].includes(String(r.status||"").toLowerCase()));
  if(!list.length){c.innerHTML='<div class="panel empty">No awarded orders yet.</div>';return}
  c.innerHTML=list.map(r=>{const q=quotes.find(x=>String(x.rfq_id)===String(r.id)&&String(x.status||"").toLowerCase()==="awarded"),p=payments.find(x=>String(x.rfq_id)===String(r.id));return `<div class="workflow"><div class="row"><div><h3>${esc(r.title||"Order")}</h3><div class="small">${esc(r.code||"")}</div></div><span class="badge awarded">${esc(r.status||"Awarded")}</span></div><div class="details"><div class="detail"><span>Supplier</span><strong>${esc(q?.supplier_company||"Supplier")}</strong></div><div class="detail"><span>Value</span><strong>${money(q?.price)}</strong></div><div class="detail"><span>Delivery</span><strong>${esc(q?.delivery||q?.delivery_period||"As agreed")}</strong></div><div class="detail"><span>Payment</span><strong>${esc(p?.status||"Awaiting payment")}</strong></div></div><div class="small">After payment, the supplier confirms receipt and creates the invoice.</div><div class="card-actions"><button class="btn btn-primary" onclick="${p?`openPayment('${p.id}')`:`showSection('payments')`}">Go to Payment</button><button class="btn btn-light" onclick="showStatus('${r.id}')">Track Status</button></div></div>`}).join("");
@@ -607,7 +949,7 @@ async function submitPayment(){
  if(ue){n.innerHTML=`<div class="notice error">${esc(ue.message)}</div>`;return}
  const {error:e}=await db.from("supplier_payments").update({payment_reference:ref,payment_date:pd,proof_path:path,status:"proof_uploaded"}).eq("id",selectedPayment.id).eq("customer_user_id",currentUser.id);
  if(e){n.innerHTML=`<div class="notice error">${esc(e.message)}</div>`;return}
- closeModal("paymentModal");await refresh();showSection("payments");alert("Proof of payment submitted. The supplier can now confirm receipt.");
+ closeModal("paymentModal");await refresh();showSection("payments");alert("Proof of payment submitted successfully. The supplier can now view it and confirm payment received.");
 }
 
 function renderPayments(){
