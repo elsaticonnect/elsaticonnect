@@ -332,13 +332,27 @@ function updateIdentity(){
 }
 
 async function loadRFQs(){
- const {data,error}=await db.from("rfqs").select("*").eq("business_id",currentUser.id).order("created_at",{ascending:false});
- rfqs=error?[]:(data||[]);
+ const {data,error}=await db.from("rfqs").select("*").or(`business_id.eq.${currentUser.id},created_by.eq.${currentUser.id}`).order("created_at",{ascending:false});
+ if(error){
+   console.error("RFQ loading error:",error);
+   rfqs=[];
+   const c=document.getElementById("rfqContainer");
+   if(c)c.innerHTML='<div class="empty">Unable to load RFQs: '+esc(error.message)+'</div>';
+   return;
+ }
+ rfqs=data||[];
 }
 async function loadQuotes(){
  if(!rfqs.length){quotes=[];return}
  const {data,error}=await db.from("quotes").select("*").in("rfq_id",rfqs.map(r=>r.id)).order("created_at",{ascending:false});
- quotes=error?[]:(data||[]);
+ if(error){
+   console.error("Quote loading error:",error);
+   quotes=[];
+   const c=document.getElementById("quotesContainer");
+   if(c)c.innerHTML='<div class="empty">Unable to load quotations: '+esc(error.message)+'</div>';
+   return;
+ }
+ quotes=data||[];
 }
 async function loadPayments(){
  const {data,error}=await db.from("supplier_payments").select("*").eq("customer_user_id",currentUser.id).order("created_at",{ascending:false});
@@ -696,9 +710,12 @@ function enhancedIsAwarded(q){
 
 function enhancedSelectedQuote(rfqId){
   const list=quotes.filter(q=>String(q.rfq_id)===String(rfqId));
+  const rfq=rfqs.find(r=>String(r.id)===String(rfqId));
+  let localId=null; try{localId=localStorage.getItem("elsati_selected_quote_"+rfqId)}catch(e){}
+  const persistedId=rfq?.selected_quote_id || rfq?.awarded_quote_id || localId || null;
   const awarded=list.find(enhancedIsAwarded);
   if(awarded)return awarded;
-  return list.find(q=>String(q.id)===String(enhancedSelectedQuoteId)) || null;
+  return list.find(q=>String(q.id)===String(persistedId)) || list.find(q=>String(q.id)===String(enhancedSelectedQuoteId)) || null;
 }
 
 function enhancedRFQForQuote(q){
@@ -709,13 +726,20 @@ function enhancedReportMount(){
   return document.getElementById("enhancedProcurementReport");
 }
 
-function selectQuoteForReport(quoteId){
+async function selectQuoteForReport(quoteId){
   const q=quotes.find(x=>String(x.id)===String(quoteId));
   if(!q)return;
   enhancedSelectedQuoteId=q.id;
   enhancedSelectedRfqId=q.rfq_id;
+  try{localStorage.setItem("elsati_selected_quote_"+q.rfq_id,q.id)}catch(e){}
+  const r=enhancedRFQForQuote(q);
+  if(r){
+    const {error}=await db.from("rfqs").update({selected_quote_id:q.id}).eq("id",r.id).or(`business_id.eq.${currentUser.id},created_by.eq.${currentUser.id}`);
+    if(error)console.warn("Selected quote could not be persisted yet:",error.message);
+    else r.selected_quote_id=q.id;
+  }
   renderQuotes();
-  renderEnhancedProcurementReport(enhancedRFQForQuote(q),q);
+  renderEnhancedProcurementReport(r,q);
   window.scrollTo({top:document.getElementById("enhancedProcurementReport")?.getBoundingClientRect().top+window.scrollY-100||0,behavior:"smooth"});
 }
 
@@ -788,7 +812,7 @@ function renderEnhancedProcurementReport(rfq,q){
 async function saveProcurementComments(rfqId){
   const officer=document.getElementById("procurementOfficerComment")?.value.trim()||"";
   const approval=document.getElementById("approvalCustomerComment")?.value.trim()||"";
-  const {data,error}=await db.from("rfqs").update({procurement_comment:officer,approval_comment:approval}).eq("id",rfqId).eq("business_id",currentUser.id).select().maybeSingle();
+  const {data,error}=await db.from("rfqs").update({procurement_comment:officer,approval_comment:approval}).eq("id",rfqId).or(`business_id.eq.${currentUser.id},created_by.eq.${currentUser.id}`).select().maybeSingle();
   if(error){alert("The comments could not be saved. Run the supplied SQL migration first.\
 \
 "+error.message);return}
@@ -841,7 +865,7 @@ Change the award to ${enhancedQuoteName(q)}?`
  if(resetError){alert(resetError.message);return}
  const {error:awardError}=await db.from("quotes").update({awarded:true,status:"awarded",quote_status:"awarded"}).eq("id",q.id);
  if(awardError){alert(awardError.message);return}
- const {error:rfqError}=await db.from("rfqs").update({status:"awarded",awarded_supplier_id:q.supplier_user_id,awarded_at:new Date().toISOString()}).eq("id",r.id).eq("business_id",currentUser.id);
+ const {error:rfqError}=await db.from("rfqs").update({status:"awarded",awarded_supplier_id:q.supplier_user_id,awarded_at:new Date().toISOString()}).eq("id",r.id).or(`business_id.eq.${currentUser.id},created_by.eq.${currentUser.id}`);
  if(rfqError){alert(rfqError.message);return}
 
  /* Cancel any old payment for this RFQ before creating the payment for the new award. */
@@ -861,7 +885,7 @@ Change the award to ${enhancedQuoteName(q)}?`
    await db.from("supplier_payments").update({amount:Number(enhancedQuotePrice(q)),status:"awaiting_payment"}).eq("id",existingPayment.id);
  }
 
- enhancedSelectedQuoteId=q.id;enhancedSelectedRfqId=r.id;
+ enhancedSelectedQuoteId=q.id;enhancedSelectedRfqId=r.id;try{localStorage.setItem("elsati_selected_quote_"+r.id,q.id)}catch(e){}
  await refresh();
  showSection("quotes");
  alert(current&&String(current.id)!==String(q.id)?"Award changed successfully.":"Quotation awarded successfully.");
