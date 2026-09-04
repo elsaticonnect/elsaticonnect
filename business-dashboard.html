@@ -116,19 +116,14 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 .filter-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;margin-left:5px;border-radius:999px;background:#edf3f5;color:#557080;font-size:7px;font-weight:900}
 .rfq-filter.active .filter-count{background:rgba(255,255,255,.22);color:#fff}
 
-/* ===== ELSATI QUOTE COMPARISON REPORT ===== */
-.elsati-report-overlay{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(8,30,43,.70)}
-.elsati-report-overlay.show{display:flex}.elsati-report-window{width:min(1120px,96vw);max-height:94vh;overflow-y:auto;background:#fff;border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.30)}
-.elsati-report-toolbar{position:sticky;top:0;z-index:10;display:flex;justify-content:flex-end;gap:9px;padding:12px 18px;background:#fff;border-bottom:1px solid #e3eaed}.elsati-report-toolbar button{border-radius:8px;padding:9px 15px;font-size:12px;font-weight:700;cursor:pointer}.elsati-report-back,.elsati-report-print{background:#fff;color:#12304a;border:1px solid #d5e1e5}.elsati-report-pdf{background:#2ca65a;color:#fff;border:1px solid #2ca65a}
-.elsati-report-page{padding:28px 34px 30px;background:#fff;color:#435965}.elsati-report-header{display:flex;justify-content:space-between;align-items:flex-start;gap:25px;padding-bottom:12px;border-bottom:2px solid #12304a}.elsati-report-logo img{width:155px;max-height:55px;object-fit:contain}.elsati-report-title{text-align:right}.elsati-report-title h1{margin:0;color:#12304a;font-size:18px;font-weight:900}.elsati-report-title p{margin:4px 0 0;color:#81919a;font-size:9px}
-.elsati-report-info{margin-top:13px;padding:12px 15px;display:grid;grid-template-columns:1fr 1fr;gap:4px 32px;background:#f2faf6;border:1px solid #cfe8d9;border-radius:9px}.elsati-report-info-row{display:flex;gap:7px;font-size:9px;line-height:1.45}.elsati-report-info-row strong{min-width:132px;color:#12304a}
-.elsati-report-section{margin-top:17px}.elsati-report-section-heading{display:flex;align-items:center;gap:8px;margin-bottom:6px;color:#12304a;font-size:12px;font-weight:900;text-transform:uppercase}.elsati-report-number{width:23px;height:23px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:50%;background:#2ca65a;color:#fff;font-size:10px;font-weight:900}
-.elsati-report-table-wrap{width:100%;overflow-x:auto}.elsati-report-table{width:100%;border-collapse:collapse;font-size:8.5px}.elsati-report-table th{padding:7px;background:#eaf3f1;border:1px solid #d4e1e5;color:#12304a;font-weight:900;text-align:left}.elsati-report-table td{padding:7px;border:1px solid #d4e1e5;color:#435965;vertical-align:middle}.elsati-report-table td.amount{text-align:right;color:#12304a;font-weight:800}.elsati-report-table tr.lowest td{background:#e7f7ed}.elsati-report-table tr.lowest td:first-child,.elsati-report-table tr.lowest td.amount{color:#20854a;font-weight:800}
-.elsati-report-two-column{display:grid;grid-template-columns:1fr 1fr;gap:18px}.elsati-report-summary-box{border:1px solid #d4e1e5;border-radius:8px;overflow:hidden}.elsati-report-summary-row{display:flex;justify-content:space-between;gap:10px;padding:8px 10px;border-bottom:1px solid #dce6e9;font-size:8.5px}.elsati-report-summary-row:last-child{border-bottom:none}.elsati-report-summary-row strong{color:#12304a}.elsati-report-summary-row.saving{background:#e7f7ed}.elsati-report-summary-row.saving span{color:#18783f;font-weight:800}.elsati-report-summary-row.saving strong{color:#20854a}
-.elsati-report-highlight{margin-top:9px;display:flex;align-items:center;gap:10px;padding:9px 11px;background:#e7f7ed;border:1px solid #c6e6d2;border-radius:8px;color:#1e6540;font-size:8.5px;line-height:1.5}.elsati-report-highlight-icon{width:25px;height:25px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:50%;background:#2ca65a;color:#fff;font-size:12px}.elsati-report-observation{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:#edf7fb;border:1px solid #d3e8f1;border-radius:8px;color:#45697c;font-size:8.5px;line-height:1.65}.elsati-report-observation-icon{width:27px;height:27px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#12304a;font-size:16px}.elsati-report-footer{margin-top:17px;padding-top:8px;border-top:1px solid #2ca65a;display:flex;justify-content:space-between;gap:15px;color:#8799a3;font-size:7px}.elsati-report-footer strong{color:#12304a}
-@media(max-width:800px){.elsati-report-page{padding:22px 16px}.elsati-report-header{flex-direction:column}.elsati-report-title{text-align:left}.elsati-report-info{grid-template-columns:1fr}.elsati-report-two-column{grid-template-columns:1fr}}
-@media print{body *{visibility:hidden!important}#elsatiQuoteComparisonReport,#elsatiQuoteComparisonReport *{visibility:visible!important}#elsatiQuoteComparisonReport{position:absolute!important;inset:0!important;display:block!important;background:#fff!important;padding:0!important}.elsati-report-window{width:100%!important;max-height:none!important;box-shadow:none!important;border-radius:0!important}.elsati-report-toolbar{display:none!important}.elsati-report-page{padding:12px!important}}
-
+/* PROCUREMENT ENHANCEMENTS */
+.enh-report{margin-top:18px;border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden}
+.enh-report-head{padding:20px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#f7fbf8,#fff)}
+.enh-report-head h3{margin:0;color:var(--navy);font-size:20px}.enh-report-head p{margin:5px 0 0;color:var(--muted);font-size:10px}
+.enh-report-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.enh-report-table{width:100%;border-collapse:collapse;font-size:10px}.enh-report-table th,.enh-report-table td{padding:11px;border-bottom:1px solid #edf2f4;text-align:left}.enh-report-table th{background:#f7fafb;color:#526b7b;font-size:9px}.enh-report-table tr.selected{background:#eaf8ef}.enh-report-table tr.selected td:first-child{border-left:4px solid var(--green)}
+.enh-report-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:16px}.enh-report-box{border:1px solid #e4ecef;border-radius:13px;padding:14px;background:#fbfcfd}.enh-report-box h4{margin:0 0 9px;color:var(--navy);font-size:11px}.enh-report-box p{margin:5px 0;font-size:10px;line-height:1.6}.enh-comment-box{padding:16px;border-top:1px solid #edf2f4}.enh-comment-box label{display:block;color:var(--navy);font-size:10px;font-weight:800;margin-bottom:7px}.enh-comment-box textarea{width:100%;min-height:90px;resize:vertical;border:1px solid var(--line);border-radius:11px;padding:11px;outline:none}.enh-comment-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:9px;flex-wrap:wrap}.quote-selected{border:2px solid var(--green)!important;background:#f4fbf6}.quote-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.quote-download{color:var(--navy)}
+@media(max-width:800px){.enh-report-grid{grid-template-columns:1fr}.enh-report-table{min-width:760px}.enh-report-scroll{overflow:auto}}
 </style>
 </head>
 
@@ -212,8 +207,13 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 </section>
 
 <section id="section-quotes" class="section">
-<div class="section-header"><div><h2>Quotes</h2><p>Compare supplier quotations and award the best offer.</p></div></div>
+<div class="section-header"><div><h2>Quotes</h2><p>Compare supplier quotations, select the preferred quote and award the supplier.</p></div></div>
 <div class="panel"><div id="quotesContainer"><div class="empty">Loading supplier quotations...</div></div></div>
+<div class="panel" style="margin-top:22px">
+  <div class="panel-title">Procurement Report</div>
+  <div class="panel-sub">The report follows the quote selected for this RFQ. Once awarded, the awarded quote is shown automatically.</div>
+  <div id="enhancedProcurementReport"><div class="empty">Select an RFQ and quote to build the procurement report.</div></div>
+</div>
 </section>
 
 <section id="section-orders" class="section">
@@ -302,19 +302,6 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('paymentModal')">Cancel</button><button class="btn btn-primary" onclick="submitPayment()">Submit Proof of Payment</button></div>
 </div></div>
 
-
-<!-- ELSATI CONNECT QUOTE COMPARISON REPORT -->
-<div class="elsati-report-overlay" id="elsatiQuoteComparisonReport">
-  <div class="elsati-report-window">
-    <div class="elsati-report-toolbar">
-      <button class="elsati-report-back" onclick="closeElsatiQuoteReport()">← Back to Quotes</button>
-      <button class="elsati-report-print" onclick="printElsatiQuoteReport()">🖨 Print Report</button>
-      <button class="elsati-report-pdf" onclick="printElsatiQuoteReport()">↓ Download PDF</button>
-    </div>
-    <div id="elsatiQuoteComparisonReportContent" class="elsati-report-page"></div>
-  </div>
-</div>
-
 <script>
 const db=supabase.createClient(window.ELSATI_SUPABASE.url,window.ELSATI_SUPABASE.publishableKey);
 let currentUser=null,currentBusiness=null,rfqs=[],quotes=[],payments=[],invoices=[],verifiedSuppliers=[],selectedPayment=null,rfqFilter="all";
@@ -361,24 +348,6 @@ async function loadInvoices(){
  if(!payments.length){invoices=[];return}
  const {data,error}=await db.from("supplier_invoices").select("*").in("payment_id",payments.map(p=>p.id)).order("created_at",{ascending:false});
  invoices=error?[]:(data||[]);
-}
-
-async function loadVerifiedSuppliers(){
- const {data,error}=await db.from("profiles").select("*").eq("role","supplier");
- if(error){console.error("Verified suppliers load error:",error);verifiedSuppliers=[];return}
- verifiedSuppliers=(data||[]).filter(s=>s.verified===true||String(s.verification_status||"").toLowerCase().trim()==="verified");
-}
-function renderVerifiedSuppliers(){
- const c=document.getElementById("verifiedSuppliersContainer");if(!c)return;
- if(!verifiedSuppliers.length){c.innerHTML='<div class="empty">No verified suppliers are available yet.</div>';return}
- c.innerHTML=verifiedSuppliers.map(s=>{
-  const company=s.company_name||s.business_name||"Supplier",initial=company.trim().charAt(0).toUpperCase()||"S",category=s.category||s.business_category||s.industry||"General Supplier",city=s.city||s.location||"Zambia",description=s.business_description||s.description||"Verified supplier on Elsati Connect.";
-  return `<article class="supplier-card"><div class="supplier-top"><div class="supplier-avatar">${esc(initial)}</div><div><div class="supplier-name">${esc(company)} <span class="verified-tick" title="Verified supplier">✓</span></div><div class="small">${esc(category)}</div></div></div><div class="supplier-meta"><div><span>Category</span><strong>${esc(category)}</strong></div><div><span>Location</span><strong>${esc(city)}</strong></div></div><div class="small supplier-description">${esc(description)}</div><div class="card-actions"><button class="btn btn-primary" onclick="createDirectRFQ('${s.id}')">Request Quote</button></div></article>`;
- }).join("");
-}
-function createDirectRFQ(supplierId){
- const supplier=verifiedSuppliers.find(s=>String(s.id)===String(supplierId));if(!supplier){alert("Supplier could not be found.");return}
- openCreateRFQ();const company=supplier.company_name||supplier.business_name||"Selected supplier";document.getElementById("rfqNotice").innerHTML=`<div class="notice info">You selected <strong>${esc(company)}</strong> as the supplier for this request. Complete the RFQ details below and publish the request.</div>`;
 }
 
 function showSection(section,button){
@@ -522,42 +491,9 @@ function renderQuotes(){
  const groups={};quotes.forEach(q=>(groups[q.rfq_id]??=[]).push(q));
  c.innerHTML=Object.entries(groups).map(([id,qs])=>{
   const r=rfqs.find(x=>String(x.id)===String(id));
-  return `<div style="margin-bottom:28px"><div class="panel-title">${esc(r?.title||"RFQ")}</div><div class="panel-sub">${esc(r?.code||"")} · ${qs.length} supplier quote(s)</div><div class="quote-list">${qs.map(q=>quoteCard(q,r)).join("")}</div><div class="card-actions" style="margin-top:10px"><button class="btn btn-primary" onclick="generateElsatiQuoteComparisonReport('${id}')">Compare Quotes</button></div></div>`
+  return `<div style="margin-bottom:28px"><div class="panel-title">${esc(r?.title||"RFQ")}</div><div class="panel-sub">${esc(r?.code||"")} · ${qs.length} supplier quote(s)</div><div class="quote-list">${qs.map(q=>quoteCard(q,r)).join("")}</div></div>`
  }).join("");
 }
-
-function elsatiReportMoney(value){return "K "+Number(value||0).toLocaleString("en-ZM",{minimumFractionDigits:2,maximumFractionDigits:2});}
-function elsatiReportDate(value){if(!value)return "—";const d=new Date(value);return isNaN(d)?"—":d.toLocaleDateString("en-ZM",{day:"2-digit",month:"short",year:"numeric"});}
-function elsatiSupplierName(q){return q.supplier_company||q.supplier_name||q.company_name||"Supplier";}
-function elsatiQuotationNumber(q){return q.quotation_number||q.quote_number||q.quotation_no||q.quote_no||q.code||"—";}
-function elsatiDelivery(q){return q.delivery||q.delivery_period||q.delivery_time||"As stated";}
-function elsatiPayment(q){return q.payment_terms||q.payment||"As stated";}
-function elsatiValidity(q){return q.quote_validity||q.validity||q.quotation_validity||"As stated";}
-
-async function generateElsatiQuoteComparisonReport(rfqId){
- try{
-  const rfq=rfqs.find(r=>String(r.id)===String(rfqId));
-  if(!rfq){alert("RFQ could not be found.");return;}
-  let qs=quotes.filter(q=>String(q.rfq_id)===String(rfqId));
-  if(!qs.length){alert("There are no quotations received for this RFQ.");return;}
-  const supplierIds=[...new Set(qs.map(q=>q.supplier_user_id).filter(Boolean))];
-  if(supplierIds.length){try{const {data:suppliers,error}=await db.from("profiles").select("id,company_name,business_name").in("id",supplierIds);if(!error&&suppliers){qs=qs.map(q=>{const s=suppliers.find(x=>String(x.id)===String(q.supplier_user_id));return s?{...q,supplier_company:q.supplier_company||s.company_name||s.business_name||"Supplier"}:q;});}}catch(e){console.error("Supplier lookup error:",e);}}
-  qs.sort((a,b)=>Number(a.price||0)-Number(b.price||0));
-  const lowest=Number(qs[0]?.price||0), highest=Math.max(...qs.map(q=>Number(q.price||0))), difference=highest-lowest;
-  const budget=(rfq.estimated_budget!==null&&rfq.estimated_budget!==undefined&&rfq.estimated_budget!=="")?Number(rfq.estimated_budget):null;
-  const saving=budget!==null?budget-lowest:null;
-  const lowestSupplier=elsatiSupplierName(qs[0]);
-  let logo="elsati.png";const dashboardLogo=document.querySelector(".brand img,.logo img,header img");if(dashboardLogo)logo=dashboardLogo.src;
-  let section3="";
-  if(budget!==null){section3=`<div class="elsati-report-two-column"><div class="elsati-report-summary-box"><div class="elsati-report-summary-row"><span>Estimated / Approved Budget</span><strong>${elsatiReportMoney(budget)}</strong></div><div class="elsati-report-summary-row"><span>Lowest Quotation</span><strong>${elsatiReportMoney(lowest)}</strong></div><div class="elsati-report-summary-row saving"><span>Potential Saving Against Budget</span><strong>${saving>=0?elsatiReportMoney(saving):"Over budget by "+elsatiReportMoney(Math.abs(saving))}</strong></div></div><div class="elsati-report-summary-box"><div class="elsati-report-summary-row"><span>Lowest Quotation</span><strong>${elsatiReportMoney(lowest)}</strong></div><div class="elsati-report-summary-row"><span>Highest Quotation</span><strong>${elsatiReportMoney(highest)}</strong></div><div class="elsati-report-summary-row saving"><span>Difference Between Lowest & Highest</span><strong>${elsatiReportMoney(difference)}</strong></div></div></div><div class="elsati-report-highlight"><div class="elsati-report-highlight-icon">✓</div><div>Lowest quotation: <strong>${elsatiReportMoney(lowest)}</strong> – ${esc(lowestSupplier)}<br>Difference between lowest and highest quotation: <strong>${elsatiReportMoney(difference)}</strong></div></div>`;}else{section3=`<div class="elsati-report-two-column"><div class="elsati-report-summary-box"><div class="elsati-report-summary-row"><span>Lowest Quotation</span><strong>${elsatiReportMoney(lowest)}</strong></div><div class="elsati-report-summary-row"><span>Highest Quotation</span><strong>${elsatiReportMoney(highest)}</strong></div><div class="elsati-report-summary-row saving"><span>Difference Between Lowest & Highest</span><strong>${elsatiReportMoney(difference)}</strong></div></div></div><div class="elsati-report-highlight"><div class="elsati-report-highlight-icon">✓</div><div>Lowest quotation: <strong>${elsatiReportMoney(lowest)}</strong> – ${esc(lowestSupplier)}<br>Difference between lowest and highest quotation: <strong>${elsatiReportMoney(difference)}</strong></div></div>`;}
-  let observation;if(budget!==null&&saving>=0){observation=`${qs.length} quotation${qs.length===1?"":"s"} were received for the procurement requirement. The lowest quotation was received from <strong>${esc(lowestSupplier)}</strong> at <strong>${elsatiReportMoney(lowest)}</strong>, with a delivery period of <strong>${esc(elsatiDelivery(qs[0]))}</strong>. Based on the estimated budget of <strong>${elsatiReportMoney(budget)}</strong>, the lowest quotation represents a potential saving of <strong>${elsatiReportMoney(saving)}</strong>. Management should consider the quoted price together with delivery requirements, payment terms, specifications and other applicable procurement considerations before making the final supplier selection.`;}else if(budget!==null){observation=`${qs.length} quotation${qs.length===1?"":"s"} were received for the procurement requirement. The lowest quotation was received from <strong>${esc(lowestSupplier)}</strong> at <strong>${elsatiReportMoney(lowest)}</strong>. The lowest quotation is <strong>${elsatiReportMoney(Math.abs(saving))}</strong> above the estimated budget of <strong>${elsatiReportMoney(budget)}</strong>. Management should consider the quoted price, delivery requirements, payment terms, specifications and other applicable procurement considerations before making the final supplier selection.`;}else{observation=`${qs.length} quotation${qs.length===1?"":"s"} were received for the procurement requirement. The lowest quotation was received from <strong>${esc(lowestSupplier)}</strong> at <strong>${elsatiReportMoney(lowest)}</strong>, while the highest quotation was <strong>${elsatiReportMoney(highest)}</strong>. The difference between the lowest and highest quotations is <strong>${elsatiReportMoney(difference)}</strong>. Management should consider the quoted prices together with delivery periods, payment terms, specifications and other applicable procurement considerations before making the final supplier selection.`;}
-  document.getElementById("elsatiQuoteComparisonReportContent").innerHTML=`<div class="elsati-report-header"><div class="elsati-report-logo"><img src="${logo}" alt="Elsati Connect"></div><div class="elsati-report-title"><h1>PROCUREMENT QUOTATION COMPARISON REPORT</h1><p>A summary and comparison of quotations received for the procurement request.</p></div></div><div class="elsati-report-info"><div class="elsati-report-info-row"><strong>RFQ No.:</strong><span>${esc(rfq.code||"—")}</span></div><div class="elsati-report-info-row"><strong>Delivery Location:</strong><span>${esc(rfq.delivery_location||"—")}</span></div><div class="elsati-report-info-row"><strong>Procurement Request:</strong><span>${esc(rfq.title||"—")}</span></div><div class="elsati-report-info-row"><strong>Required Delivery Date:</strong><span>${elsatiReportDate(rfq.deadline)}</span></div><div class="elsati-report-info-row"><strong>Requesting Business:</strong><span>${esc(rfq.business_name||currentBusiness?.company_name||"—")}</span></div><div class="elsati-report-info-row"><strong>Estimated / Approved Budget:</strong><span>${budget!==null?elsatiReportMoney(budget):"Not specified"}</span></div><div class="elsati-report-info-row"><strong>Category:</strong><span>${esc(rfq.category||"—")}</span></div><div class="elsati-report-info-row"><strong>Date of Report:</strong><span>${elsatiReportDate(new Date())}</span></div><div class="elsati-report-info-row"><strong>Quantity:</strong><span>${esc(rfq.quantity||"—")}</span></div></div><div class="elsati-report-section"><div class="elsati-report-section-heading"><span class="elsati-report-number">1</span>QUOTATIONS RECEIVED</div><div class="elsati-report-table-wrap"><table class="elsati-report-table"><thead><tr><th>No.</th><th>Supplier</th><th>Quotation No.</th><th>Quoted Amount</th><th>Delivery Period</th><th>Payment Terms</th><th>Quotation Validity</th></tr></thead><tbody>${qs.map((q,i)=>`<tr class="${i===0?"lowest":""}"><td>${i+1}</td><td>${esc(elsatiSupplierName(q))}</td><td>${esc(elsatiQuotationNumber(q))}</td><td class="amount">${elsatiReportMoney(q.price)}</td><td>${esc(elsatiDelivery(q))}</td><td>${esc(elsatiPayment(q))}</td><td>${esc(elsatiValidity(q))}</td></tr>`).join("")}</tbody></table></div></div><div class="elsati-report-section"><div class="elsati-report-section-heading"><span class="elsati-report-number">2</span>PRICE COMPARISON</div><div class="elsati-report-table-wrap"><table class="elsati-report-table"><thead><tr><th>Supplier</th><th>Quoted Amount</th><th>Difference from Lowest Quote</th></tr></thead><tbody>${qs.map((q,i)=>{const p=Number(q.price||0);return `<tr class="${i===0?"lowest":""}"><td>${esc(elsatiSupplierName(q))}</td><td class="amount">${elsatiReportMoney(p)}</td><td class="amount">${elsatiReportMoney(p-lowest)}</td></tr>`;}).join("")}</tbody></table></div></div><div class="elsati-report-section"><div class="elsati-report-section-heading"><span class="elsati-report-number">3</span>${budget!==null?"BUDGET ANALYSIS":"PRICE DIFFERENCE ANALYSIS"}</div>${section3}</div><div class="elsati-report-section"><div class="elsati-report-section-heading"><span class="elsati-report-number">4</span>DELIVERY COMPARISON</div><div class="elsati-report-table-wrap"><table class="elsati-report-table"><thead><tr><th>Supplier</th><th>Quoted Amount</th><th>Delivery Period</th></tr></thead><tbody>${qs.map(q=>`<tr><td>${esc(elsatiSupplierName(q))}</td><td class="amount">${elsatiReportMoney(q.price)}</td><td>${esc(elsatiDelivery(q))}</td></tr>`).join("")}</tbody></table></div></div><div class="elsati-report-section"><div class="elsati-report-section-heading"><span class="elsati-report-number">5</span>COMMERCIAL COMPARISON</div><div class="elsati-report-table-wrap"><table class="elsati-report-table"><thead><tr><th>Criteria</th>${qs.map(q=>`<th>${esc(elsatiSupplierName(q))}</th>`).join("")}</tr></thead><tbody><tr><td><strong>Quoted Amount</strong></td>${qs.map(q=>`<td class="amount">${elsatiReportMoney(q.price)}</td>`).join("")}</tr><tr><td><strong>Delivery</strong></td>${qs.map(q=>`<td>${esc(elsatiDelivery(q))}</td>`).join("")}</tr><tr><td><strong>Payment Terms</strong></td>${qs.map(q=>`<td>${esc(elsatiPayment(q))}</td>`).join("")}</tr><tr><td><strong>Quote Validity</strong></td>${qs.map(q=>`<td>${esc(elsatiValidity(q))}</td>`).join("")}</tr>${budget!==null?`<tr><td><strong>Budget Position</strong></td>${qs.map(q=>{const within=budget-Number(q.price||0)>=0;return `<td style="background:${within?"#e7f7ed":"#fff0f0"};color:${within?"#20854a":"#a33e3e"};font-weight:800">${within?"Within budget":"Above budget"}</td>`;}).join("")}</tr>`:""}</tbody></table></div></div><div class="elsati-report-section"><div class="elsati-report-section-heading"><span class="elsati-report-number">6</span>MANAGEMENT OBSERVATION</div><div class="elsati-report-observation"><div class="elsati-report-observation-icon">▤</div><div>${observation}</div></div></div><div class="elsati-report-footer"><div>This report was generated from quotations received through <strong>Elsati Connect</strong>. The comparison is provided to support procurement review and management decision-making.</div><div><strong>www.elsaticonnect.site</strong></div></div>`;
-  document.getElementById("elsatiQuoteComparisonReport").classList.add("show");
- }catch(error){console.error("Elsati comparison report error:",error);alert("The quotation comparison report could not be generated.");}
-}
-function closeElsatiQuoteReport(){document.getElementById("elsatiQuoteComparisonReport").classList.remove("show");}
-function printElsatiQuoteReport(){window.print();}
-
 function quoteCard(q,r){
  const awarded=String(q.status||"").toLowerCase()==="awarded";
  return `<article class="quote-card"><div class="row"><div><div class="panel-title">${esc(q.supplier_company||q.supplier_name||"Supplier")}</div><div class="small">${esc(r?.code||"")}</div></div><div class="price">${money(q.price)}</div></div><div class="quote-meta"><div><span>Delivery</span><strong>${esc(q.delivery||q.delivery_period||"As stated")}</strong></div><div><span>Payment Terms</span><strong>${esc(q.payment_terms||"As agreed")}</strong></div><div><span>Validity</span><strong>${esc(q.quote_validity||"As stated")}</strong></div><div><span>Availability</span><strong>${esc(q.availability||"As stated")}</strong></div></div><div class="small">${esc(q.notes||"No additional supplier notes.")}</div><div class="card-actions"><button class="btn btn-light" onclick="openQuote('${q.id}')">View Full Quote</button>${awarded?'<span class="badge awarded">Awarded</span>':`<button class="btn btn-primary" onclick="awardQuote('${q.id}')">Award Quote</button>`}</div></article>`
@@ -571,359 +507,17 @@ function openQuote(id){
 }
 
 async function awardQuote(id){
- const q=quotes.find(x=>String(x.id)===String(id));
- if(!q)return;
-
- const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
- if(!r)return;
-
+ const q=quotes.find(x=>String(x.id)===String(id));if(!q)return;const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
  if(!confirm(`Award ${r?.code||"this RFQ"} to ${q.supplier_company||"this supplier"}?`))return;
-
- const {error:qe}=await db
-   .from("quotes")
-   .update({status:"awarded"})
-   .eq("id",q.id);
-
- if(qe){
-   alert("The quotation could not be awarded: "+qe.message);
-   return;
- }
-
- const {error:re}=await db
-   .from("rfqs")
-   .update({
-      status:"awarded",
-      awarded_supplier_id:q.supplier_user_id
-   })
-   .eq("id",r.id)
-   .eq("business_id",currentUser.id);
-
- if(re){
-   console.error("RFQ award update error:",re);
-   alert("The quotation was marked awarded, but the RFQ status could not be updated: "+re.message);
-   return;
- }
-
- /*
-  * Create the payment workflow record immediately.
-  * The old version ignored errors here, which could leave
-  * the Orders page without a payment record and therefore
-  * without the payment upload window.
-  */
-
- const {data:existingPayment,error:existingError}=await db
-   .from("supplier_payments")
-   .select("id")
-   .eq("rfq_id",r.id)
-   .eq("customer_user_id",currentUser.id)
-   .maybeSingle();
-
- if(existingError){
-   console.error("Payment lookup error:",existingError);
- }
-
- if(!existingPayment){
-
-   const {error:paymentError}=await db
-     .from("supplier_payments")
-     .insert({
-       supplier_user_id:q.supplier_user_id,
-       customer_user_id:currentUser.id,
-       customer_name:currentBusiness.company_name,
-       rfq_id:r.id,
-       rfq_code:r.code,
-       amount:Number(q.price||0),
-       status:"awaiting_payment"
-     });
-
-   if(paymentError){
-     console.error("Payment creation error:",paymentError);
-
-     alert(
-       "The quotation was awarded, but the payment step could not be created.\n\n"+
-       "Please check the supplier_payments permissions in Supabase.\n\n"+
-       paymentError.message
-     );
-
-     await refresh();
-     showSection("orders");
-     return;
-   }
- }
-
- await refresh();
- showSection("orders");
-
- alert(
-   "Quotation awarded successfully. The payment upload step is now ready."
- );
+ const {error:qe}=await db.from("quotes").update({status:"awarded"}).eq("id",q.id);
+ if(qe){alert(qe.message);return}
+ const {error:re}=await db.from("rfqs").update({status:"awarded",awarded_supplier_id:q.supplier_user_id}).eq("id",r.id).eq("business_id",currentUser.id);
+ if(re)console.warn(re);
+ await db.from("supplier_payments").insert({supplier_user_id:q.supplier_user_id,customer_user_id:currentUser.id,customer_name:currentBusiness.company_name,rfq_id:r.id,rfq_code:r.code,amount:Number(q.price||0),status:"awaiting_payment"});
+ await refresh();showSection("orders");alert("Quotation awarded. The supplier payment workflow is now ready.");
 }
-
-
-/*
- * Create a payment record for an already-awarded order if
- * an older award did not create one.
- */
-async function prepareOrderPayment(rfqId){
-
- const r=rfqs.find(x=>String(x.id)===String(rfqId));
-
- if(!r){
-   alert("The order could not be found.");
-   return;
- }
-
- const q=quotes.find(
-   x =>
-     String(x.rfq_id)===String(rfqId) &&
-     String(x.status||"").toLowerCase()==="awarded"
- );
-
- if(!q){
-   alert("The awarded supplier could not be found.");
-   return;
- }
-
- const {data:existing,error:lookupError}=await db
-   .from("supplier_payments")
-   .select("*")
-   .eq("rfq_id",r.id)
-   .eq("customer_user_id",currentUser.id)
-   .maybeSingle();
-
- if(lookupError){
-   alert("Payment record could not be checked: "+lookupError.message);
-   return;
- }
-
- let payment=existing;
-
- if(!payment){
-
-   const {data:newPayment,error:createError}=await db
-     .from("supplier_payments")
-     .insert({
-       supplier_user_id:q.supplier_user_id,
-       customer_user_id:currentUser.id,
-       customer_name:currentBusiness.company_name,
-       rfq_id:r.id,
-       rfq_code:r.code,
-       amount:Number(q.price||0),
-       status:"awaiting_payment"
-     })
-     .select()
-     .single();
-
-   if(createError){
-     alert(
-       "The payment record could not be created.\n\n"+
-       createError.message
-     );
-     return;
-   }
-
-   payment=newPayment;
- }
-
- payments=payments.filter(
-   p=>String(p.id)!==String(payment.id)
- );
-
- payments.unshift(payment);
-
- await openPayment(payment.id);
-}
-
 
 function renderOrders(){
- const c=document.getElementById("ordersContainer"),
- list=rfqs.filter(
-   r=>["awarded","completed"].includes(
-     String(r.status||"").toLowerCase()
-   )
- );
-
- if(!list.length){
-   c.innerHTML='<div class="panel empty">No awarded orders yet.</div>';
-   return;
- }
-
- c.innerHTML=list.map(r=>{
-
-   const q=quotes.find(
-     x =>
-       String(x.rfq_id)===String(r.id) &&
-       String(x.status||"").toLowerCase()==="awarded"
-   );
-
-   const p=payments.find(
-     x=>String(x.rfq_id)===String(r.id)
-   );
-
-   let paymentButton;
-
-   if(p){
-
-     if(p.status==="awaiting_payment"){
-
-       paymentButton=`
-         <button
-           class="btn btn-primary"
-           onclick="openPayment('${p.id}')"
-         >
-           Go to Payment
-         </button>
-       `;
-
-     }else if(p.status==="proof_uploaded"){
-
-       paymentButton=`
-         <button
-           class="btn btn-primary"
-           onclick="openPayment('${p.id}')"
-         >
-           View Payment
-         </button>
-       `;
-
-     }else if(p.status==="confirmed"){
-
-       paymentButton=`
-         <button
-           class="btn btn-light"
-           onclick="showSection('payments')"
-         >
-           Payment Confirmed
-         </button>
-       `;
-
-     }else{
-
-       paymentButton=`
-         <button
-           class="btn btn-primary"
-           onclick="openPayment('${p.id}')"
-         >
-           Go to Payment
-         </button>
-       `;
-
-     }
-
-   }else{
-
-     /*
-      * Older awarded orders may not have a payment row.
-      * Clicking Go to Payment now creates it and immediately
-      * opens the payment upload form.
-      */
-
-     paymentButton=`
-       <button
-         class="btn btn-primary"
-         onclick="prepareOrderPayment('${r.id}')"
-       >
-         Go to Payment
-       </button>
-     `;
-
-   }
-
-   return `
-     <div class="workflow">
-
-       <div class="row">
-
-         <div>
-
-           <h3>
-             ${esc(r.title||"Order")}
-           </h3>
-
-           <div class="small">
-             ${esc(r.code||"")}
-           </div>
-
-         </div>
-
-         <span class="badge awarded">
-           ${esc(r.status||"Awarded")}
-         </span>
-
-       </div>
-
-
-       <div class="details">
-
-         <div class="detail">
-           <span>Supplier</span>
-           <strong>
-             ${esc(q?.supplier_company||"Supplier")}
-           </strong>
-         </div>
-
-         <div class="detail">
-           <span>Value</span>
-           <strong>
-             ${money(q?.price)}
-           </strong>
-         </div>
-
-         <div class="detail">
-           <span>Delivery</span>
-           <strong>
-             ${esc(
-               q?.delivery||
-               q?.delivery_period||
-               "As agreed"
-             )}
-           </strong>
-         </div>
-
-         <div class="detail">
-           <span>Payment</span>
-           <strong>
-             ${esc(
-               p?.status||
-               "Payment not yet started"
-             )}
-           </strong>
-         </div>
-
-       </div>
-
-
-       <div class="small">
-
-         ${
-           p?.status==="proof_uploaded"
-           ? "Proof of payment has been submitted. The supplier can now confirm receipt."
-           : p?.status==="confirmed"
-           ? "Payment has been confirmed by the supplier. The supplier can now create the invoice."
-           : "Upload your payment reference, payment date and proof of payment."
-         }
-
-       </div>
-
-
-       <div class="card-actions">
-
-         ${paymentButton}
-
-         <button
-           class="btn btn-light"
-           onclick="showStatus('${r.id}')"
-         >
-           Track Status
-         </button>
-
-       </div>
-
-     </div>
-   `;
-
- }).join("");
-}(){
  const c=document.getElementById("ordersContainer"),list=rfqs.filter(r=>["awarded","completed"].includes(String(r.status||"").toLowerCase()));
  if(!list.length){c.innerHTML='<div class="panel empty">No awarded orders yet.</div>';return}
  c.innerHTML=list.map(r=>{const q=quotes.find(x=>String(x.rfq_id)===String(r.id)&&String(x.status||"").toLowerCase()==="awarded"),p=payments.find(x=>String(x.rfq_id)===String(r.id));return `<div class="workflow"><div class="row"><div><h3>${esc(r.title||"Order")}</h3><div class="small">${esc(r.code||"")}</div></div><span class="badge awarded">${esc(r.status||"Awarded")}</span></div><div class="details"><div class="detail"><span>Supplier</span><strong>${esc(q?.supplier_company||"Supplier")}</strong></div><div class="detail"><span>Value</span><strong>${money(q?.price)}</strong></div><div class="detail"><span>Delivery</span><strong>${esc(q?.delivery||q?.delivery_period||"As agreed")}</strong></div><div class="detail"><span>Payment</span><strong>${esc(p?.status||"Awaiting payment")}</strong></div></div><div class="small">After payment, the supplier confirms receipt and creates the invoice.</div><div class="card-actions"><button class="btn btn-primary" onclick="${p?`openPayment('${p.id}')`:`showSection('payments')`}">Go to Payment</button><button class="btn btn-light" onclick="showStatus('${r.id}')">Track Status</button></div></div>`}).join("");
@@ -949,7 +543,7 @@ async function submitPayment(){
  if(ue){n.innerHTML=`<div class="notice error">${esc(ue.message)}</div>`;return}
  const {error:e}=await db.from("supplier_payments").update({payment_reference:ref,payment_date:pd,proof_path:path,status:"proof_uploaded"}).eq("id",selectedPayment.id).eq("customer_user_id",currentUser.id);
  if(e){n.innerHTML=`<div class="notice error">${esc(e.message)}</div>`;return}
- closeModal("paymentModal");await refresh();showSection("payments");alert("Proof of payment submitted successfully. The supplier can now view it and confirm payment received.");
+ closeModal("paymentModal");await refresh();showSection("payments");alert("Proof of payment submitted. The supplier can now confirm receipt.");
 }
 
 function renderPayments(){
@@ -982,33 +576,13 @@ function showStatus(id){const r=rfqs.find(x=>String(x.id)===String(id));if(r){wi
 function openCreateRFQ(){document.getElementById("rfqModal").classList.add("show")}
 async function createRFQ(){
  const title=v("rfqTitle"),category=v("rfqCategory"),quantity=v("rfqQuantity"),budget=v("rfqBudget"),delivery=v("rfqDelivery"),deadline=v("rfqDeadline"),notes=v("rfqNotes"),n=document.getElementById("rfqNotice");
-
  n.innerHTML="";
-
- if(!title||!category||!quantity||!deadline){
-   n.innerHTML='<div class="notice error">Complete title, category, quantity and required date.</div>';
-   return;
- }
-
- if(!currentUser||!currentBusiness){
-   n.innerHTML='<div class="notice error">Your business profile could not be loaded. Please log in again.</div>';
-   return;
- }
-
+ if(!title||!category||!quantity||!deadline){n.innerHTML='<div class="notice error">Complete title, category, quantity and required date.</div>';return}
+ if(!currentUser||!currentBusiness){n.innerHTML='<div class="notice error">Your business profile could not be loaded. Please log in again.</div>';return}
  const companyName=String(currentBusiness.company_name||currentBusiness.business_name||"").trim();
-
- if(!companyName){
-   n.innerHTML='<div class="notice error">Please complete your Business Name in your Company Profile before creating an RFQ.</div>';
-   return;
- }
-
+ if(!companyName){n.innerHTML='<div class="notice error">Please complete your Business Name in your Company Profile before creating an RFQ.</div>';return}
  const publishButton=document.querySelector('#rfqModal .modal-actions .btn-primary');
-
- if(publishButton){
-   publishButton.disabled=true;
-   publishButton.textContent="Publishing...";
- }
-
+ if(publishButton){publishButton.disabled=true;publishButton.textContent="Publishing..."}
  try{
    const rfqData={
      code:"RFQ-"+Date.now().toString().slice(-7),
@@ -1016,89 +590,35 @@ async function createRFQ(){
      category:category,
      quantity:quantity,
      deadline:deadline,
-     delivery_location:delivery||null,
+     delivery_location:delivery,
      estimated_budget:budget?Number(budget):null,
-     notes:notes||null,
+     notes:notes,
      business_id:currentUser.id,
      business_name:companyName,
      created_by_company:companyName,
      created_by:currentUser.id,
      status:"open"
    };
-
    console.log("Creating RFQ:",rfqData);
-
-   /*
-    * Do NOT use .select().single() here.
-    * The RFQ only needs to be inserted. Requiring a SELECT
-    * immediately after the INSERT can cause a separate RLS
-    * permission problem even when the INSERT itself is allowed.
-    */
-   const {error}=await db.from("rfqs").insert(rfqData);
-
-   if(error){
-     console.error("RFQ creation error:",error);
-     n.innerHTML=`
-       <div class="notice error">
-         <strong>RFQ could not be created.</strong><br>
-         ${esc(error.message)}
-       </div>`;
-     return;
-   }
-
-   console.log("RFQ created successfully.");
-
-   ["rfqTitle","rfqCategory","rfqQuantity","rfqBudget","rfqDelivery","rfqDeadline","rfqNotes"].forEach(x=>{
-     const field=document.getElementById(x);
-     if(field)field.value="";
-   });
-
+   const {data,error}=await db.from("rfqs").insert(rfqData).select().single();
+   if(error){console.error("RFQ creation error:",error);n.innerHTML=`<div class="notice error">${esc(error.message)}</div>`;return}
+   console.log("RFQ created successfully:",data);
+   ["rfqTitle","rfqCategory","rfqQuantity","rfqBudget","rfqDelivery","rfqDeadline","rfqNotes"].forEach(x=>{const field=document.getElementById(x);if(field)field.value=""});
    n.innerHTML='<div class="notice success">RFQ published successfully. Suppliers can now view and respond to your request.</div>';
-
-   /*
-    * Refresh separately. If another dashboard table has an RLS/schema
-    * issue, it must not make a successfully-created RFQ look like a failure.
-    */
-   try{
-     await refresh();
-   }catch(refreshError){
-     console.error("Dashboard refresh error after RFQ creation:",refreshError);
-   }
-
+   await refresh();
    setTimeout(()=>{
      closeModal("rfqModal");
      showSection("rfqs");
      rfqFilter="all";
-
      const allButton=document.querySelector('#section-rfqs [data-rfq-filter="all"]');
-
-     if(allButton){
-       document.querySelectorAll("#section-rfqs .rfq-filter").forEach(btn=>{
-         btn.classList.remove("active");
-         btn.setAttribute("aria-selected","false");
-       });
-
-       allButton.classList.add("active");
-       allButton.setAttribute("aria-selected","true");
-     }
-
+     if(allButton){document.querySelectorAll("#section-rfqs .rfq-filter").forEach(btn=>{btn.classList.remove("active");btn.setAttribute("aria-selected","false")});allButton.classList.add("active");allButton.setAttribute("aria-selected","true")}
      renderRFQs();
    },700);
-
  }catch(err){
-   console.error("Unexpected RFQ creation error:",err);
-
-   n.innerHTML=`
-     <div class="notice error">
-       <strong>RFQ could not be created.</strong><br>
-       ${esc(err?.message||"Unexpected error. Please try again.")}
-     </div>`;
-
+   console.error("Unexpected RFQ error:",err);
+   n.innerHTML='<div class="notice error">Something went wrong while creating the RFQ. Please try again.</div>';
  }finally{
-   if(publishButton){
-     publishButton.disabled=false;
-     publishButton.textContent="Publish RFQ";
-   }
+   if(publishButton){publishButton.disabled=false;publishButton.textContent="Publish RFQ"}
  }
 }
 function details(id){const r=rfqs.find(x=>String(x.id)===String(id));if(r)alert([`RFQ: ${r.code||""}`,`Title: ${r.title||""}`,`Category: ${r.category||""}`,`Quantity: ${r.quantity||""}`,`Required: ${date(r.deadline)}`,`Delivery: ${r.delivery_location||""}`,`Budget: ${money(r.estimated_budget)}`,`Notes: ${r.notes||"None"}`].join("\n"))}
@@ -1141,6 +661,299 @@ function date(x){if(!x)return"—";const d=new Date(x);return isNaN(d)? "—":d.
 function dateTime(x){if(!x)return"";const d=new Date(x);return isNaN(d)?"":d.toLocaleString("en-ZM",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}
 function v(id){return document.getElementById(id)?.value.trim()||""}function setv(id,x){document.getElementById(id).value=x||""}
 function esc(x){return String(x??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+</script>
+
+<script>
+/* =========================================================
+   ELSATI PROCUREMENT ENHANCEMENTS
+   Built on the existing dashboard. Original data-loading flow
+   is preserved; this layer adds selection, re-awarding, comments,
+   procurement reports and printable/downloadable quotation templates.
+========================================================= */
+
+let enhancedSelectedQuoteId = null;
+let enhancedSelectedRfqId = null;
+
+function today(){
+  return new Date().toISOString().slice(0,10);
+}
+
+function enhancedQuoteName(q){
+  return q?.supplier_company || q?.supplier_name || "Supplier";
+}
+
+function enhancedQuotePrice(q){
+  return Number(q?.price ?? q?.quoted_price ?? 0);
+}
+
+function enhancedQuoteDelivery(q){
+  return q?.delivery || q?.delivery_period || "As stated";
+}
+
+function enhancedIsAwarded(q){
+  return String(q?.status||"").toLowerCase()==="awarded" || q?.awarded===true || String(q?.quote_status||"").toLowerCase()==="awarded";
+}
+
+function enhancedSelectedQuote(rfqId){
+  const list=quotes.filter(q=>String(q.rfq_id)===String(rfqId));
+  const awarded=list.find(enhancedIsAwarded);
+  if(awarded)return awarded;
+  return list.find(q=>String(q.id)===String(enhancedSelectedQuoteId)) || null;
+}
+
+function enhancedRFQForQuote(q){
+  return rfqs.find(r=>String(r.id)===String(q?.rfq_id));
+}
+
+function enhancedReportMount(){
+  return document.getElementById("enhancedProcurementReport");
+}
+
+function selectQuoteForReport(quoteId){
+  const q=quotes.find(x=>String(x.id)===String(quoteId));
+  if(!q)return;
+  enhancedSelectedQuoteId=q.id;
+  enhancedSelectedRfqId=q.rfq_id;
+  renderQuotes();
+  renderEnhancedProcurementReport(enhancedRFQForQuote(q),q);
+  window.scrollTo({top:document.getElementById("enhancedProcurementReport")?.getBoundingClientRect().top+window.scrollY-100||0,behavior:"smooth"});
+}
+
+function enhancedReportButtons(rfq,q){
+  return `<div class="enh-report-actions">
+    <button class="btn btn-primary" type="button" onclick="printProcurementReport('${rfq.id}')">Print / Save PDF</button>
+    <button class="btn btn-light" type="button" onclick="downloadProcurementReport('${rfq.id}')">Download Report</button>
+    ${q?`<button class="btn btn-light" type="button" onclick="printSupplierQuote('${q.id}')">Print Quote</button><button class="btn btn-light" type="button" onclick="downloadSupplierQuote('${q.id}')">Download Quote</button>`:""}
+  </div>`;
+}
+
+function renderEnhancedProcurementReport(rfq,q){
+  const mount=enhancedReportMount();
+  if(!mount)return;
+  if(!rfq){mount.innerHTML='<div class="empty">Select an RFQ to build the procurement report.</div>';return}
+  const qs=quotes.filter(x=>String(x.rfq_id)===String(rfq.id));
+  const selected=q || enhancedSelectedQuote(rfq.id);
+  const sorted=[...qs].sort((a,b)=>enhancedQuotePrice(a)-enhancedQuotePrice(b));
+  const prices=qs.map(enhancedQuotePrice).filter(n=>Number.isFinite(n));
+  const lowest=prices.length?Math.min(...prices):0;
+  const highest=prices.length?Math.max(...prices):0;
+  const average=prices.length?prices.reduce((a,b)=>a+b,0)/prices.length:0;
+  const selectedPrice=selected?enhancedQuotePrice(selected):0;
+  const budget=Number(rfq.estimated_budget||0);
+  const budgetVariance=budget&&selected?budget-selectedPrice:null;
+  const selectedDelivery=selected?enhancedQuoteDelivery(selected):"Not selected";
+  const selectedName=selected?enhancedQuoteName(selected):"No quote selected";
+  const officerComment=rfq.procurement_comment||"";
+  const approvalComment=rfq.approval_comment||"";
+  const status=selected&&enhancedIsAwarded(selected)?"Awarded":"Not yet awarded";
+
+  mount.innerHTML=`<div class="enh-report">
+    <div class="enh-report-head">
+      <div style="display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap">
+        <div><h3>${esc(rfq.code||"RFQ")} · ${esc(rfq.title||"Procurement Report")}</h3><p>${esc(currentBusiness?.company_name||rfq.business_name||"Business")} · ${status}</p></div>
+        <div><span class="badge ${selected&&enhancedIsAwarded(selected)?"awarded":"pending"}">${selected&&enhancedIsAwarded(selected)?"SELECTED / AWARDED":"SELECTED FOR REVIEW"}</span></div>
+      </div>
+      ${enhancedReportButtons(rfq,selected)}
+    </div>
+
+    <div class="enh-report-scroll">
+      <table class="enh-report-table">
+        <thead><tr><th>Supplier</th><th>Quoted Price</th><th>Delivery</th><th>Payment Terms</th><th>Validity</th><th>Status</th><th>Report</th></tr></thead>
+        <tbody>${sorted.map(x=>`<tr class="${selected&&String(selected.id)===String(x.id)?"selected":""}"><td><strong>${esc(enhancedQuoteName(x))}</strong></td><td>${money(enhancedQuotePrice(x))}</td><td>${esc(enhancedQuoteDelivery(x))}</td><td>${esc(x.payment_terms||"As agreed")}</td><td>${esc(x.quote_validity||"As stated")}</td><td>${enhancedIsAwarded(x)?"Awarded":esc(x.status||"Submitted")}</td><td><button class="btn btn-light" type="button" onclick="selectQuoteForReport('${x.id}')">${selected&&String(selected.id)===String(x.id)?"Selected":"Select"}</button></td></tr>`).join("")}</tbody>
+      </table>
+    </div>
+
+    <div class="enh-report-grid">
+      <div class="enh-report-box"><h4>RFQ Details</h4><p><strong>Category:</strong> ${esc(rfq.category||"—")}</p><p><strong>Quantity:</strong> ${esc(rfq.quantity||"—")}</p><p><strong>Required Date:</strong> ${date(rfq.deadline)}</p><p><strong>Delivery Location:</strong> ${esc(rfq.delivery_location||"—")}</p><p><strong>Budget:</strong> ${budget?money(budget):"Not provided"}</p></div>
+      <div class="enh-report-box"><h4>Selected Quote</h4><p><strong>Supplier:</strong> ${esc(selectedName)}</p><p><strong>Quoted Price:</strong> ${selected?money(selectedPrice):"—"}</p><p><strong>Delivery:</strong> ${esc(selectedDelivery)}</p><p><strong>Payment Terms:</strong> ${esc(selected?.payment_terms||"As agreed")}</p><p><strong>Validity:</strong> ${esc(selected?.quote_validity||"As stated")}</p></div>
+      <div class="enh-report-box"><h4>Price Comparison</h4><p><strong>Lowest Quote:</strong> ${money(lowest)}</p><p><strong>Highest Quote:</strong> ${money(highest)}</p><p><strong>Average Quote:</strong> ${money(average)}</p><p><strong>Selected Quote:</strong> ${selected?money(selectedPrice):"—"}</p></div>
+      <div class="enh-report-box"><h4>Budget Analysis</h4><p><strong>Approved / Estimated Budget:</strong> ${budget?money(budget):"Not provided"}</p><p><strong>Selected Quote:</strong> ${selected?money(selectedPrice):"—"}</p><p><strong>Difference:</strong> ${budgetVariance===null?"—":money(Math.abs(budgetVariance))}</p><p>${budgetVariance===null?"No budget comparison available.":budgetVariance>=0?"Selected quote is within the stated budget.":"Selected quote exceeds the stated budget."}</p></div>
+      <div class="enh-report-box"><h4>Delivery Comparison</h4>${qs.map(x=>`<p><strong>${esc(enhancedQuoteName(x))}:</strong> ${esc(enhancedQuoteDelivery(x))}</p>`).join("")||"<p>No delivery information.</p>"}</div>
+      <div class="enh-report-box"><h4>Commercial Comparison</h4><p><strong>Selected Supplier:</strong> ${esc(selectedName)}</p><p><strong>Payment Terms:</strong> ${esc(selected?.payment_terms||"As agreed")}</p><p><strong>Validity:</strong> ${esc(selected?.quote_validity||"As stated")}</p><p><strong>Availability:</strong> ${esc(selected?.availability||"As stated")}</p><p><strong>Warranty / Guarantee:</strong> ${esc(selected?.warranty||"As stated")}</p></div>
+    </div>
+
+    <div class="enh-comment-box">
+      <label>Procurement Officer Comment</label>
+      <textarea id="procurementOfficerComment" placeholder="Explain why this quotation was selected, for example: Best overall commercial offer, meets required delivery period and supplier requirements.">${esc(officerComment)}</textarea>
+      <div class="enh-comment-actions"><button class="btn btn-primary" type="button" onclick="saveProcurementComments('${rfq.id}')">Save Comment</button></div>
+    </div>
+    <div class="enh-comment-box">
+      <label>Approver / Customer Comment</label>
+      <textarea id="approvalCustomerComment" placeholder="Comment for the person approving the procurement, or the customer's approval note.">${esc(approvalComment)}</textarea>
+      <div class="enh-comment-actions"><button class="btn btn-primary" type="button" onclick="saveProcurementComments('${rfq.id}')">Save Comment</button></div>
+    </div>
+  </div>`;
+}
+
+async function saveProcurementComments(rfqId){
+  const officer=document.getElementById("procurementOfficerComment")?.value.trim()||"";
+  const approval=document.getElementById("approvalCustomerComment")?.value.trim()||"";
+  const {data,error}=await db.from("rfqs").update({procurement_comment:officer,approval_comment:approval}).eq("id",rfqId).eq("business_id",currentUser.id).select().maybeSingle();
+  if(error){alert("The comments could not be saved. Run the supplied SQL migration first.\
+\
+"+error.message);return}
+  const idx=rfqs.findIndex(x=>String(x.id)===String(rfqId));
+  if(idx>=0)rfqs[idx]={...rfqs[idx],...(data||{}),procurement_comment:officer,approval_comment:approval};
+  renderEnhancedProcurementReport(rfqs[idx],enhancedSelectedQuote(rfqId));
+  alert("Procurement comments saved.");
+}
+
+/* Replaces the existing quote renderer without changing the underlying quote data. */
+function renderQuotes(){
+  const c=document.getElementById("quotesContainer");
+  if(!quotes.length){c.innerHTML='<div class="empty">No supplier quotations yet.</div>';renderEnhancedProcurementReport(null,null);return}
+  const groups={};quotes.forEach(q=>(groups[q.rfq_id]??=[]).push(q));
+  c.innerHTML=Object.entries(groups).map(([id,qs])=>{
+    const r=rfqs.find(x=>String(x.id)===String(id));
+    const selected=enhancedSelectedQuote(id);
+    return `<div style="margin-bottom:28px">
+      <div class="panel-title">${esc(r?.title||"RFQ")}</div>
+      <div class="panel-sub">${esc(r?.code||"")} · ${qs.length} supplier quote(s)</div>
+      <div class="quote-list">${qs.map(q=>enhancedQuoteCard(q,r,selected)).join("")}</div>
+    </div>`;
+  }).join("");
+  const firstRfq=enhancedSelectedRfqId?rfqs.find(r=>String(r.id)===String(enhancedSelectedRfqId)):rfqs.find(r=>quotes.some(q=>String(q.rfq_id)===String(r.id)&&enhancedIsAwarded(q))) || rfqs.find(r=>quotes.some(q=>String(q.rfq_id)===String(r.id)));
+  if(firstRfq){const selected=enhancedSelectedQuote(firstRfq.id);renderEnhancedProcurementReport(firstRfq,selected);}
+}
+
+function enhancedQuoteCard(q,r,selected){
+ const awarded=enhancedIsAwarded(q);
+ const isSelected=selected&&String(selected.id)===String(q.id);
+ const isRfqAwarded=quotes.some(x=>String(x.rfq_id)===String(q.rfq_id)&&enhancedIsAwarded(x));
+ return `<article class="quote-card ${isSelected?"quote-selected":""}"><div class="row"><div><div class="panel-title">${esc(enhancedQuoteName(q))}</div><div class="small">${esc(r?.code||"")}</div></div><div class="price">${money(enhancedQuotePrice(q))}</div></div><div class="quote-meta"><div><span>Delivery</span><strong>${esc(enhancedQuoteDelivery(q))}</strong></div><div><span>Payment Terms</span><strong>${esc(q.payment_terms||"As agreed")}</strong></div><div><span>Validity</span><strong>${esc(q.quote_validity||"As stated")}</strong></div><div><span>Availability</span><strong>${esc(q.availability||"As stated")}</strong></div></div><div class="small">${esc(q.notes||"No additional supplier notes.")}</div><div class="quote-actions"><button class="btn btn-light" onclick="openQuote('${q.id}')">View Full Quote</button><button class="btn btn-light" onclick="selectQuoteForReport('${q.id}')">${isSelected?"Selected for Report":"Select for Report"}</button><button class="btn btn-light" onclick="printSupplierQuote('${q.id}')">Print Quote</button><button class="btn btn-light" onclick="downloadSupplierQuote('${q.id}')">Download Quote</button>${awarded?'<span class="badge awarded">Awarded</span>':`<button class="btn btn-primary" onclick="awardQuote('${q.id}')">${isRfqAwarded?"Award Instead":"Award Quote"}</button>`}</div></article>`;
+}
+
+/* Award/re-award. The old award is first reset, then the new quote is made the only award. */
+async function awardQuote(id){
+ const q=quotes.find(x=>String(x.id)===String(id));
+ if(!q)return;
+ const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
+ if(!r)return;
+ const current=quotes.find(x=>String(x.rfq_id)===String(r.id)&&enhancedIsAwarded(x));
+ const message=current&&String(current.id)!==String(q.id)
+   ? `This RFQ is already awarded to ${enhancedQuoteName(current)}.\
+\
+Change the award to ${enhancedQuoteName(q)}?`
+   : `Award ${r.code||"this RFQ"} to ${enhancedQuoteName(q)}?`;
+ if(!confirm(message))return;
+
+ const {error:resetError}=await db.from("quotes").update({awarded:false,status:"submitted",quote_status:"not_selected"}).eq("rfq_id",r.id);
+ if(resetError){alert(resetError.message);return}
+ const {error:awardError}=await db.from("quotes").update({awarded:true,status:"awarded",quote_status:"awarded"}).eq("id",q.id);
+ if(awardError){alert(awardError.message);return}
+ const {error:rfqError}=await db.from("rfqs").update({status:"awarded",awarded_supplier_id:q.supplier_user_id,awarded_at:new Date().toISOString()}).eq("id",r.id).eq("business_id",currentUser.id);
+ if(rfqError){alert(rfqError.message);return}
+
+ /* Cancel any old payment for this RFQ before creating the payment for the new award. */
+ const oldPayments=payments.filter(p=>String(p.rfq_id)===String(r.id));
+ for(const p of oldPayments){
+   if(String(p.supplier_user_id)!==String(q.supplier_user_id) && p.status!=="confirmed")
+     await db.from("supplier_payments").update({status:"cancelled"}).eq("id",p.id).eq("customer_user_id",currentUser.id);
+ }
+
+ const {data:existingPayment}=await db.from("supplier_payments").select("id,status").eq("rfq_id",r.id).eq("customer_user_id",currentUser.id).eq("supplier_user_id",q.supplier_user_id).maybeSingle();
+ if(!existingPayment){
+   const {error:paymentError}=await db.from("supplier_payments").insert({supplier_user_id:q.supplier_user_id,customer_user_id:currentUser.id,customer_name:currentBusiness.company_name,rfq_id:r.id,rfq_code:r.code,amount:Number(enhancedQuotePrice(q)),status:"awaiting_payment"});
+   if(paymentError){alert("Supplier was awarded, but the payment record could not be created.\
+\
+"+paymentError.message);}
+ }else if(existingPayment.status==="cancelled"){
+   await db.from("supplier_payments").update({amount:Number(enhancedQuotePrice(q)),status:"awaiting_payment"}).eq("id",existingPayment.id);
+ }
+
+ enhancedSelectedQuoteId=q.id;enhancedSelectedRfqId=r.id;
+ await refresh();
+ showSection("quotes");
+ alert(current&&String(current.id)!==String(q.id)?"Award changed successfully.":"Quotation awarded successfully.");
+}
+
+/* Fixes the old Orders bug: if a payment record is missing, create it instead of merely opening Payments. */
+function renderOrders(){
+ const c=document.getElementById("ordersContainer"),list=rfqs.filter(r=>["awarded","completed"].includes(String(r.status||"").toLowerCase()));
+ if(!list.length){c.innerHTML='<div class="panel empty">No awarded orders yet.</div>';return}
+ c.innerHTML=list.map(r=>{const q=quotes.find(x=>String(x.rfq_id)===String(r.id)&&enhancedIsAwarded(x)),p=payments.find(x=>String(x.rfq_id)===String(r.id)&&String(x.supplier_user_id||"")===String(q?.supplier_user_id||""));return `<div class="workflow"><div class="row"><div><h3>${esc(r.title||"Order")}</h3><div class="small">${esc(r.code||"")}</div></div><span class="badge awarded">${esc(r.status||"Awarded")}</span></div><div class="details"><div class="detail"><span>Supplier</span><strong>${esc(enhancedQuoteName(q)||"Supplier")}</strong></div><div class="detail"><span>Value</span><strong>${money(enhancedQuotePrice(q))}</strong></div><div class="detail"><span>Delivery</span><strong>${esc(enhancedQuoteDelivery(q))}</strong></div><div class="detail"><span>Payment</span><strong>${esc(p?.status||"Payment record pending")}</strong></div></div><div class="small">You can change the awarded supplier from the Quotes section before payment is confirmed.</div><div class="card-actions"><button class="btn btn-primary" onclick="goToPaymentForRFQ('${r.id}')">${p?"Go to Payment":"Create Payment"}</button><button class="btn btn-light" onclick="selectQuoteForReport('${q?.id||""}')">View Report</button><button class="btn btn-light" onclick="showStatus('${r.id}')">Track Status</button></div></div>`}).join("");
+}
+
+async function goToPaymentForRFQ(rfqId){
+ const r=rfqs.find(x=>String(x.id)===String(rfqId));
+ const q=quotes.find(x=>String(x.rfq_id)===String(rfqId)&&enhancedIsAwarded(x));
+ if(!r||!q)return;
+ let p=payments.find(x=>String(x.rfq_id)===String(rfqId)&&String(x.supplier_user_id)===String(q.supplier_user_id));
+ if(!p){
+   const {data,error}=await db.from("supplier_payments").insert({supplier_user_id:q.supplier_user_id,customer_user_id:currentUser.id,customer_name:currentBusiness.company_name,rfq_id:r.id,rfq_code:r.code,amount:Number(enhancedQuotePrice(q)),status:"awaiting_payment"}).select().single();
+   if(error){alert("Could not create payment record.\
+\
+"+error.message);return}
+   p=data;await refresh();p=payments.find(x=>String(x.id)===String(p.id))||p;
+ }
+ openPayment(p.id);
+}
+
+/* Professional supplier quotation template */
+function quoteTemplateHTML(q){
+ const r=enhancedRFQForQuote(q)||{};
+ const supplier=enhancedQuoteName(q);
+ const customer=currentBusiness?.company_name||r.business_name||"Customer";
+ const quoteNo="QTN-"+String(q.id||"").slice(0,8).toUpperCase();
+ const quoteDate=q.created_at?date(q.created_at):date(new Date());
+ return `<!doctype html><html><head><meta charset="utf-8"><title>${esc(quoteNo)} - ${esc(supplier)}</title><style>body{font-family:Arial,sans-serif;color:#263342;margin:0;background:#f4f7f8}.sheet{max-width:850px;margin:30px auto;background:#fff;padding:45px;box-shadow:0 8px 30px #12304a14}.top{display:flex;justify-content:space-between;gap:30px;border-bottom:3px solid #2f9955;padding-bottom:22px}.brand{font-size:26px;font-weight:800;color:#12304a}.brand span{color:#2f9955}.quote-title{text-align:right}.quote-title h1{margin:0;font-size:28px;color:#12304a}.muted{color:#71818d;font-size:12px}.customer{margin-top:28px;padding:18px;background:#f7fafb;border-left:4px solid #2f9955}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}.box{border:1px solid #e0e8ec;padding:14px;border-radius:8px}.box b{display:block;font-size:11px;color:#71818d;margin-bottom:5px}.box strong{font-size:13px}.table{width:100%;border-collapse:collapse;margin-top:25px}.table th{background:#12304a;color:#fff;text-align:left;padding:12px;font-size:11px}.table td{padding:12px;border-bottom:1px solid #e6ecef;font-size:12px}.total{text-align:right;margin-top:18px;font-size:20px;font-weight:800;color:#12304a}.notes{margin-top:25px;border-top:1px solid #e6ecef;padding-top:18px}.footer{margin-top:45px;padding-top:18px;border-top:1px solid #e6ecef;font-size:11px;color:#71818d;display:flex;justify-content:space-between;gap:20px}@media print{body{background:#fff}.sheet{box-shadow:none;margin:0;max-width:none}} </style></head><body><div class="sheet"><div class="top"><div><div class="brand">${esc(supplier)}</div><div class="muted">Supplier Quotation</div></div><div class="quote-title"><h1>QUOTATION</h1><div class="muted">${esc(quoteNo)}</div><div class="muted">Date: ${esc(quoteDate)}</div></div></div><div class="customer"><div class="muted">QUOTATION TO</div><strong>${esc(customer)}</strong><div class="muted">RFQ: ${esc(r.code||"—")}</div></div><div class="grid"><div class="box"><b>RFQ TITLE</b><strong>${esc(r.title||"—")}</strong></div><div class="box"><b>CATEGORY</b><strong>${esc(r.category||"—")}</strong></div><div class="box"><b>QUANTITY</b><strong>${esc(r.quantity||"—")}</strong></div><div class="box"><b>DELIVERY LOCATION</b><strong>${esc(r.delivery_location||"—")}</strong></div></div><table class="table"><thead><tr><th>Description</th><th>Quantity</th><th>Delivery</th><th style="text-align:right">Total</th></tr></thead><tbody><tr><td>${esc(r.title||"Supply against RFQ")}</td><td>${esc(r.quantity||"—")}</td><td>${esc(enhancedQuoteDelivery(q))}</td><td style="text-align:right">${esc(money(enhancedQuotePrice(q)))}</td></tr></tbody></table><div class="total">Total Quotation: ${esc(money(enhancedQuotePrice(q)))}</div><div class="grid"><div class="box"><b>PAYMENT TERMS</b><strong>${esc(q.payment_terms||"As agreed")}</strong></div><div class="box"><b>QUOTE VALIDITY</b><strong>${esc(q.quote_validity||"As stated")}</strong></div><div class="box"><b>AVAILABILITY</b><strong>${esc(q.availability||"As stated")}</strong></div><div class="box"><b>WARRANTY / GUARANTEE</b><strong>${esc(q.warranty||"As stated")}</strong></div></div><div class="notes"><strong>Supplier Notes</strong><p>${esc(q.notes||"No additional supplier notes.")}</p></div><div class="footer"><div>Prepared by: ${esc(supplier)}</div><div>Generated through Elsati Connect</div></div></div></body></html>`;
+}
+
+function downloadTextFile(filename,content,mime="text/html"){
+ const blob=new Blob([content],{type:mime+";charset=utf-8"});
+ const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+
+function printHTML(title,html){
+ const w=window.open("","_blank","width=1000,height=800");
+ if(!w){alert("Please allow pop-ups for Elsati Connect to print or save PDF.");return}
+ w.document.open();w.document.write(html);w.document.close();w.document.title=title;
+ setTimeout(()=>{w.focus();w.print()},500);
+}
+
+function printSupplierQuote(id){
+ const q=quotes.find(x=>String(x.id)===String(id));if(!q)return;
+ printHTML("Supplier Quotation",quoteTemplateHTML(q));
+}
+
+function downloadSupplierQuote(id){
+ const q=quotes.find(x=>String(x.id)===String(id));if(!q)return;
+ const r=enhancedRFQForQuote(q);const no="QTN-"+String(q.id).slice(0,8).toUpperCase();
+ downloadTextFile(`${no}-${(enhancedQuoteName(q)||"Supplier").replace(/[^a-z0-9]+/gi,"-")}.html`,quoteTemplateHTML(q));
+}
+
+function procurementReportHTML(rfq){
+ const q=enhancedSelectedQuote(rfq.id);
+ const qs=quotes.filter(x=>String(x.rfq_id)===String(rfq.id));
+ const prices=qs.map(enhancedQuotePrice);const lowest=prices.length?Math.min(...prices):0,highest=prices.length?Math.max(...prices):0,avg=prices.length?prices.reduce((a,b)=>a+b,0)/prices.length:0;
+ const selected=q?enhancedQuotePrice(q):0;const budget=Number(rfq.estimated_budget||0);const diff=budget&&q?budget-selected:null;
+ return `<!doctype html><html><head><meta charset="utf-8"><title>Procurement Report ${esc(rfq.code||"")}</title><style>body{font-family:Arial,sans-serif;color:#263342;margin:0;background:#f4f7f8}.sheet{max-width:1000px;margin:25px auto;background:#fff;padding:38px}.head{border-bottom:3px solid #2f9955;padding-bottom:18px;display:flex;justify-content:space-between}.head h1{margin:0;color:#12304a}.muted{color:#71818d;font-size:11px}.section{margin-top:24px}.section h2{font-size:15px;color:#12304a;border-bottom:1px solid #dfe8ec;padding-bottom:7px}.table{width:100%;border-collapse:collapse}.table th{background:#12304a;color:#fff;padding:10px;text-align:left;font-size:10px}.table td{padding:10px;border-bottom:1px solid #e4eaed;font-size:10px}.selected{background:#eaf8ef}.boxgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.box{border:1px solid #dfe7eb;padding:13px;border-radius:8px}.box b{display:block;color:#71818d;font-size:9px;margin-bottom:5px}.comment{background:#f7fafb;border-left:4px solid #2f9955;padding:14px;margin-top:10px;white-space:pre-wrap;font-size:11px}@media print{body{background:#fff}.sheet{margin:0;max-width:none}} </style></head><body><div class="sheet"><div class="head"><div><h1>PROCUREMENT REPORT</h1><div class="muted">${esc(rfq.code||"")} · ${esc(rfq.title||"")}</div></div><div class="muted">${esc(currentBusiness?.company_name||rfq.business_name||"Business")}<br>${esc(date(new Date()))}</div></div><div class="section"><h2>Quotations Received</h2><table class="table"><thead><tr><th>Supplier</th><th>Price</th><th>Delivery</th><th>Payment Terms</th><th>Status</th></tr></thead><tbody>${qs.map(x=>`<tr class="${q&&String(q.id)===String(x.id)?"selected":""}"><td>${esc(enhancedQuoteName(x))}</td><td>${esc(money(enhancedQuotePrice(x)))}</td><td>${esc(enhancedQuoteDelivery(x))}</td><td>${esc(x.payment_terms||"As agreed")}</td><td>${enhancedIsAwarded(x)?"Awarded":esc(x.status||"Submitted")}</td></tr>`).join("")}</tbody></table></div><div class="section"><h2>Price Comparison</h2><div class="boxgrid"><div class="box"><b>LOWEST QUOTE</b>${esc(money(lowest))}</div><div class="box"><b>HIGHEST QUOTE</b>${esc(money(highest))}</div><div class="box"><b>AVERAGE QUOTE</b>${esc(money(avg))}</div><div class="box"><b>SELECTED QUOTE</b>${q?esc(money(selected)):"Not selected"}</div></div></div><div class="section"><h2>Budget Analysis</h2><div class="boxgrid"><div class="box"><b>ESTIMATED BUDGET</b>${budget?esc(money(budget)):"Not provided"}</div><div class="box"><b>SELECTED SUPPLIER</b>${q?esc(enhancedQuoteName(q)):"Not selected"}</div><div class="box"><b>SELECTED VALUE</b>${q?esc(money(selected)):"Not selected"}</div><div class="box"><b>BUDGET POSITION</b>${diff===null?"Not available":diff>=0?"Within budget":"Above budget"}</div></div></div><div class="section"><h2>Delivery Comparison</h2><table class="table"><thead><tr><th>Supplier</th><th>Delivery</th><th>Availability</th></tr></thead><tbody>${qs.map(x=>`<tr><td>${esc(enhancedQuoteName(x))}</td><td>${esc(enhancedQuoteDelivery(x))}</td><td>${esc(x.availability||"As stated")}</td></tr>`).join("")}</tbody></table></div><div class="section"><h2>Commercial Comparison</h2><div class="boxgrid"><div class="box"><b>SELECTED PAYMENT TERMS</b>${q?esc(q.payment_terms||"As agreed"):"—"}</div><div class="box"><b>QUOTE VALIDITY</b>${q?esc(q.quote_validity||"As stated"):"—"}</div><div class="box"><b>WARRANTY / GUARANTEE</b>${q?esc(q.warranty||"As stated"):"—"}</div><div class="box"><b>RFQ STATUS</b>${esc(rfq.status||"Open")}</div></div></div><div class="section"><h2>Procurement Officer Comment</h2><div class="comment">${esc(rfq.procurement_comment||"No procurement officer comment added.")}</div></div><div class="section"><h2>Approver / Customer Comment</h2><div class="comment">${esc(rfq.approval_comment||"No approver / customer comment added.")}</div></div></div></body></html>`;
+}
+
+function printProcurementReport(rfqId){
+ const r=rfqs.find(x=>String(x.id)===String(rfqId));if(!r)return;
+ printHTML("Procurement Report",procurementReportHTML(r));
+}
+
+function downloadProcurementReport(rfqId){
+ const r=rfqs.find(x=>String(x.id)===String(rfqId));if(!r)return;
+ downloadTextFile(`Procurement-Report-${r.code||"RFQ"}.html`,procurementReportHTML(r));
+}
+
+/* Keep report in sync when the dashboard refreshes. */
+const originalRefresh=refresh;
+refresh=async function(){
+ await originalRefresh();
+ const rfq=enhancedSelectedRfqId?rfqs.find(r=>String(r.id)===String(enhancedSelectedRfqId)):rfqs.find(r=>quotes.some(q=>String(q.rfq_id)===String(r.id)&&enhancedIsAwarded(q)))||rfqs.find(r=>quotes.some(q=>String(q.rfq_id)===String(r.id)));
+ if(rfq)renderEnhancedProcurementReport(rfq,enhancedSelectedQuote(rfq.id));
+};
+
+/* After the page has loaded, initialise the report from existing data. */
+document.addEventListener("DOMContentLoaded",()=>{
+ setTimeout(()=>{
+   if(typeof renderQuotes==="function")renderQuotes();
+ },150);
+});
 </script>
 </body>
 </html>
