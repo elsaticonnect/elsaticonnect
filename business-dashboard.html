@@ -336,6 +336,24 @@ async function loadInvoices(){
  invoices=error?[]:(data||[]);
 }
 
+async function loadVerifiedSuppliers(){
+ const {data,error}=await db.from("profiles").select("*").eq("role","supplier");
+ if(error){console.error("Verified suppliers load error:",error);verifiedSuppliers=[];return}
+ verifiedSuppliers=(data||[]).filter(s=>s.verified===true||String(s.verification_status||"").toLowerCase().trim()==="verified");
+}
+function renderVerifiedSuppliers(){
+ const c=document.getElementById("verifiedSuppliersContainer");if(!c)return;
+ if(!verifiedSuppliers.length){c.innerHTML='<div class="empty">No verified suppliers are available yet.</div>';return}
+ c.innerHTML=verifiedSuppliers.map(s=>{
+  const company=s.company_name||s.business_name||"Supplier",initial=company.trim().charAt(0).toUpperCase()||"S",category=s.category||s.business_category||s.industry||"General Supplier",city=s.city||s.location||"Zambia",description=s.business_description||s.description||"Verified supplier on Elsati Connect.";
+  return `<article class="supplier-card"><div class="supplier-top"><div class="supplier-avatar">${esc(initial)}</div><div><div class="supplier-name">${esc(company)} <span class="verified-tick" title="Verified supplier">✓</span></div><div class="small">${esc(category)}</div></div></div><div class="supplier-meta"><div><span>Category</span><strong>${esc(category)}</strong></div><div><span>Location</span><strong>${esc(city)}</strong></div></div><div class="small supplier-description">${esc(description)}</div><div class="card-actions"><button class="btn btn-primary" onclick="createDirectRFQ('${s.id}')">Request Quote</button></div></article>`;
+ }).join("");
+}
+function createDirectRFQ(supplierId){
+ const supplier=verifiedSuppliers.find(s=>String(s.id)===String(supplierId));if(!supplier){alert("Supplier could not be found.");return}
+ openCreateRFQ();const company=supplier.company_name||supplier.business_name||"Selected supplier";document.getElementById("rfqNotice").innerHTML=`<div class="notice info">You selected <strong>${esc(company)}</strong> as the supplier for this request. Complete the RFQ details below and publish the request.</div>`;
+}
+
 function showSection(section,button){
  document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
  document.getElementById("section-"+section)?.classList.add("active");
