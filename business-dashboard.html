@@ -580,13 +580,33 @@ function showStatus(id){const r=rfqs.find(x=>String(x.id)===String(id));if(r){wi
 function openCreateRFQ(){document.getElementById("rfqModal").classList.add("show")}
 async function createRFQ(){
  const title=v("rfqTitle"),category=v("rfqCategory"),quantity=v("rfqQuantity"),budget=v("rfqBudget"),delivery=v("rfqDelivery"),deadline=v("rfqDeadline"),notes=v("rfqNotes"),n=document.getElementById("rfqNotice");
+
  n.innerHTML="";
- if(!title||!category||!quantity||!deadline){n.innerHTML='<div class="notice error">Complete title, category, quantity and required date.</div>';return}
- if(!currentUser||!currentBusiness){n.innerHTML='<div class="notice error">Your business profile could not be loaded. Please log in again.</div>';return}
+
+ if(!title||!category||!quantity||!deadline){
+   n.innerHTML='<div class="notice error">Complete title, category, quantity and required date.</div>';
+   return;
+ }
+
+ if(!currentUser||!currentBusiness){
+   n.innerHTML='<div class="notice error">Your business profile could not be loaded. Please log in again.</div>';
+   return;
+ }
+
  const companyName=String(currentBusiness.company_name||currentBusiness.business_name||"").trim();
- if(!companyName){n.innerHTML='<div class="notice error">Please complete your Business Name in your Company Profile before creating an RFQ.</div>';return}
+
+ if(!companyName){
+   n.innerHTML='<div class="notice error">Please complete your Business Name in your Company Profile before creating an RFQ.</div>';
+   return;
+ }
+
  const publishButton=document.querySelector('#rfqModal .modal-actions .btn-primary');
- if(publishButton){publishButton.disabled=true;publishButton.textContent="Publishing..."}
+
+ if(publishButton){
+   publishButton.disabled=true;
+   publishButton.textContent="Publishing...";
+ }
+
  try{
    const rfqData={
      code:"RFQ-"+Date.now().toString().slice(-7),
@@ -594,35 +614,89 @@ async function createRFQ(){
      category:category,
      quantity:quantity,
      deadline:deadline,
-     delivery_location:delivery,
+     delivery_location:delivery||null,
      estimated_budget:budget?Number(budget):null,
-     notes:notes,
+     notes:notes||null,
      business_id:currentUser.id,
      business_name:companyName,
      created_by_company:companyName,
      created_by:currentUser.id,
      status:"open"
    };
+
    console.log("Creating RFQ:",rfqData);
-   const {data,error}=await db.from("rfqs").insert(rfqData).select().single();
-   if(error){console.error("RFQ creation error:",error);n.innerHTML=`<div class="notice error">${esc(error.message)}</div>`;return}
-   console.log("RFQ created successfully:",data);
-   ["rfqTitle","rfqCategory","rfqQuantity","rfqBudget","rfqDelivery","rfqDeadline","rfqNotes"].forEach(x=>{const field=document.getElementById(x);if(field)field.value=""});
+
+   /*
+    * Do NOT use .select().single() here.
+    * The RFQ only needs to be inserted. Requiring a SELECT
+    * immediately after the INSERT can cause a separate RLS
+    * permission problem even when the INSERT itself is allowed.
+    */
+   const {error}=await db.from("rfqs").insert(rfqData);
+
+   if(error){
+     console.error("RFQ creation error:",error);
+     n.innerHTML=`
+       <div class="notice error">
+         <strong>RFQ could not be created.</strong><br>
+         ${esc(error.message)}
+       </div>`;
+     return;
+   }
+
+   console.log("RFQ created successfully.");
+
+   ["rfqTitle","rfqCategory","rfqQuantity","rfqBudget","rfqDelivery","rfqDeadline","rfqNotes"].forEach(x=>{
+     const field=document.getElementById(x);
+     if(field)field.value="";
+   });
+
    n.innerHTML='<div class="notice success">RFQ published successfully. Suppliers can now view and respond to your request.</div>';
-   await refresh();
+
+   /*
+    * Refresh separately. If another dashboard table has an RLS/schema
+    * issue, it must not make a successfully-created RFQ look like a failure.
+    */
+   try{
+     await refresh();
+   }catch(refreshError){
+     console.error("Dashboard refresh error after RFQ creation:",refreshError);
+   }
+
    setTimeout(()=>{
      closeModal("rfqModal");
      showSection("rfqs");
      rfqFilter="all";
+
      const allButton=document.querySelector('#section-rfqs [data-rfq-filter="all"]');
-     if(allButton){document.querySelectorAll("#section-rfqs .rfq-filter").forEach(btn=>{btn.classList.remove("active");btn.setAttribute("aria-selected","false")});allButton.classList.add("active");allButton.setAttribute("aria-selected","true")}
+
+     if(allButton){
+       document.querySelectorAll("#section-rfqs .rfq-filter").forEach(btn=>{
+         btn.classList.remove("active");
+         btn.setAttribute("aria-selected","false");
+       });
+
+       allButton.classList.add("active");
+       allButton.setAttribute("aria-selected","true");
+     }
+
      renderRFQs();
    },700);
+
  }catch(err){
-   console.error("Unexpected RFQ error:",err);
-   n.innerHTML='<div class="notice error">Something went wrong while creating the RFQ. Please try again.</div>';
+   console.error("Unexpected RFQ creation error:",err);
+
+   n.innerHTML=`
+     <div class="notice error">
+       <strong>RFQ could not be created.</strong><br>
+       ${esc(err?.message||"Unexpected error. Please try again.")}
+     </div>`;
+
  }finally{
-   if(publishButton){publishButton.disabled=false;publishButton.textContent="Publish RFQ"}
+   if(publishButton){
+     publishButton.disabled=false;
+     publishButton.textContent="Publish RFQ";
+   }
  }
 }
 function details(id){const r=rfqs.find(x=>String(x.id)===String(id));if(r)alert([`RFQ: ${r.code||""}`,`Title: ${r.title||""}`,`Category: ${r.category||""}`,`Quantity: ${r.quantity||""}`,`Required: ${date(r.deadline)}`,`Delivery: ${r.delivery_location||""}`,`Budget: ${money(r.estimated_budget)}`,`Notes: ${r.notes||"None"}`].join("\n"))}
