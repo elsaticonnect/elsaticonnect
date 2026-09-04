@@ -616,7 +616,7 @@ async function createRFQ(){
      deadline:deadline,
      delivery_location:delivery||null,
      estimated_budget:budget?Number(budget):null,
-     notes:notes||null,
+     notes:notes||"No additional requirements provided.",
      business_id:currentUser.id,
      business_name:companyName,
      created_by_company:companyName,
