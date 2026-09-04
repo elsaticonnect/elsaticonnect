@@ -562,11 +562,50 @@ function showStatus(id){const r=rfqs.find(x=>String(x.id)===String(id));if(r){wi
 function openCreateRFQ(){document.getElementById("rfqModal").classList.add("show")}
 async function createRFQ(){
  const title=v("rfqTitle"),category=v("rfqCategory"),quantity=v("rfqQuantity"),budget=v("rfqBudget"),delivery=v("rfqDelivery"),deadline=v("rfqDeadline"),notes=v("rfqNotes"),n=document.getElementById("rfqNotice");
+ n.innerHTML="";
  if(!title||!category||!quantity||!deadline){n.innerHTML='<div class="notice error">Complete title, category, quantity and required date.</div>';return}
- const {error}=await db.from("rfqs").insert({code:"RFQ-"+Date.now().toString().slice(-7),title,category,quantity,deadline,delivery_location:delivery,estimated_budget:budget?Number(budget):null,notes,business_id:currentUser.id,business_name:currentBusiness.company_name,created_by:currentUser.id,status:"open"});
- if(error){n.innerHTML=`<div class="notice error">${esc(error.message)}</div>`;return}
- ["rfqTitle","rfqCategory","rfqQuantity","rfqBudget","rfqDelivery","rfqDeadline","rfqNotes"].forEach(x=>document.getElementById(x).value="");
- n.innerHTML='<div class="notice success">RFQ published successfully.</div>';await refresh();setTimeout(()=>{closeModal("rfqModal");showSection("rfqs")},600);
+ if(!currentUser||!currentBusiness){n.innerHTML='<div class="notice error">Your business profile could not be loaded. Please log in again.</div>';return}
+ const companyName=String(currentBusiness.company_name||currentBusiness.business_name||"").trim();
+ if(!companyName){n.innerHTML='<div class="notice error">Please complete your Business Name in your Company Profile before creating an RFQ.</div>';return}
+ const publishButton=document.querySelector('#rfqModal .modal-actions .btn-primary');
+ if(publishButton){publishButton.disabled=true;publishButton.textContent="Publishing..."}
+ try{
+   const rfqData={
+     code:"RFQ-"+Date.now().toString().slice(-7),
+     title:title,
+     category:category,
+     quantity:quantity,
+     deadline:deadline,
+     delivery_location:delivery,
+     estimated_budget:budget?Number(budget):null,
+     notes:notes,
+     business_id:currentUser.id,
+     business_name:companyName,
+     created_by_company:companyName,
+     created_by:currentUser.id,
+     status:"open"
+   };
+   console.log("Creating RFQ:",rfqData);
+   const {data,error}=await db.from("rfqs").insert(rfqData).select().single();
+   if(error){console.error("RFQ creation error:",error);n.innerHTML=`<div class="notice error">${esc(error.message)}</div>`;return}
+   console.log("RFQ created successfully:",data);
+   ["rfqTitle","rfqCategory","rfqQuantity","rfqBudget","rfqDelivery","rfqDeadline","rfqNotes"].forEach(x=>{const field=document.getElementById(x);if(field)field.value=""});
+   n.innerHTML='<div class="notice success">RFQ published successfully. Suppliers can now view and respond to your request.</div>';
+   await refresh();
+   setTimeout(()=>{
+     closeModal("rfqModal");
+     showSection("rfqs");
+     rfqFilter="all";
+     const allButton=document.querySelector('#section-rfqs [data-rfq-filter="all"]');
+     if(allButton){document.querySelectorAll("#section-rfqs .rfq-filter").forEach(btn=>{btn.classList.remove("active");btn.setAttribute("aria-selected","false")});allButton.classList.add("active");allButton.setAttribute("aria-selected","true")}
+     renderRFQs();
+   },700);
+ }catch(err){
+   console.error("Unexpected RFQ error:",err);
+   n.innerHTML='<div class="notice error">Something went wrong while creating the RFQ. Please try again.</div>';
+ }finally{
+   if(publishButton){publishButton.disabled=false;publishButton.textContent="Publish RFQ"}
+ }
 }
 function details(id){const r=rfqs.find(x=>String(x.id)===String(id));if(r)alert([`RFQ: ${r.code||""}`,`Title: ${r.title||""}`,`Category: ${r.category||""}`,`Quantity: ${r.quantity||""}`,`Required: ${date(r.deadline)}`,`Delivery: ${r.delivery_location||""}`,`Budget: ${money(r.estimated_budget)}`,`Notes: ${r.notes||"None"}`].join("\n"))}
 
