@@ -345,8 +345,25 @@ async function loadBusiness(){
 }
 
 async function refresh(){
- await loadRFQs();await loadQuotes();await loadPayments();await loadInvoices();await loadVerifiedSuppliers();
- renderRFQs();renderQuotes();renderOrders();renderPayments();renderInvoices();updateStats();renderActivity();
+ await loadRFQs();
+ await loadQuotes();
+ await loadPayments();
+ await loadInvoices();
+ await loadVerifiedSuppliers();
+
+ renderRFQs();
+ renderQuotes();
+ renderOrders();
+ renderPayments();
+ renderInvoices();
+ updateStats();
+
+ if(typeof renderActivity==="function"){
+   renderActivity();
+ }
+ if(typeof renderVerifiedSuppliers==="function"){
+   renderVerifiedSuppliers();
+ }
 }
 
 function updateIdentity(){
@@ -357,8 +374,19 @@ function updateIdentity(){
 }
 
 async function loadRFQs(){
- const {data,error}=await db.from("rfqs").select("*").eq("business_id",currentUser.id).order("created_at",{ascending:false});
- rfqs=error?[]:(data||[]);
+ const {data,error}=await db
+   .from("rfqs")
+   .select("*")
+   .or(`business_id.eq.${currentUser.id},created_by.eq.${currentUser.id}`)
+   .order("created_at",{ascending:false});
+
+ if(error){
+   console.error("RFQ load error:",error);
+   rfqs=[];
+   return;
+ }
+
+ rfqs=data||[];
 }
 async function loadQuotes(){
  if(!rfqs.length){quotes=[];return}
@@ -373,6 +401,48 @@ async function loadInvoices(){
  if(!payments.length){invoices=[];return}
  const {data,error}=await db.from("supplier_invoices").select("*").in("payment_id",payments.map(p=>p.id)).order("created_at",{ascending:false});
  invoices=error?[]:(data||[]);
+}
+
+async function loadVerifiedSuppliers(){
+ try{
+   const {data,error}=await db.from("profiles").select("*").eq("role","supplier");
+   if(error){
+     console.error("Verified suppliers load error:",error);
+     verifiedSuppliers=[];
+     return;
+   }
+   verifiedSuppliers=(data||[]).filter(s =>
+     s.verified===true ||
+     String(s.verification_status||"").toLowerCase().trim()==="verified" ||
+     String(s.verification_status||"").toLowerCase().trim()==="approved"
+   );
+ }catch(error){
+   console.error("Verified suppliers unexpected error:",error);
+   verifiedSuppliers=[];
+ }
+}
+
+function renderVerifiedSuppliers(){
+ const c=document.getElementById("verifiedSuppliersContainer");
+ if(!c)return;
+ if(!verifiedSuppliers.length){
+   c.innerHTML='<div class="empty">No verified suppliers are available yet.</div>';
+   return;
+ }
+ c.innerHTML=verifiedSuppliers.map(s=>{
+   const company=s.company_name||s.business_name||"Supplier";
+   const category=s.category||s.business_category||s.industry||s.supplier_category||"General Supplier";
+   const city=s.city||s.location||s.country||"Zambia";
+   const description=s.business_description||s.description||"Verified supplier on Elsati Connect.";
+   return `<article class="supplier-card">
+     <div class="supplier-card-head">
+       <div class="supplier-initial">${esc(company.trim().charAt(0).toUpperCase()||"S")}</div>
+       <div><h3>${esc(company)}</h3><div class="small">${esc(category)} · ${esc(city)}</div></div>
+     </div>
+     <p>${esc(description)}</p>
+     <span class="badge verified">✓ Verified Supplier</span>
+   </article>`;
+ }).join("");
 }
 
 function showSection(section,button){
