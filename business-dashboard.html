@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -680,6 +680,7 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 <div class="field"><label>Estimated Budget</label><input id="rfqBudget" type="number" placeholder="Optional"></div>
 <div class="field"><label>Delivery Location</label><input id="rfqDelivery" placeholder="Lusaka"></div>
 <div class="field"><label>Required Date</label><input id="rfqDeadline" type="date"></div>
+<div class="field full"><label>RFQ Items</label><div id="rfq-items-builder" class="rfq-items-builder"></div><button type="button" class="btn btn-light" id="add-rfq-item" style="margin-top:8px;width:max-content">+ Add Another Item</button></div>
 <div class="field full"><label>Requirements / Notes</label><textarea id="rfqNotes" placeholder="Specifications, delivery requirements and evaluation criteria"></textarea></div>
 </div>
 <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('rfqModal')">Cancel</button><button class="btn btn-primary" onclick="createRFQ()">Publish RFQ</button></div>
@@ -2126,6 +2127,144 @@ function downloadProcurementReport(){
 
 /* Replace only the presentation functions; the original data loading remains intact. */
 renderQuotes = renderQuotesV2;
+</script>
+
+
+<style id="elsati-business-flow-improvements">
+.rfq-items-builder{display:grid;gap:9px}.rfq-item-row{display:grid;grid-template-columns:1.7fr .8fr .7fr 42px;gap:8px;align-items:end;padding:10px;background:#f7fafb;border:1px solid #dce7ec;border-radius:12px}.rfq-item-row label{font-size:7px;color:#71818d;font-weight:800}.rfq-item-row input{width:100%;border:1px solid #dce7ec;background:#fff;color:#12304a;border-radius:9px;padding:10px;font-size:9px}.remove-rfq-item{width:38px;height:38px;border:1px solid #efcaca;background:#fff5f5;color:#a74343;border-radius:10px;font-weight:900}.invoice-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.invoice-ready{padding:10px 12px;background:#eaf7ef;border:1px solid #cfe8d8;color:#257a43;border-radius:10px;font-size:8px;font-weight:800;margin-top:10px}.payment-proof-status{margin-top:10px;padding:10px 12px;border-radius:10px;font-size:8px;font-weight:800}.payment-proof-status.waiting{background:#fff8e9;color:#906719;border:1px solid #efdba9}.payment-proof-status.verified{background:#eaf7ef;color:#257a43;border:1px solid #cfe8d8}
+@media(max-width:700px){.rfq-item-row{grid-template-columns:1fr 1fr}.rfq-item-row .item-desc{grid-column:1/-1}.remove-rfq-item{width:100%}}
+</style>
+<script>
+/* =========================================================
+   ELSATI BUSINESS FLOW IMPROVEMENTS
+   - Keeps the current dashboard appearance.
+   - RFQs can contain multiple requested items.
+   - POP upload remains on the customer side.
+   - Supplier verifies the POP before invoice issuance.
+   - Customer can view and print the resulting invoice.
+========================================================= */
+const ELSATI_RFQ_ITEMS_START_B="[[ELSATI_RFQ_ITEMS]]";
+const ELSATI_RFQ_ITEMS_END_B="[[/ELSATI_RFQ_ITEMS]]";
+
+function businessRfqItems(){
+  return [...document.querySelectorAll("#rfq-items-builder .rfq-item-row")].map(row=>({
+    description:row.querySelector("input.item-desc")?.value.trim()||"",
+    quantity:row.querySelector(".item-qty")?.value.trim()||"",
+    unit:row.querySelector(".item-unit")?.value.trim()||""
+  })).filter(x=>x.description);
+}
+function renderRfqItemBuilder(items){
+  const host=document.getElementById("rfq-items-builder");if(!host)return;
+  const list=Array.isArray(items)&&items.length?items:[{description:"",quantity:"",unit:""}];
+  host.innerHTML=list.map((x,i)=>`<div class="rfq-item-row"><div class="item-desc"><label>Item ${i+1}</label><input class="item-desc" value="${esc(x.description||"")}" placeholder="e.g. Laptop computers"></div><div><label>Quantity</label><input class="item-qty" value="${esc(x.quantity||"")}" placeholder="10"></div><div><label>Unit</label><input class="item-unit" value="${esc(x.unit||"")}" placeholder="pcs"></div><button type="button" class="remove-rfq-item" onclick="removeRfqItem(this)" title="Remove item">×</button></div>`).join("");
+  // The nested class on the first div is deliberate only for styling; use the input itself when collecting.
+}
+function addRfqItem(){
+  const items=businessRfqItems();items.push({description:"",quantity:"",unit:""});renderRfqItemBuilder(items);
+  document.querySelector("#rfq-items-builder .rfq-item-row:last-child .item-desc")?.focus();
+}
+function removeRfqItem(btn){
+  const rows=[...document.querySelectorAll("#rfq-items-builder .rfq-item-row")];if(rows.length<=1){alert("An RFQ must contain at least one item.");return;}
+  const items=businessRfqItems();const index=rows.indexOf(btn.closest(".rfq-item-row"));if(index>=0)items.splice(index,1);renderRfqItemBuilder(items);
+}
+
+const originalOpenCreateRFQ=window.openCreateRFQ;
+window.openCreateRFQ=function(){
+  if(typeof originalOpenCreateRFQ==="function")originalOpenCreateRFQ();else document.getElementById("rfqModal")?.classList.add("show");
+  setTimeout(()=>renderRfqItemBuilder([{description:document.getElementById("rfqTitle")?.value||"",quantity:document.getElementById("rfqQuantity")?.value||"",unit:""}]),30);
+};
+
+document.addEventListener("DOMContentLoaded",()=>{
+  renderRfqItemBuilder();
+  document.getElementById("add-rfq-item")?.addEventListener("click",addRfqItem);
+});
+
+/* Override RFQ creation so the new item list is stored without requiring new columns. */
+window.createRFQ=async function(){
+  const title=v("rfqTitle"),category=v("rfqCategory"),quantity=v("rfqQuantity"),budget=v("rfqBudget"),delivery=v("rfqDelivery"),deadline=v("rfqDeadline"),notes=v("rfqNotes"),n=document.getElementById("rfqNotice"),items=businessRfqItems();
+  n.innerHTML="";
+  if(!title||!category||!deadline){n.innerHTML='<div class="notice error">Complete title, category and required date.</div>';return;}
+  if(!items.length){n.innerHTML='<div class="notice error">Add at least one RFQ item.</div>';return;}
+  if(!items.every(x=>x.description)){n.innerHTML='<div class="notice error">Please describe every RFQ item.</div>';return;}
+  if(!currentUser||!currentBusiness){n.innerHTML='<div class="notice error">Your business profile could not be loaded. Please log in again.</div>';return;}
+  const companyName=String(currentBusiness.company_name||currentBusiness.business_name||currentUser.email||"").trim();
+  if(!companyName){n.innerHTML='<div class="notice error">Please complete your Business Name in your Company Profile before creating an RFQ.</div>';return;}
+  const publishButton=document.querySelector('#rfqModal .modal-actions .btn-primary');if(publishButton){publishButton.disabled=true;publishButton.textContent="Publishing...";}
+  const firstQty=items[0]?.quantity||quantity||"";
+  const itemBlock=ELSATI_RFQ_ITEMS_START_B+JSON.stringify(items)+ELSATI_RFQ_ITEMS_END_B;
+  const combinedNotes=itemBlock+(notes?"\n"+notes:"");
+  const rfqData={code:"RFQ-"+Date.now().toString().slice(-7),title,category,quantity:firstQty,deadline,delivery_location:delivery||null,estimated_budget:budget?Number(budget):null,notes:combinedNotes||null,business_id:currentUser.id,business_name:companyName,created_by_company:companyName,created_by:currentUser.id,status:"open"};
+  try{
+    const {error}=await db.from("rfqs").insert(rfqData);
+    if(error){n.innerHTML=`<div class="notice error"><strong>RFQ was not created.</strong><br>${esc(error.message)}</div>`;return;}
+    ["rfqTitle","rfqCategory","rfqQuantity","rfqBudget","rfqDelivery","rfqDeadline","rfqNotes"].forEach(id=>{const f=document.getElementById(id);if(f)f.value=""});
+    renderRfqItemBuilder();n.innerHTML='<div class="notice success">RFQ published successfully with '+items.length+' requested item'+(items.length===1?'':'s')+'.</div>';
+    await refresh();setTimeout(()=>{closeModal("rfqModal");showSection("rfqs")},600);
+  }catch(err){n.innerHTML=`<div class="notice error"><strong>Something went wrong.</strong><br>${esc(err?.message||String(err))}</div>`}
+  finally{if(publishButton){publishButton.disabled=false;publishButton.textContent="Publish RFQ"}}
+};
+
+function businessParseRfqItems(r){
+  const raw=String(r?.notes||""),m=raw.match(/\[\[ELSATI_RFQ_ITEMS\]\]([\s\S]*?)\[\[\/ELSATI_RFQ_ITEMS\]\]/);
+  if(m){try{const arr=JSON.parse(m[1]);if(Array.isArray(arr)&&arr.length)return arr}catch(e){}}
+  return [{description:r?.title||"Requested item",quantity:r?.quantity||1,unit:""}];
+}
+
+/* Better invoice HTML + print action. */
+window.printBusinessInvoice=async function(id){
+  const invoice=invoices.find(x=>String(x.id)===String(id));if(!invoice){alert("Invoice could not be found.");return;}
+  const payment=payments.find(x=>String(x.id)===String(invoice.payment_id));
+  const rfq=rfqs.find(x=>String(x.id)===String(payment?.rfq_id));
+  const supplier=quotes.find(x=>String(x.rfq_id)===String(payment?.rfq_id)&&String(x.status||"").toLowerCase()==="awarded");
+  const html=`<!doctype html><html><head><meta charset="utf-8"><title>${esc(invoice.invoice_number||"Invoice")}</title><style>body{font-family:Arial,sans-serif;color:#12304a;margin:0;background:#f2f6f8}.page{max-width:900px;margin:25px auto;background:#fff;padding:42px;box-shadow:0 12px 40px rgba(18,48,74,.1)}.top{display:flex;justify-content:space-between;gap:20px}.brand{font-size:25px;font-weight:900}.brand span{color:#2f9955}.title{text-align:right;font-size:35px;font-weight:900}.meta{text-align:right;color:#6d808d;font-size:11px;line-height:1.8}.rule{height:4px;background:#2f9955;margin:22px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.box{border:1px solid #dce7ec;border-radius:12px;padding:14px;background:#fbfdfe}.label{font-size:8px;font-weight:900;text-transform:uppercase;color:#8a9ba6}.value{margin-top:6px;font-size:12px;line-height:1.6}.items{width:100%;border-collapse:collapse;margin-top:22px;font-size:11px}.items th{background:#12304a;color:#fff;padding:11px;text-align:left}.items td{border:1px solid #dce7ec;padding:10px}.total{text-align:right;font-size:22px;font-weight:900;margin-top:18px}.footer{margin-top:35px;border-top:1px solid #dce7ec;padding-top:12px;color:#71818d;font-size:9px}@media print{body{background:#fff}.page{margin:0;box-shadow:none}@page{size:A4;margin:12mm}}</style></head><body><div class="page"><div class="top"><div><div class="brand">ELSATI <span>CONNECT</span></div><div>${esc(currentBusiness?.company_name||"Customer")}</div></div><div><div class="title">INVOICE</div><div class="meta"><strong>Invoice No.:</strong> ${esc(invoice.invoice_number||"—")}<br><strong>Invoice Date:</strong> ${esc(invoice.invoice_date||date(invoice.created_at))}</div></div></div><div class="rule"></div><div class="grid"><div class="box"><div class="label">Bill From</div><div class="value">${esc(supplier?.supplier_company||"Supplier")}</div></div><div class="box"><div class="label">Bill To</div><div class="value">${esc(currentBusiness?.company_name||"Customer")}</div></div></div><table class="items"><thead><tr><th>Description</th><th>RFQ</th><th>Amount</th></tr></thead><tbody><tr><td>${esc(invoice.description||rfq?.title||"Supply against procurement request")}</td><td>${esc(rfq?.code||payment?.rfq_code||"—")}</td><td>${money(invoice.amount)}</td></tr></tbody></table><div class="total">TOTAL: ${money(invoice.amount)}</div><div class="box" style="margin-top:22px"><div class="label">Payment Reference</div><div class="value">${esc(payment?.payment_reference||"—")}</div></div><div class="footer">Invoice issued by the supplier after payment was verified through Elsati Connect.</div></div></body></html>`;
+  const w=window.open("","_blank","width=1000,height=800");if(!w){alert("Please allow pop-ups to print the invoice.");return;}w.document.write(html);w.document.close();setTimeout(()=>{w.focus();w.print()},400);
+};
+
+/* Replace invoice rendering with customer-friendly actions. */
+window.renderInvoices=function(){
+  const c=document.getElementById("invoicesContainer");if(!c)return;
+  if(!invoices.length){c.innerHTML='<div class="panel empty">No invoices yet. They become available after the supplier verifies payment.</div>';return;}
+  c.innerHTML=invoices.map(i=>{const p=payments.find(x=>String(x.id)===String(i.payment_id));return `<div class="workflow"><div class="row"><div><h3>${esc(i.invoice_number||"Invoice")}</h3><div class="small">${esc(i.description||"Supply against procurement request")}</div></div><span class="badge completed">${esc(i.status||"Issued")}</span></div><div class="details"><div class="detail"><span>Amount</span><strong>${money(i.amount)}</strong></div><div class="detail"><span>Invoice Date</span><strong>${date(i.invoice_date)}</strong></div><div class="detail"><span>RFQ</span><strong>${esc(paymentCode(i.payment_id))}</strong></div><div class="detail"><span>Payment Status</span><strong>${esc(p?.status||"Confirmed")}</strong></div></div><div class="invoice-ready">✓ Invoice received from supplier after payment verification.</div><div class="invoice-actions"><button class="btn btn-primary" onclick="printBusinessInvoice('${i.id}')">Print Invoice</button><button class="btn btn-light" onclick="printBusinessInvoice('${i.id}')">View / Print</button></div></div>`}).join("");
+};
+
+/* Customer payment cards: clearly show POP and supplier verification. */
+window.renderPayments=function(){
+  const c=document.getElementById("paymentsContainer");if(!c)return;
+  if(!payments.length){c.innerHTML='<div class="panel empty">No payments yet. Award a supplier quotation to begin payment.</div>';return;}
+  c.innerHTML=payments.map(p=>{const q=quotes.find(x=>String(x.rfq_id)===String(p.rfq_id)&&String(x.status||"").toLowerCase()==="awarded"),status=String(p.status||"").toLowerCase(),verified=["confirmed","paid"].includes(status);return `<div class="workflow"><div class="row"><div><h3>${esc(p.rfq_code||"Payment")}</h3><div class="small">${esc(q?.supplier_company||"Supplier")}</div></div><span class="badge ${verified?'completed':status==='proof_uploaded'?'awarded':'pending'}">${esc(verified?'Payment Verified':status==='proof_uploaded'?'POP Uploaded — Awaiting Supplier':'Awaiting Payment')}</span></div><div class="details"><div class="detail"><span>Amount</span><strong>${money(p.amount)}</strong></div><div class="detail"><span>Payment Reference</span><strong>${esc(p.payment_reference||"Not submitted")}</strong></div><div class="detail"><span>Payment Date</span><strong>${date(p.payment_date)}</strong></div><div class="detail"><span>Supplier</span><strong>${esc(q?.supplier_company||"Supplier")}</strong></div></div>${status==='proof_uploaded'?'<div class="payment-proof-status waiting">POP uploaded successfully. The supplier must verify that the funds have reflected before the invoice is issued.</div>':verified?'<div class="payment-proof-status verified">✓ Supplier has verified the payment. The invoice should now be available under Invoices.</div>':''}<div class="card-actions">${status==='awaiting_payment'?`<button class="btn btn-primary" onclick="openPayment('${p.id}')">Upload POP</button>`:""}${p.proof_path?`<button class="btn btn-light" onclick="viewProof('${p.id}')">View POP</button>`:""}${verified?`<button class="btn btn-primary" onclick="showSection('invoices')">Go to Invoice</button>`:""}</div></div>`}).join("");
+};
+</script>
+
+<script>
+/* Customer-side quote display: decode the same safe markers used for itemised RFQs/quotes. */
+function bizParseStructuredQuote(q){
+  const raw=String(q?.notes||""),tm=raw.match(/\[\[ELSATI_QUOTE_TERMS\]\]([\s\S]*?)\[\[\/ELSATI_QUOTE_TERMS\]\]/),im=raw.match(/\[\[ELSATI_QUOTE_ITEMS\]\]([\s\S]*?)\[\[\/ELSATI_QUOTE_ITEMS\]\]/);
+  let meta={},items=[];if(tm)try{meta=JSON.parse(tm[1])||{}}catch(e){};if(im)try{items=JSON.parse(im[1])||[]}catch(e){}
+  const clean=raw.replace(tm?tm[0]:"","").replace(im?im[0]:"").trim();
+  return {payment_terms:q?.payment_terms||meta.payment_terms||"As agreed",quote_validity:q?.quote_validity||meta.quote_validity||"As stated",availability:q?.availability||meta.availability||"As stated",warranty:q?.warranty||q?.warranty_guarantee||meta.warranty||"As stated",notes:clean||"No additional supplier notes.",items:Array.isArray(items)?items:[]};
+}
+
+window.v2renderQuoteCard=function(q,r){
+  const awarded=v2isAwarded(q),selected=v2selectedQuote(r?.id),isSelected=String(selected?.id)===String(q.id),t=bizParseStructuredQuote(q);
+  const items=t.items.length?t.items:[{description:r?.title||"Requested item",quantity:r?.quantity||"—",unit:"",unit_price:null,line_total:null}];
+  return `<article class="quote-card ${isSelected?'procurement-selected':''}"><div class="row"><div><div class="panel-title">${v2esc(v2quoteName(q))}</div><div class="small">${v2esc(r?.code||"")} · Submitted ${v2esc(q.created_at?dateTime(q.created_at):"—")}</div></div><div class="price">${money(q.price)}</div></div><div class="quote-meta"><div><span>Delivery</span><strong>${v2esc(q.delivery||q.delivery_period||"As stated")}</strong></div><div><span>Payment Terms</span><strong>${v2esc(t.payment_terms)}</strong></div><div><span>Validity</span><strong>${v2esc(t.quote_validity)}</strong></div><div><span>Availability</span><strong>${v2esc(t.availability)}</strong></div></div><div style="overflow:auto;margin-top:12px"><table style="width:100%;border-collapse:collapse;font-size:8px"><thead><tr><th style="text-align:left;padding:8px;background:#eff7f3">Item</th><th style="padding:8px;background:#eff7f3">Qty</th><th style="padding:8px;background:#eff7f3">Unit</th><th style="padding:8px;background:#eff7f3">Unit Price</th><th style="padding:8px;background:#eff7f3">Line Total</th></tr></thead><tbody>${items.map(it=>`<tr><td style="padding:8px;border-bottom:1px solid #e7eef1">${v2esc(it.description||"Item")}</td><td style="padding:8px;border-bottom:1px solid #e7eef1;text-align:center">${v2esc(it.quantity??"—")}</td><td style="padding:8px;border-bottom:1px solid #e7eef1;text-align:center">${v2esc(it.unit||"—")}</td><td style="padding:8px;border-bottom:1px solid #e7eef1;text-align:right">${it.unit_price!=null?money(it.unit_price):"—"}</td><td style="padding:8px;border-bottom:1px solid #e7eef1;text-align:right">${it.line_total!=null?money(it.line_total):money(q.price)}</td></tr>`).join("")}</tbody></table></div><div class="small" style="margin-top:10px">Warranty / Guarantee: ${v2esc(t.warranty)}<br>${v2esc(t.notes)}</div><div class="quote-actions-v2">${isSelected?'<span class="procurement-selected-label">✓ Selected for report</span>':''}${awarded?'<span class="badge awarded">Awarded</span>':''}<button class="btn btn-light" onclick="openQuoteV2('${q.id}')">View Full Quote</button><button class="btn btn-light" onclick="selectQuoteForReport('${q.id}')">${isSelected?'Selected':'Select for Report'}</button>${awarded?'<button class="btn btn-secondary" onclick="changeAwardToQuote(\''+q.id+'\')">Award Instead</button>':`<button class="btn btn-primary" onclick="awardQuoteV2('${q.id}')">Award Quote</button>`}</div></article>`;
+};
+
+window.openQuoteV2=function(id){
+  const q=quotes.find(x=>String(x.id)===String(id));if(!q)return;const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));const t=bizParseStructuredQuote(q),items=t.items.length?t.items:[{description:r?.title||"Requested item",quantity:r?.quantity||"—",unit:"",unit_price:null,line_total:null}];
+  document.getElementById("quoteSub").textContent=`${v2quoteName(q)} · ${r?.code||""}`;
+  document.getElementById("quoteContent").innerHTML=`<div class="quote-document"><div class="qhead"><div><h1>QUOTATION</h1><div class="green"><strong>${v2esc(v2quoteName(q))}</strong></div></div><div style="text-align:right"><strong>Quotation Date &amp; Time:</strong> ${v2esc(dateTime(q.created_at))}<br><strong>RFQ:</strong> ${v2esc(r?.code||"")}</div></div><div style="margin-top:12px"><strong>Customer:</strong> ${v2esc(r?.business_name||currentBusiness?.company_name||"Business")}<br><strong>Request:</strong> ${v2esc(r?.title||"")}</div><div style="overflow:auto"><table><thead><tr><th>#</th><th>Description</th><th>Quantity</th><th>Unit</th><th>Unit Price</th><th>Line Total</th></tr></thead><tbody>${items.map((it,i)=>`<tr><td>${i+1}</td><td>${v2esc(it.description||"Item")}</td><td>${v2esc(it.quantity??"—")}</td><td>${v2esc(it.unit||"—")}</td><td>${it.unit_price!=null?money(it.unit_price):"—"}</td><td>${it.line_total!=null?money(it.line_total):money(i===0?q.price:0)}</td></tr>`).join("")}</tbody></table></div><div class="total">Quotation Total: ${money(q.price)}</div><table><tr><th>Delivery</th><td>${v2esc(q.delivery||q.delivery_period||"As stated")}</td></tr><tr><th>Payment Terms</th><td>${v2esc(t.payment_terms)}</td></tr><tr><th>Quotation Validity</th><td>${v2esc(t.quote_validity)}</td></tr><tr><th>Availability</th><td>${v2esc(t.availability)}</td></tr><tr><th>Warranty / Guarantee</th><td>${v2esc(t.warranty)}</td></tr><tr><th>Supplier Notes</th><td>${v2esc(t.notes)}</td></tr></table></div>`;
+  document.getElementById("awardBtn").textContent=v2isAwarded(q)?"Awarded":"Award Quote";document.getElementById("awardBtn").disabled=v2isAwarded(q);document.getElementById("awardBtn").onclick=()=>{closeModal("quoteModal");awardQuoteV2(q.id)};document.getElementById("quoteModal").classList.add("show");
+};
+
+/* Do not allow an award change after the supplier has confirmed the payment. */
+const _originalChangeAward=window.changeAwardToQuote;
+window.changeAwardToQuote=async function(id,skipConfirm=false){
+  const q=quotes.find(x=>String(x.id)===String(id));if(!q)return;const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));if(!r)return;
+  const p=payments.find(x=>String(x.rfq_id)===String(r.id));
+  if(p&&["confirmed","paid"].includes(String(p.status||"").toLowerCase())){alert("The award cannot be changed because payment has already been verified by the supplier.");return;}
+  return _originalChangeAward(id,skipConfirm);
+};
 </script>
 
 </body>
