@@ -531,7 +531,13 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 }
 </style>
 
-</head>
+<style id="elsati-payment-flow-ui">
+.payment-flow-track{display:flex;align-items:flex-start;gap:0;margin:16px 0 8px;overflow-x:auto;padding:4px 2px 10px}
+.payment-flow-step{min-width:135px;position:relative;text-align:center}.payment-flow-step:not(:last-child):after{content:"";position:absolute;top:16px;left:50%;width:100%;height:2px;background:#dce7ec;z-index:0}.payment-flow-step.done:not(:last-child):after{background:#2f9955}
+.payment-flow-dot{position:relative;z-index:2;width:32px;height:32px;margin:0 auto 7px;border-radius:50%;background:#edf2f4;color:#71818d;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;border:2px solid #fff;box-shadow:0 0 0 1px #dce7ec}.payment-flow-step.done .payment-flow-dot{background:#2f9955;color:#fff;box-shadow:0 0 0 1px #2f9955}.payment-flow-step.current .payment-flow-dot{background:#eaf3fb;color:#285d83;box-shadow:0 0 0 2px #bdd6e7}
+.payment-flow-step strong{display:block;color:#12304a;font-size:7.5px;line-height:1.3}.payment-flow-step span{display:block;color:#8193a0;font-size:6.8px;line-height:1.35;margin-top:3px}.flow-status{margin-top:10px;padding:10px 12px;border-radius:11px;font-size:8px;line-height:1.5;font-weight:700}.flow-status.waiting{background:#fff8e9;border:1px solid #efdba9;color:#906719}.flow-status.progress{background:#eef7fb;border:1px solid #d9e9f1;color:#4e6e83}.flow-status.success{background:#eaf7ef;border:1px solid #cfe8d8;color:#257a43}.invoice-received{display:flex;align-items:center;gap:8px;margin-top:10px;padding:11px 13px;border-radius:11px;background:#eaf7ef;border:1px solid #cfe8d8;color:#257a43;font-size:8px;font-weight:800}
+@media(max-width:700px){.payment-flow-step{min-width:118px}}
+</style></head>
 
 <body>
 <header class="header">
@@ -589,8 +595,11 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 <div class="step done"><div class="dot">1</div><div><h4>Create RFQ</h4><p>Publish what your business needs.</p></div></div>
 <div class="step current"><div class="dot">2</div><div><h4>Receive & Compare Quotes</h4><p>Review supplier price, delivery and commercial terms.</p></div></div>
 <div class="step"><div class="dot">3</div><div><h4>Award Supplier</h4><p>Select the supplier that best meets your requirements.</p></div></div>
-<div class="step"><div class="dot">4</div><div><h4>Pay Supplier</h4><p>After award, view the supplier's bank details and upload proof of payment.</p></div></div>
-<div class="step"><div class="dot">5</div><div><h4>Payment Confirmed & Invoice</h4><p>The supplier confirms receipt and creates the invoice.</p></div></div>
+<div class="step"><div class="dot">4</div><div><h4>Customer Uploads POP</h4><p>Upload proof of payment against the awarded supplier.</p></div></div>
+<div class="step"><div class="dot">5</div><div><h4>Supplier Sees POP</h4><p>The supplier receives the uploaded proof for review.</p></div></div>
+<div class="step"><div class="dot">6</div><div><h4>Supplier Verifies Payment</h4><p>The supplier confirms that the funds have reflected.</p></div></div>
+<div class="step"><div class="dot">7</div><div><h4>Supplier Generates Invoice</h4><p>The invoice can only follow verified payment.</p></div></div>
+<div class="step"><div class="dot">8</div><div><h4>Customer Receives Invoice</h4><p>The invoice appears under Invoices and can be viewed or printed.</p></div></div>
 </div>
 </div>
 <div class="panel"><div class="panel-title">Recent activity</div><div class="panel-sub">Your latest procurement activity.</div><div id="activity"><div class="empty">No activity yet.</div></div></div>
@@ -623,12 +632,24 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 </section>
 
 <section id="section-payments" class="section">
-<div class="section-header"><div><h2>Payments</h2><p>Pay awarded suppliers and upload proof of payment.</p></div></div>
+<div class="section-header"><div><h2>Payments</h2><p>Pay awarded suppliers and upload proof of payment.</p></div><button class="btn btn-light" onclick="refresh()">↻ Refresh Status</button></div>
+<div class="panel" style="margin-bottom:16px">
+<div class="panel-title">Payment to Invoice Flow</div><div class="panel-sub">The transaction remains linked from award through POP, supplier verification and invoice.</div>
+<div class="payment-flow-track">
+<div class="payment-flow-step done"><div class="payment-flow-dot">1</div><strong>Customer awards supplier</strong><span>Quotation selected</span></div>
+<div class="payment-flow-step"><div class="payment-flow-dot">2</div><strong>Customer uploads POP</strong><span>Proof submitted</span></div>
+<div class="payment-flow-step"><div class="payment-flow-dot">3</div><strong>Supplier sees POP</strong><span>Proof reviewed</span></div>
+<div class="payment-flow-step"><div class="payment-flow-dot">4</div><strong>Supplier verifies payment</strong><span>Funds reflected</span></div>
+<div class="payment-flow-step"><div class="payment-flow-dot">5</div><strong>Payment becomes Payment Verified</strong><span>Confirmed</span></div>
+<div class="payment-flow-step"><div class="payment-flow-dot">6</div><strong>Supplier generates invoice</strong><span>Invoice issued</span></div>
+<div class="payment-flow-step"><div class="payment-flow-dot">7</div><strong>Customer receives invoice</strong><span>Invoices section</span></div>
+<div class="payment-flow-step"><div class="payment-flow-dot">8</div><strong>Customer can view/print</strong><span>Invoice action</span></div>
+</div></div>
 <div id="paymentsContainer"><div class="empty">Loading payment workflow...</div></div>
 </section>
 
 <section id="section-invoices" class="section">
-<div class="section-header"><div><h2>Invoices</h2><p>View invoices created by suppliers after payment confirmation.</p></div></div>
+<div class="section-header"><div><h2>Invoices</h2><p>Invoices become available after the supplier verifies payment and issues the invoice.</p></div></div>
 <div id="invoicesContainer"><div class="empty">Loading invoices...</div></div>
 </section>
 
@@ -2229,9 +2250,30 @@ window.renderInvoices=function(){
 
 /* Customer payment cards: clearly show POP and supplier verification. */
 window.renderPayments=function(){
-  const c=document.getElementById("paymentsContainer");if(!c)return;
-  if(!payments.length){c.innerHTML='<div class="panel empty">No payments yet. Award a supplier quotation to begin payment.</div>';return;}
-  c.innerHTML=payments.map(p=>{const q=quotes.find(x=>String(x.rfq_id)===String(p.rfq_id)&&String(x.status||"").toLowerCase()==="awarded"),status=String(p.status||"").toLowerCase(),verified=["confirmed","paid"].includes(status);return `<div class="workflow"><div class="row"><div><h3>${esc(p.rfq_code||"Payment")}</h3><div class="small">${esc(q?.supplier_company||"Supplier")}</div></div><span class="badge ${verified?'completed':status==='proof_uploaded'?'awarded':'pending'}">${esc(verified?'Payment Verified':status==='proof_uploaded'?'POP Uploaded — Awaiting Supplier':'Awaiting Payment')}</span></div><div class="details"><div class="detail"><span>Amount</span><strong>${money(p.amount)}</strong></div><div class="detail"><span>Payment Reference</span><strong>${esc(p.payment_reference||"Not submitted")}</strong></div><div class="detail"><span>Payment Date</span><strong>${date(p.payment_date)}</strong></div><div class="detail"><span>Supplier</span><strong>${esc(q?.supplier_company||"Supplier")}</strong></div></div>${status==='proof_uploaded'?'<div class="payment-proof-status waiting">POP uploaded successfully. The supplier must verify that the funds have reflected before the invoice is issued.</div>':verified?'<div class="payment-proof-status verified">✓ Supplier has verified the payment. The invoice should now be available under Invoices.</div>':''}<div class="card-actions">${status==='awaiting_payment'?`<button class="btn btn-primary" onclick="openPayment('${p.id}')">Upload POP</button>`:""}${p.proof_path?`<button class="btn btn-light" onclick="viewProof('${p.id}')">View POP</button>`:""}${verified?`<button class="btn btn-primary" onclick="showSection('invoices')">Go to Invoice</button>`:""}</div></div>`}).join("");
+ const c=document.getElementById("paymentsContainer");if(!c)return;
+ if(!payments.length){c.innerHTML='<div class="panel empty">No payments yet. Award a supplier quotation to begin payment.</div>';return;}
+ c.innerHTML=payments.map(p=>{
+  const q=quotes.find(x=>String(x.rfq_id)===String(p.rfq_id)&&String(x.status||"").toLowerCase()==="awarded");
+  const status=String(p.status||"").toLowerCase(),verified=["confirmed","paid"].includes(status),hasPop=!!p.proof_path;
+  const inv=invoices.find(i=>String(i.payment_id)===String(p.id));
+  let current=1;if(hasPop)current=3;if(verified)current=5;if(inv)current=8;
+  const steps=[
+   ["Customer awards supplier","Quotation selected"],["Customer uploads POP","Proof submitted"],["Supplier sees POP","Proof available"],
+   ["Supplier verifies payment","Funds reflected"],["Payment becomes Payment Verified","Confirmed"],["Supplier generates invoice","Invoice issued"],
+   ["Customer receives invoice","Invoices section"],["Customer can view/print","Invoice action"]
+  ];
+  const track=steps.map((s,i)=>{const n=i+1,done=n<=current;return `<div class="payment-flow-step ${done?'done':''}"><div class="payment-flow-dot">${done?'✓':n}</div><strong>${esc(s[0])}</strong><span>${esc(s[1])}</span></div>`}).join("");
+  let box="";
+  if(status==="awaiting_payment")box='<div class="flow-status waiting">Step 2: Upload the proof of payment. The supplier will then see the POP and verify the payment.</div>';
+  else if(status==="proof_uploaded")box='<div class="flow-status progress">Step 3–4: POP uploaded. The supplier can now see the proof and verify that the funds have reflected. The invoice is not available until verification.</div>';
+  else if(verified&&!inv)box='<div class="flow-status success">✓ Payment Verified. The supplier has confirmed that the funds have reflected and can now generate the invoice.</div>';
+  else if(inv)box='<div class="flow-status success">✓ Payment Verified and Invoice Received. The invoice is now available under Invoices.</div>';
+  return `<div class="workflow"><div class="row"><div><h3>${esc(p.rfq_code||"Payment")}</h3><div class="small">${esc(q?.supplier_company||"Supplier")}</div></div><span class="badge ${verified?'completed':status==='proof_uploaded'?'awarded':'pending'}">${esc(verified?'Payment Verified':status==='proof_uploaded'?'POP Uploaded — Awaiting Supplier':'Awaiting Payment')}</span></div>
+  <div class="payment-flow-track">${track}</div>
+  <div class="details"><div class="detail"><span>Amount</span><strong>${money(p.amount)}</strong></div><div class="detail"><span>Payment Reference</span><strong>${esc(p.payment_reference||"Not submitted")}</strong></div><div class="detail"><span>Payment Date</span><strong>${date(p.payment_date)}</strong></div><div class="detail"><span>Supplier</span><strong>${esc(q?.supplier_company||"Supplier")}</strong></div></div>
+  ${box}${hasPop?'<div class="payment-proof-status verified">✓ Proof of payment has been uploaded and is available for supplier review.</div>':''}${inv?'<div class="invoice-received">✓ Customer invoice received from supplier after payment verification.</div>':''}
+  <div class="card-actions">${status==="awaiting_payment"?`<button class="btn btn-primary" onclick="openPayment('${p.id}')">Upload POP</button>`:""}${hasPop?`<button class="btn btn-light" onclick="viewProof('${p.id}')">View POP</button>`:""}${inv?`<button class="btn btn-primary" onclick="printBusinessInvoice('${inv.id}')">View / Print Invoice</button>`:""}</div></div>`;
+ }).join("");
 };
 </script>
 
@@ -2267,5 +2309,8 @@ window.changeAwardToQuote=async function(id,skipConfirm=false){
 };
 </script>
 
+<script>
+setInterval(async()=>{if(document.querySelector(".modal-overlay.show"))return;try{await loadPayments();await loadInvoices();renderPayments();renderInvoices();updateStats()}catch(e){console.warn("Payment/invoice refresh:",e)}},30000);
+</script>
 </body>
 </html>  
