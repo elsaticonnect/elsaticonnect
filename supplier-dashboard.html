@@ -3549,6 +3549,20 @@ body {
 
         <button
             class="nav-item"
+            onclick="showSection('tenders', this)"
+        >
+            Tenders
+        </button>
+
+        <button
+            class="nav-item"
+            onclick="showSection('bidding', this)"
+        >
+            Bidding
+        </button>
+
+        <button
+            class="nav-item"
             onclick="showSection('quotes', this)"
         >
             My Quotes
@@ -3731,9 +3745,9 @@ body {
 
                 <button
                     class="welcome-action secondary"
-                    onclick="showSection('quotes')"
+                    onclick="showSection('tenders')"
                 >
-                    View My Quotes
+                    Explore Tenders & Bids
                 </button>
 
             </div>
@@ -3929,6 +3943,22 @@ body {
 
 
     <!-- =====================================================
+         TENDERS
+    ===================================================== -->
+    <section id="section-tenders" class="section">
+        <div class="section-header"><div><h2>Available Tenders</h2><p>Review published tenders and invitations and submit your interest through Elsati Connect.</p></div></div>
+        <div id="tendersContainer" class="rfq-grid"><div class="loading">Loading tenders...</div></div>
+    </section>
+
+    <!-- =====================================================
+         BIDDING OPPORTUNITIES
+    ===================================================== -->
+    <section id="section-bidding" class="section">
+        <div class="section-header"><div><h2>Bidding Opportunities</h2><p>Explore competitive bidding opportunities and submit your bid before the closing date.</p></div></div>
+        <div id="biddingContainer" class="rfq-grid"><div class="loading">Loading bidding opportunities...</div></div>
+    </section>
+
+    <!-- =====================================================
          MY QUOTES
     ===================================================== -->
 
@@ -4113,7 +4143,7 @@ body {
                 </h2>
 
                 <p>
-                    Create and download invoices after payment confirmation.
+                    Publish your official ZRA Tax Invoice after POP approval.
                 </p>
 
             </div>
@@ -4137,7 +4167,7 @@ body {
                     margin-top:7px;
                     font-size:11px;
                 ">
-                    Invoices become available after payment is confirmed.
+                    Upload and publish the official ZRA Tax Invoice after POP has been approved.
                 </p>
 
             </div>
@@ -5358,6 +5388,10 @@ let currentUser = null;
 let currentSupplier = null;
 
 let allRFQs = [];
+let allTenders = [];
+let allBiddingOpportunities = [];
+let supplierTenderApplications = [];
+let supplierBidApplications = [];
 
 let allQuotes = [];
 
@@ -5492,6 +5526,8 @@ async function initialiseDashboard() {
         await loadSupplierProfile();
 
         await loadRFQs();
+
+        await loadTendersAndBids();
 
         await loadQuotes();
 
@@ -9967,6 +10003,76 @@ function downloadQuotationPDF(
 
 
 /* =========================================================
+   TENDERS AND BIDDING OPPORTUNITIES
+   These sections read the published opportunities and allow
+   the signed-in supplier to submit an application.
+========================================================= */
+async function loadTendersAndBids() {
+    const [tendersResult, bidsResult, tenderAppsResult, bidAppsResult] = await Promise.all([
+        db.from("tenders").select("*").order("created_at", { ascending: false }),
+        db.from("bids").select("*").order("created_at", { ascending: false }),
+        db.from("tender_applications").select("*").eq("supplier_user_id", currentUser.id),
+        db.from("bid_applications").select("*").eq("supplier_user_id", currentUser.id)
+    ]);
+    allTenders = tendersResult.error ? [] : (tendersResult.data || []);
+    allBiddingOpportunities = bidsResult.error ? [] : (bidsResult.data || []);
+    supplierTenderApplications = tenderAppsResult.error ? [] : (tenderAppsResult.data || []);
+    supplierBidApplications = bidAppsResult.error ? [] : (bidAppsResult.data || []);
+    if (tendersResult.error) console.warn("Tenders could not be loaded:", tendersResult.error.message);
+    if (bidsResult.error) console.warn("Bidding opportunities could not be loaded:", bidsResult.error.message);
+    renderTenderOpportunities();
+    renderBidOpportunities();
+}
+
+function supplierOpportunityIsOpen(item) {
+    const status = String(item.status || "open").toLowerCase();
+    const deadline = item.deadline || item.closing_date || item.submission_deadline;
+    return !["closed", "cancelled", "awarded", "withdrawn", "draft"].includes(status) && (!deadline || new Date(deadline + (String(deadline).length === 10 ? "T23:59:59" : "")).getTime() >= Date.now());
+}
+
+function supplierOpportunityCard(item, type) {
+    const apps = type === "tender" ? supplierTenderApplications : supplierBidApplications;
+    const applied = apps.some(a => String(a.tender_id || a.opportunity_id || a.bid_id) === String(item.id));
+    const title = item.title || item.tender_title || item.bid_title || "Procurement Opportunity";
+    const code = item.reference_number || item.code || item.tender_number || item.bid_number || "";
+    const deadline = item.deadline || item.closing_date || item.submission_deadline;
+    const location = item.location || item.delivery_location || "Not specified";
+    const description = item.description || item.scope || item.specifications || item.notes || "Please review the attached opportunity documents and submission requirements.";
+    const attachment = item.attachment_url || item.document_url || item.pdf_url || item.file_url || "";
+    const status = supplierOpportunityIsOpen(item) ? "Open" : "Closed";
+    const visibility = item.target_supplier_id || item.supplier_user_id ? "Direct Invitation" : "Open Opportunity";
+    return `<article class="rfq-card"><div class="rfq-top"><span class="badge ${status === "Open" ? "badge-open" : "badge-declined"}">${status}</span><span class="badge badge-direct">${visibility}</span></div><div class="rfq-code">${escapeHTML(code)}</div><h3>${escapeHTML(title)}</h3><div class="description">${escapeHTML(description)}</div><div class="rfq-details"><div class="detail"><span class="detail-label">Location</span><strong>${escapeHTML(location)}</strong></div><div class="detail"><span class="detail-label">Closing Date</span><strong>${escapeHTML(deadline ? formatDate(deadline) : "Not stated")}</strong></div><div class="detail"><span class="detail-label">Category</span><strong>${escapeHTML(item.category || "General")}</strong></div><div class="detail"><span class="detail-label">Budget / Value</span><strong>${escapeHTML(item.estimated_budget || item.contract_value || item.budget || "Not disclosed")}</strong></div></div>${attachment ? `<p style="margin:0 0 12px"><a href="${escapeHTML(attachment)}" target="_blank" rel="noopener" class="btn btn-light">View Opportunity Document</a></p>` : ""}<button class="btn ${applied ? "btn-light" : "btn-primary"}" ${(!supplierOpportunityIsOpen(item) || applied) ? "disabled" : ""} onclick="applyForOpportunity('${item.id}','${type}')">${applied ? "Application Submitted" : status === "Open" ? (type === "tender" ? "Apply for Tender" : "Submit Bid") : "Opportunity Closed"}</button></article>`;
+}
+
+function renderTenderOpportunities() {
+    const c = document.getElementById("tendersContainer"); if (!c) return;
+    c.innerHTML = allTenders.length ? allTenders.map(x => supplierOpportunityCard(x, "tender")).join("") : `<div class="empty"><strong>No tenders available at the moment.</strong><p style="margin-top:7px;font-size:11px">New tenders published by customers will appear here.</p></div>`;
+}
+
+function renderBidOpportunities() {
+    const c = document.getElementById("biddingContainer"); if (!c) return;
+    c.innerHTML = allBiddingOpportunities.length ? allBiddingOpportunities.map(x => supplierOpportunityCard(x, "bid")).join("") : `<div class="empty"><strong>No bidding opportunities available.</strong><p style="margin-top:7px;font-size:11px">New bidding opportunities will appear here once published.</p></div>`;
+}
+
+async function applyForOpportunity(opportunityId, type) {
+    const isTender = type === "tender";
+    const table = isTender ? "tender_applications" : "bid_applications";
+    const source = isTender ? allTenders : allBiddingOpportunities;
+    const item = source.find(x => String(x.id) === String(opportunityId));
+    if (!item || !supplierOpportunityIsOpen(item)) { showToast("This opportunity is no longer open.", "error"); return; }
+    const existing = (isTender ? supplierTenderApplications : supplierBidApplications).some(a => String(a.tender_id || a.opportunity_id || a.bid_id) === String(opportunityId));
+    if (existing) { showToast("You have already submitted an application.", "error"); return; }
+    const notes = prompt("Add a brief application note or proposal summary (optional):", "");
+    if (notes === null) return;
+    const payload = { supplier_user_id: currentUser.id, supplier_company: currentSupplier?.company_name || currentSupplier?.business_name || "Supplier", status: "submitted", proposal_notes: notes.trim() || null };
+    payload[isTender ? "tender_id" : "bid_id"] = opportunityId;
+    const { error } = await db.from(table).insert(payload);
+    if (error) { console.error(error); showToast("Application could not be submitted: " + error.message, "error"); return; }
+    showToast(isTender ? "Tender application submitted." : "Bid submitted successfully.", "success");
+    await loadTendersAndBids();
+}
+
+/* =========================================================
    LOAD PAYMENTS
 ========================================================= */
 
@@ -10114,17 +10220,9 @@ function renderPaymentCard(
     }
 
 
-    if (
-        payment.status ===
-        "confirmed"
-    ) {
-
-        statusClass =
-            "status-confirmed";
-
-        statusText =
-            "Payment Confirmed";
-
+    if (["confirmed", "paid", "payment_approved", "approved"].includes(String(payment.status || "").toLowerCase())) {
+        statusClass = "status-confirmed";
+        statusText = "POP Approved";
     }
 
 
@@ -10272,7 +10370,7 @@ function renderPaymentCard(
                                 class="btn btn-primary"
                                 onclick="confirmPaymentReceived('${payment.id}')"
                             >
-                                Confirm Payment Received
+                                Confirm POP / Payment Received
                             </button>
                         `
                         : ""
@@ -10280,14 +10378,13 @@ function renderPaymentCard(
 
 
                 ${
-                    payment.status ===
-                    "confirmed"
+                    ["confirmed", "paid", "payment_approved", "approved"].includes(String(payment.status || "").toLowerCase())
                         ? `
                             <button
                                 class="btn btn-secondary"
                                 onclick="createInvoiceFromPayment('${payment.id}')"
                             >
-                                Create Invoice
+                                Proceed to Invoice
                             </button>
                         `
                         : ""
@@ -10650,9 +10747,9 @@ function renderInvoices() {
 
                             <button
                                 class="btn btn-primary"
-                                onclick="downloadInvoiceFromRecord('${invoice.id}')"
+                                onclick="${invoice.invoice_pdf_path ? `viewSupplierTaxInvoice('${invoice.id}')` : `downloadInvoiceFromRecord('${invoice.id}')`}"
                             >
-                                ↓ Download Invoice
+                                ${invoice.invoice_pdf_path ? "View / Download ZRA Tax Invoice" : "Download Invoice"}
                             </button>
 
                         </div>
@@ -10671,118 +10768,87 @@ function renderInvoices() {
    CREATE INVOICE
 ========================================================= */
 
-async function createInvoiceFromPayment(
-    paymentId
-) {
-
-    const payment =
-        allPayments.find(
-            p =>
-                String(p.id) ===
-                String(paymentId)
-        );
-
-
-    if (!payment) {
-
+async function createInvoiceFromPayment(paymentId) {
+    const payment = allPayments.find(p => String(p.id) === String(paymentId));
+    if (!payment) return;
+    if (!["confirmed", "paid", "payment_approved", "approved"].includes(String(payment.status || "").toLowerCase())) {
+        showToast("POP must be approved before an invoice can be submitted.", "error");
         return;
-
     }
 
+    const invoiceNumber = prompt("Enter the number on your official ZRA Tax Invoice:", "");
+    if (!invoiceNumber || !invoiceNumber.trim()) return;
+    const invoiceDate = prompt("Enter the invoice date (YYYY-MM-DD):", today());
+    if (!invoiceDate) return;
+    const description = prompt("Enter the goods/services supplied:", `Supply against ${payment.rfq_code || payment.order_number || "order"}`) || "Supply of goods/services";
 
-    if (
-        payment.status !==
-        "confirmed"
-    ) {
-
-        showToast(
-            "Payment must be confirmed before creating an invoice.",
-            "error"
-        );
-
+    const picker = document.createElement("input");
+    picker.type = "file";
+    picker.accept = "application/pdf,.pdf";
+    picker.style.display = "none";
+    document.body.appendChild(picker);
+    picker.click();
+    const file = await new Promise(resolve => {
+        picker.addEventListener("change", () => resolve(picker.files && picker.files[0] ? picker.files[0] : null), { once: true });
+        picker.addEventListener("cancel", () => resolve(null), { once: true });
+    });
+    picker.remove();
+    if (!file) return;
+    if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+        showToast("Please upload your official ZRA Tax Invoice as a PDF.", "error");
         return;
-
+    }
+    if (file.size > 15 * 1024 * 1024) {
+        showToast("The invoice PDF must be 15 MB or smaller.", "error");
+        return;
     }
 
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const storagePath = `${currentUser.id}/${payment.id}/${Date.now()}-${safeName}`;
+    const { error: uploadError } = await db.storage.from("supplier-tax-invoices").upload(storagePath, file, { contentType: "application/pdf", upsert: false });
+    if (uploadError) {
+        showToast("Tax invoice upload failed: " + uploadError.message, "error");
+        return;
+    }
 
-    const invoiceNumber =
-        generateInvoiceNumber();
-
-
-    const {
-        data,
-        error
-    } =
-        await db
-            .from("supplier_invoices")
-            .insert({
-
-                supplier_user_id:
-                    currentUser.id,
-
-                payment_id:
-                    payment.id,
-
-                customer_name:
-                    payment.customer_name ||
-                    "Customer",
-
-                invoice_number:
-                    invoiceNumber,
-
-                invoice_date:
-                    today(),
-
-                description:
-                    `Supply against ${
-                        payment.rfq_code ||
-                        payment.order_number ||
-                        "order"
-                    }`,
-
-                amount:
-                    payment.amount ||
-                    0,
-
-                status:
-                    "submitted"
-
-            })
-            .select()
-            .single();
-
+    const { data, error } = await db.from("supplier_invoices").insert({
+        supplier_user_id: currentUser.id,
+        payment_id: payment.id,
+        customer_name: payment.customer_name || "Customer",
+        invoice_number: invoiceNumber.trim(),
+        tax_invoice_number: invoiceNumber.trim(),
+        invoice_date: invoiceDate,
+        description: description.trim(),
+        amount: Number(payment.amount || 0),
+        invoice_pdf_path: storagePath,
+        invoice_pdf_name: file.name,
+        status: "published",
+        published_at: new Date().toISOString()
+    }).select().single();
 
     if (error) {
-
-        console.error(error);
-
-        showToast(
-            "Invoice could not be created: " +
-            error.message,
-            "error"
-        );
-
+        await db.storage.from("supplier-tax-invoices").remove([storagePath]);
+        showToast("Invoice could not be published: " + error.message, "error");
         return;
-
     }
 
-
-    showToast(
-        "Invoice created successfully.",
-        "success"
-    );
-
-
+    showToast("Official ZRA Tax Invoice published to the customer.", "success");
     await loadInvoices();
+    showSection("invoices");
+}
 
-
-    downloadInvoicePDF(
-        createInvoiceObject(
-            data,
-            payment
-        )
-    );
-
+async function viewSupplierTaxInvoice(invoiceId) {
+    const invoice = allInvoices.find(i => String(i.id) === String(invoiceId));
+    if (!invoice || !invoice.invoice_pdf_path) {
+        showToast("The uploaded tax invoice PDF could not be found.", "error");
+        return;
+    }
+    const { data, error } = await db.storage.from("supplier-tax-invoices").createSignedUrl(invoice.invoice_pdf_path, 3600);
+    if (error || !data?.signedUrl) {
+        showToast("The tax invoice could not be opened: " + (error?.message || "Unknown error"), "error");
+        return;
+    }
+    window.open(data.signedUrl, "_blank", "noopener");
 }
 
 
@@ -12464,6 +12530,8 @@ function showSection(
                 const sectionLabels = {
                     dashboard: ["dashboard"],
                     rfqs: ["rfqs"],
+                    tenders: ["tenders"],
+                    bidding: ["bidding"],
                     quotes: ["my quotes", "quotes"],
                     orders: ["orders"],
                     payments: ["payments"],
