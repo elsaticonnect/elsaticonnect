@@ -68,32 +68,32 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 
 .rfq-filter-toolbar{align-items:center;gap:9px}
 .rfq-filter-toolbar .rfq-filter{
-  min-width:92px;
-  border:1px solid #d8e4ea;
-  background:#fff;
-  color:#526b7b;
-  cursor:pointer;
-  user-select:none;
-  position:relative;
-  transition:transform .18s ease,background .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease;
+  min-width:92px;
+  border:1px solid #d8e4ea;
+  background:#fff;
+  color:#526b7b;
+  cursor:pointer;
+  user-select:none;
+  position:relative;
+  transition:transform .18s ease,background .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease;
 }
 .rfq-filter-toolbar .rfq-filter:hover{
-  transform:translateY(-2px);
-  border-color:#2f9955;
-  color:#12304a;
-  box-shadow:0 8px 18px rgba(18,48,74,.10);
+  transform:translateY(-2px);
+  border-color:#2f9955;
+  color:#12304a;
+  box-shadow:0 8px 18px rgba(18,48,74,.10);
 }
 .rfq-filter-toolbar .rfq-filter:active{transform:translateY(0)}
 .rfq-filter-toolbar .rfq-filter.active{
-  background:#2f9955;
-  border-color:#2f9955;
-  color:#fff;
-  box-shadow:0 8px 18px rgba(47,153,85,.20);
+  background:#2f9955;
+  border-color:#2f9955;
+  color:#fff;
+  box-shadow:0 8px 18px rgba(47,153,85,.20);
 }
 @media(max-width:800px){
-  .brand{left:25px;top:25px;gap:8px}
-  .brand img{width:48px;height:48px}
-  .brand-name{font-size:17px}
+  .brand{left:25px;top:25px;gap:8px}
+  .brand img{width:48px;height:48px}
+  .brand-name{font-size:17px}
 }
 
 .rfq-card{transition:transform .18s ease,box-shadow .18s ease}
@@ -569,6 +569,8 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 <p class="welcome-message">Create RFQs, receive quotations from verified suppliers, compare offers, award the best quotation and manage payment through completion — <strong>connecting businesses, one deal at a time.</strong></p>
 <div class="welcome-actions">
 <button class="btn btn-primary" onclick="openCreateRFQ()">Create RFQ</button>
+<button class="btn btn-secondary" type="button" onclick="openOpportunityModal('tender')">Create Tender</button>
+<button class="btn btn-secondary" type="button" onclick="openOpportunityModal('bidding')">Create Bidding</button>
 <button class="btn btn-secondary" onclick="showSection('quotes')">Compare Quotes</button>
 </div>
 </div>
@@ -634,16 +636,16 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 
 <section id="section-suppliers" class="section">
 <div class="section-header">
-  <div>
-    <h2>Verified Suppliers</h2>
-    <p>Browse suppliers that have been verified on Elsati Connect and start a procurement request.</p>
-  </div>
+  <div>
+    <h2>Verified Suppliers</h2>
+    <p>Browse suppliers that have been verified on Elsati Connect and start a procurement request.</p>
+  </div>
 </div>
 <div class="notice info" style="margin-bottom:18px">
-  Only supplier profiles marked as <strong>verified</strong> or with <strong>verification status = verified</strong> are shown here.
+  Only supplier profiles marked as <strong>verified</strong> or with <strong>verification status = verified</strong> are shown here.
 </div>
 <div id="verifiedSuppliersContainer" class="supplier-grid">
-  <div class="empty">Loading verified suppliers...</div>
+  <div class="empty">Loading verified suppliers...</div>
 </div>
 </section>
 
@@ -709,14 +711,14 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 
 <div class="modal-overlay" id="procurementReportModal"><div class="modal" style="max-width:900px">
 <div class="modal-head">
-  <div><h2>Procurement Report</h2><p class="small" id="procurementReportSub"></p></div>
-  <button class="close" onclick="closeModal('procurementReportModal')">×</button>
+  <div><h2>Procurement Report</h2><p class="small" id="procurementReportSub"></p></div>
+  <button class="close" onclick="closeModal('procurementReportModal')">×</button>
 </div>
 <div id="procurementReportContent"></div>
 <div class="modal-actions">
-  <button class="btn btn-secondary" onclick="closeModal('procurementReportModal')">Close</button>
-  <button class="btn btn-light" onclick="printProcurementReport()">Print / Save PDF</button>
-  <button class="btn btn-primary" onclick="downloadProcurementReport()">Download Report</button>
+  <button class="btn btn-secondary" onclick="closeModal('procurementReportModal')">Close</button>
+  <button class="btn btn-light" onclick="printProcurementReport()">Print / Save PDF</button>
+  <button class="btn btn-primary" onclick="downloadProcurementReport()">Download Report</button>
 </div>
 </div></div>
 
@@ -727,126 +729,126 @@ let currentUser=null,currentBusiness=null,rfqs=[],quotes=[],payments=[],invoices
 document.addEventListener("DOMContentLoaded",loadBusiness);
 
 async function loadBusiness(){
- const {data,error}=await db.auth.getUser();
- if(error||!data.user){location.href="customer-signin.html";return}
- currentUser=data.user;
- const {data:profile,error:pe}=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
- if(pe||!profile||profile.role!=="business"){await db.auth.signOut();location.href="customer-signin.html";return}
- currentBusiness=profile;
- updateIdentity();populateProfile();
- await refresh();
+ const {data,error}=await db.auth.getUser();
+ if(error||!data.user){location.href="customer-signin.html";return}
+ currentUser=data.user;
+ const {data:profile,error:pe}=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
+ if(pe||!profile||profile.role!=="business"){await db.auth.signOut();location.href="customer-signin.html";return}
+ currentBusiness=profile;
+ updateIdentity();populateProfile();
+ await refresh();
 }
 
 async function refresh(){
- await loadRFQs();
- await loadQuotes();
- await loadPayments();
- await loadInvoices();
- await loadVerifiedSuppliers();
+ await loadRFQs();
+ await loadQuotes();
+ await loadPayments();
+ await loadInvoices();
+ await loadVerifiedSuppliers();
 
- renderRFQs();
- renderQuotes();
- renderOrders();
- renderPayments();
- renderInvoices();
- updateStats();
+ renderRFQs();
+ renderQuotes();
+ renderOrders();
+ renderPayments();
+ renderInvoices();
+ updateStats();
 
- if(typeof renderActivity==="function"){
-   renderActivity();
- }
- if(typeof renderVerifiedSuppliers==="function"){
-   renderVerifiedSuppliers();
- }
+ if(typeof renderActivity==="function"){
+   renderActivity();
+ }
+ if(typeof renderVerifiedSuppliers==="function"){
+   renderVerifiedSuppliers();
+ }
 }
 
 function updateIdentity(){
- const name=currentBusiness.company_name||currentUser.email||"Business";
- document.getElementById("welcomeTitle").textContent="Hello, "+name;
- document.getElementById("menuCompany").textContent=name;
- document.getElementById("profileInitial").textContent=name.trim().charAt(0).toUpperCase()||"B";
+ const name=currentBusiness.company_name||currentUser.email||"Business";
+ document.getElementById("welcomeTitle").textContent="Hello, "+name;
+ document.getElementById("menuCompany").textContent=name;
+ document.getElementById("profileInitial").textContent=name.trim().charAt(0).toUpperCase()||"B";
 }
 
 async function loadRFQs(){
- const {data,error}=await db
-   .from("rfqs")
-   .select("*")
-   .or(`business_id.eq.${currentUser.id},created_by.eq.${currentUser.id}`)
-   .order("created_at",{ascending:false});
+ const {data,error}=await db
+   .from("rfqs")
+   .select("*")
+   .or(`business_id.eq.${currentUser.id},created_by.eq.${currentUser.id}`)
+   .order("created_at",{ascending:false});
 
- if(error){
-   console.error("RFQ load error:",error);
-   rfqs=[];
-   return;
- }
+ if(error){
+   console.error("RFQ load error:",error);
+   rfqs=[];
+   return;
+ }
 
- rfqs=data||[];
+ rfqs=data||[];
 }
 async function loadQuotes(){
- if(!rfqs.length){quotes=[];return}
- const {data,error}=await db.from("quotes").select("*").in("rfq_id",rfqs.map(r=>r.id)).order("created_at",{ascending:false});
- quotes=error?[]:(data||[]);
+ if(!rfqs.length){quotes=[];return}
+ const {data,error}=await db.from("quotes").select("*").in("rfq_id",rfqs.map(r=>r.id)).order("created_at",{ascending:false});
+ quotes=error?[]:(data||[]);
 }
 async function loadPayments(){
- const {data,error}=await db.from("supplier_payments").select("*").eq("customer_user_id",currentUser.id).order("created_at",{ascending:false});
- payments=error?[]:(data||[]);
+ const {data,error}=await db.from("supplier_payments").select("*").eq("customer_user_id",currentUser.id).order("created_at",{ascending:false});
+ payments=error?[]:(data||[]);
 }
 async function loadInvoices(){
- if(!payments.length){invoices=[];return}
- const {data,error}=await db.from("supplier_invoices").select("*").in("payment_id",payments.map(p=>p.id)).order("created_at",{ascending:false});
- invoices=error?[]:(data||[]);
+ if(!payments.length){invoices=[];return}
+ const {data,error}=await db.from("supplier_invoices").select("*").in("payment_id",payments.map(p=>p.id)).order("created_at",{ascending:false});
+ invoices=error?[]:(data||[]);
 }
 
 async function loadVerifiedSuppliers(){
- try{
-   const {data,error}=await db.from("profiles").select("*").eq("role","supplier");
-   if(error){
-     console.error("Verified suppliers load error:",error);
-     verifiedSuppliers=[];
-     return;
-   }
-   verifiedSuppliers=(data||[]).filter(s =>
-     s.verified===true ||
-     String(s.verification_status||"").toLowerCase().trim()==="verified" ||
-     String(s.verification_status||"").toLowerCase().trim()==="approved"
-   );
- }catch(error){
-   console.error("Verified suppliers unexpected error:",error);
-   verifiedSuppliers=[];
- }
+ try{
+   const {data,error}=await db.from("profiles").select("*").eq("role","supplier");
+   if(error){
+     console.error("Verified suppliers load error:",error);
+     verifiedSuppliers=[];
+     return;
+   }
+   verifiedSuppliers=(data||[]).filter(s =>
+     s.verified===true ||
+     String(s.verification_status||"").toLowerCase().trim()==="verified" ||
+     String(s.verification_status||"").toLowerCase().trim()==="approved"
+   );
+ }catch(error){
+   console.error("Verified suppliers unexpected error:",error);
+   verifiedSuppliers=[];
+ }
 }
 
 function renderVerifiedSuppliers(){
- const c=document.getElementById("verifiedSuppliersContainer");
- if(!c)return;
- if(!verifiedSuppliers.length){
-   c.innerHTML='<div class="empty">No verified suppliers are available yet.</div>';
-   return;
- }
- c.innerHTML=verifiedSuppliers.map(s=>{
-   const company=s.company_name||s.business_name||"Supplier";
-   const category=s.category||s.business_category||s.industry||s.supplier_category||"General Supplier";
-   const city=s.city||s.location||s.country||"Zambia";
-   const description=s.business_description||s.description||"Verified supplier on Elsati Connect.";
-   return `<article class="supplier-card">
-     <div class="supplier-card-head">
-       <div class="supplier-initial">${esc(company.trim().charAt(0).toUpperCase()||"S")}</div>
-       <div><h3>${esc(company)}</h3><div class="small">${esc(category)} · ${esc(city)}</div></div>
-     </div>
-     <p>${esc(description)}</p>
-     <span class="badge verified">✓ Verified Supplier</span>
+ const c=document.getElementById("verifiedSuppliersContainer");
+ if(!c)return;
+ if(!verifiedSuppliers.length){
+   c.innerHTML='<div class="empty">No verified suppliers are available yet.</div>';
+   return;
+ }
+ c.innerHTML=verifiedSuppliers.map(s=>{
+   const company=s.company_name||s.business_name||"Supplier";
+   const category=s.category||s.business_category||s.industry||s.supplier_category||"General Supplier";
+   const city=s.city||s.location||s.country||"Zambia";
+   const description=s.business_description||s.description||"Verified supplier on Elsati Connect.";
+   return `<article class="supplier-card">
+     <div class="supplier-card-head">
+       <div class="supplier-initial">${esc(company.trim().charAt(0).toUpperCase()||"S")}</div>
+       <div><h3>${esc(company)}</h3><div class="small">${esc(category)} · ${esc(city)}</div></div>
+     </div>
+     <p>${esc(description)}</p>
+     <span class="badge verified">✓ Verified Supplier</span>
      <div style="margin-top:14px"><button type="button" class="btn btn-primary" onclick="requestQuoteFromSupplier(\'${esc(s.id)}\')">Request a Quote</button></div>
    </article>`;
- }).join("");
+ }).join("");
 }
 
 function showSection(section,button){
- document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
- document.getElementById("section-"+section)?.classList.add("active");
- document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
- if(button)button.classList.add("active");
- else document.querySelectorAll(".nav-item").forEach(x=>{if(x.textContent.trim().toLowerCase()===section.toLowerCase())x.classList.add("active")});
- if(section==="status")renderStatus();if(section==="suppliers")renderVerifiedSuppliers();
- window.scrollTo({top:0,behavior:"smooth"});
+ document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+ document.getElementById("section-"+section)?.classList.add("active");
+ document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
+ if(button)button.classList.add("active");
+ else document.querySelectorAll(".nav-item").forEach(x=>{if(x.textContent.trim().toLowerCase()===section.toLowerCase())x.classList.add("active")});
+ if(section==="status")renderStatus();if(section==="suppliers")renderVerifiedSuppliers();
+ window.scrollTo({top:0,behavior:"smooth"});
 }
 function toggleMenu(e){e.stopPropagation();document.getElementById("profileMenu").classList.toggle("show")}
 function closeMenu(){document.getElementById("profileMenu").classList.remove("show")}
@@ -856,328 +858,328 @@ function closeModal(id){document.getElementById(id)?.classList.remove("show")}
 document.querySelectorAll(".modal-overlay").forEach(x=>x.addEventListener("click",e=>{if(e.target===x)x.classList.remove("show")}));
 
 function openRFQStage(filter,button){
-  rfqFilter=filter;
-  document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
-  document.getElementById("section-rfqs")?.classList.add("active");
-  document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
-  document.querySelectorAll(".nav-item").forEach(x=>{
-    if(x.textContent.trim().toLowerCase()==="rfqs")x.classList.add("active");
-  });
-  document.querySelectorAll("#section-rfqs .rfq-filter").forEach(x=>{
-    x.classList.remove("active");
-    x.setAttribute("aria-selected","false");
-  });
-  const selected=button||document.querySelector('#section-rfqs [data-rfq-filter="'+filter+'"]');
-  if(selected){
-    selected.classList.add("active");
-    selected.setAttribute("aria-selected","true");
-  }
-  renderRFQs();
+  rfqFilter=filter;
+  document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+  document.getElementById("section-rfqs")?.classList.add("active");
+  document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(x=>{
+    if(x.textContent.trim().toLowerCase()==="rfqs")x.classList.add("active");
+  });
+  document.querySelectorAll("#section-rfqs .rfq-filter").forEach(x=>{
+    x.classList.remove("active");
+    x.setAttribute("aria-selected","false");
+  });
+  const selected=button||document.querySelector('#section-rfqs [data-rfq-filter="'+filter+'"]');
+  if(selected){
+    selected.classList.add("active");
+    selected.setAttribute("aria-selected","true");
+  }
+  renderRFQs();
 }
 
 function setRFQFilter(filter,button){
-  openRFQStage(filter,button);
+  openRFQStage(filter,button);
 }
 
 function getRFQQuoteCount(rfqId){
-  return quotes.filter(q=>String(q.rfq_id)===String(rfqId)).length;
+  return quotes.filter(q=>String(q.rfq_id)===String(rfqId)).length;
 }
 
 function isAwardedRFQ(r){
-  const s=String(r.status||"").toLowerCase().trim();
-  return ["awarded","accepted","award"].includes(s) ||
-    quotes.some(q=>String(q.rfq_id)===String(r.id) &&
-      ["awarded","accepted"].includes(String(q.status||"").toLowerCase().trim()));
+  const s=String(r.status||"").toLowerCase().trim();
+  return ["awarded","accepted","award"].includes(s) ||
+    quotes.some(q=>String(q.rfq_id)===String(r.id) &&
+      ["awarded","accepted"].includes(String(q.status||"").toLowerCase().trim()));
 }
 
 function isProcessedRFQ(r){
-  const s=String(r.status||"").toLowerCase().trim();
-  return ["processed","processing","fulfilled","closed","completed","complete"].includes(s);
+  const s=String(r.status||"").toLowerCase().trim();
+  return ["processed","processing","fulfilled","closed","completed","complete"].includes(s);
 }
 
 function isOpenRFQ(r){
-  const s=String(r.status||"").toLowerCase().trim();
-  return !isAwardedRFQ(r) && !isProcessedRFQ(r) &&
-    ["open","pending","new","published","active",""].includes(s);
+  const s=String(r.status||"").toLowerCase().trim();
+  return !isAwardedRFQ(r) && !isProcessedRFQ(r) &&
+    ["open","pending","new","published","active",""].includes(s);
 }
 
 function isQuotesReceivedRFQ(r){
-  return getRFQQuoteCount(r.id)>0 && !isAwardedRFQ(r) && !isProcessedRFQ(r);
+  return getRFQQuoteCount(r.id)>0 && !isAwardedRFQ(r) && !isProcessedRFQ(r);
 }
 
 function rfqMatchesFilter(r){
-  if(rfqFilter==="all")return true;
-  if(rfqFilter==="open")return isOpenRFQ(r);
-  if(rfqFilter==="quoted")return isQuotesReceivedRFQ(r);
-  if(rfqFilter==="awarded")return isAwardedRFQ(r);
-  if(rfqFilter==="processed")return isProcessedRFQ(r);
-  return true;
+  if(rfqFilter==="all")return true;
+  if(rfqFilter==="open")return isOpenRFQ(r);
+  if(rfqFilter==="quoted")return isQuotesReceivedRFQ(r);
+  if(rfqFilter==="awarded")return isAwardedRFQ(r);
+  if(rfqFilter==="processed")return isProcessedRFQ(r);
+  return true;
 }
 
 function renderRFQs(){
- const search=(document.getElementById("rfqSearch")?.value||"").toLowerCase().trim();
- const c=document.getElementById("rfqContainer");
+ const search=(document.getElementById("rfqSearch")?.value||"").toLowerCase().trim();
+ const c=document.getElementById("rfqContainer");
 
- const list=rfqs.filter(r=>{
-   if(!rfqMatchesFilter(r))return false;
-   if(!search)return true;
-   return [r.code,r.title,r.category,r.delivery_location,r.notes,r.status,r.business_name]
-     .filter(Boolean).join(" ").toLowerCase().includes(search);
- });
+ const list=rfqs.filter(r=>{
+   if(!rfqMatchesFilter(r))return false;
+   if(!search)return true;
+   return [r.code,r.title,r.category,r.delivery_location,r.notes,r.status,r.business_name]
+     .filter(Boolean).join(" ").toLowerCase().includes(search);
+ });
 
- if(!list.length){
-   const messages={
-     all:"No RFQs found.",
-     open:"No open RFQs yet.",
-     quoted:"No RFQs with supplier quotations yet.",
-     awarded:"No awarded RFQs yet.",
-     processed:"No processed RFQs yet."
-   };
-   c.innerHTML='<div class="empty">'+messages[rfqFilter]+'</div>';
-   return;
- }
+ if(!list.length){
+   const messages={
+     all:"No RFQs found.",
+     open:"No open RFQs yet.",
+     quoted:"No RFQs with supplier quotations yet.",
+     awarded:"No awarded RFQs yet.",
+     processed:"No processed RFQs yet."
+   };
+   c.innerHTML='<div class="empty">'+messages[rfqFilter]+'</div>';
+   return;
+ }
 
- c.innerHTML=list.map(r=>{
-   const count=getRFQQuoteCount(r.id);
-   let displayStatus="Open",badgeClass="open";
-   if(isProcessedRFQ(r)){displayStatus="Processed";badgeClass="processed";}
-   else if(isAwardedRFQ(r)){displayStatus="Awarded";badgeClass="awarded";}
-   else if(count>0){displayStatus="Quotes Received";badgeClass="pending";}
+ c.innerHTML=list.map(r=>{
+   const count=getRFQQuoteCount(r.id);
+   let displayStatus="Open",badgeClass="open";
+   if(isProcessedRFQ(r)){displayStatus="Processed";badgeClass="processed";}
+   else if(isAwardedRFQ(r)){displayStatus="Awarded";badgeClass="awarded";}
+   else if(count>0){displayStatus="Quotes Received";badgeClass="pending";}
 
-   const qs=quotes.filter(q=>String(q.rfq_id)===String(r.id));
-   let stage="";
-   if(rfqFilter==="quoted"){
-     stage='<div class="rfq-stage-quotes"><div class="stage-title">Supplier Quotes Received</div>'+
-       qs.map(q=>'<div class="mini-quote"><div><strong>'+esc(q.supplier_company||q.supplier_name||"Supplier")+'</strong><span>'+esc(q.delivery||q.delivery_period||"Delivery as quoted")+'</span></div><div class="mini-quote-right"><b>'+money(q.price)+'</b><span>'+esc(q.status||"Pending")+'</span></div></div>').join("")+
-       '</div>';
-   }
-   if(rfqFilter==="awarded"){
-     const aq=qs.find(q=>["awarded","accepted"].includes(String(q.status||"").toLowerCase()));
-     if(aq)stage='<div class="rfq-stage-quotes awarded-stage"><div class="stage-title">Awarded Supplier</div><div class="mini-quote"><div><strong>'+esc(aq.supplier_company||aq.supplier_name||"Supplier")+'</strong><span>Selected supplier</span></div><div class="mini-quote-right"><b>'+money(aq.price)+'</b><span>Awarded</span></div></div></div>';
-   }
-   if(rfqFilter==="processed"){
-     stage='<div class="rfq-stage-quotes processed-stage"><div class="stage-title">Procurement Processed</div><div class="small">This RFQ has moved through the procurement process.</div></div>';
-   }
+   const qs=quotes.filter(q=>String(q.rfq_id)===String(r.id));
+   let stage="";
+   if(rfqFilter==="quoted"){
+     stage='<div class="rfq-stage-quotes"><div class="stage-title">Supplier Quotes Received</div>'+
+       qs.map(q=>'<div class="mini-quote"><div><strong>'+esc(q.supplier_company||q.supplier_name||"Supplier")+'</strong><span>'+esc(q.delivery||q.delivery_period||"Delivery as quoted")+'</span></div><div class="mini-quote-right"><b>'+money(q.price)+'</b><span>'+esc(q.status||"Pending")+'</span></div></div>').join("")+
+       '</div>';
+   }
+   if(rfqFilter==="awarded"){
+     const aq=qs.find(q=>["awarded","accepted"].includes(String(q.status||"").toLowerCase()));
+     if(aq)stage='<div class="rfq-stage-quotes awarded-stage"><div class="stage-title">Awarded Supplier</div><div class="mini-quote"><div><strong>'+esc(aq.supplier_company||aq.supplier_name||"Supplier")+'</strong><span>Selected supplier</span></div><div class="mini-quote-right"><b>'+money(aq.price)+'</b><span>Awarded</span></div></div></div>';
+   }
+   if(rfqFilter==="processed"){
+     stage='<div class="rfq-stage-quotes processed-stage"><div class="stage-title">Procurement Processed</div><div class="small">This RFQ has moved through the procurement process.</div></div>';
+   }
 
-   return '<article class="card rfq-card">'+
-     '<div class="card-top"><span class="badge '+badgeClass+'">'+displayStatus+'</span><span class="code">'+esc(r.code||"")+'</span></div>'+
-     '<h3>'+esc(r.title||"Untitled RFQ")+'</h3>'+
-     '<div class="small">'+esc(r.business_name||currentBusiness?.company_name||"Your Business")+'</div>'+
-     '<div class="meta"><div><span>Category</span><strong>'+esc(r.category||"—")+'</strong></div><div><span>Quantity</span><strong>'+esc(r.quantity||"—")+'</strong></div><div><span>Required</span><strong>'+date(r.deadline)+'</strong></div><div><span>Quotes</span><strong>'+count+'</strong></div></div>'+
-     '<div class="small">Delivery: '+esc(r.delivery_location||"Not specified")+'</div>'+
-     '<div class="small" style="margin-top:6px">Created: '+dateTime(r.created_at)+'</div>'+
-     stage+
-     '<div class="card-actions">'+
-     (count?'<button class="btn btn-primary" onclick="viewRFQQuotes(\''+r.id+'\')">View Quotes ('+count+')</button>':'<button class="btn btn-light" onclick="details(\''+r.id+'\')">View RFQ</button>')+
-     (count?'<button class="btn btn-light" onclick="details(\''+r.id+'\')">View RFQ</button>':'')+
-     '</div></article>';
- }).join("");
+   return '<article class="card rfq-card">'+
+     '<div class="card-top"><span class="badge '+badgeClass+'">'+displayStatus+'</span><span class="code">'+esc(r.code||"")+'</span></div>'+
+     '<h3>'+esc(r.title||"Untitled RFQ")+'</h3>'+
+     '<div class="small">'+esc(r.business_name||currentBusiness?.company_name||"Your Business")+'</div>'+
+     '<div class="meta"><div><span>Category</span><strong>'+esc(r.category||"—")+'</strong></div><div><span>Quantity</span><strong>'+esc(r.quantity||"—")+'</strong></div><div><span>Required</span><strong>'+date(r.deadline)+'</strong></div><div><span>Quotes</span><strong>'+count+'</strong></div></div>'+
+     '<div class="small">Delivery: '+esc(r.delivery_location||"Not specified")+'</div>'+
+     '<div class="small" style="margin-top:6px">Created: '+dateTime(r.created_at)+'</div>'+
+     stage+
+     '<div class="card-actions">'+
+     (count?'<button class="btn btn-primary" onclick="viewRFQQuotes(\''+r.id+'\')">View Quotes ('+count+')</button>':'<button class="btn btn-light" onclick="details(\''+r.id+'\')">View RFQ</button>')+
+     (count?'<button class="btn btn-light" onclick="details(\''+r.id+'\')">View RFQ</button>':'')+
+     '</div></article>';
+ }).join("");
 }
 
 function renderQuotes(){
- const c=document.getElementById("quotesContainer");
- if(!quotes.length){c.innerHTML='<div class="empty">No supplier quotations yet.</div>';return}
- const groups={};quotes.forEach(q=>(groups[q.rfq_id]??=[]).push(q));
- c.innerHTML=Object.entries(groups).map(([id,qs])=>{
-  const r=rfqs.find(x=>String(x.id)===String(id));
-  return `<div style="margin-bottom:28px"><div class="panel-title">${esc(r?.title||"RFQ")}</div><div class="panel-sub">${esc(r?.code||"")} · ${qs.length} supplier quote(s)</div><div class="quote-list">${qs.map(q=>quoteCard(q,r)).join("")}</div></div>`
- }).join("");
+ const c=document.getElementById("quotesContainer");
+ if(!quotes.length){c.innerHTML='<div class="empty">No supplier quotations yet.</div>';return}
+ const groups={};quotes.forEach(q=>(groups[q.rfq_id]??=[]).push(q));
+ c.innerHTML=Object.entries(groups).map(([id,qs])=>{
+  const r=rfqs.find(x=>String(x.id)===String(id));
+  return `<div style="margin-bottom:28px"><div class="panel-title">${esc(r?.title||"RFQ")}</div><div class="panel-sub">${esc(r?.code||"")} · ${qs.length} supplier quote(s)</div><div class="quote-list">${qs.map(q=>quoteCard(q,r)).join("")}</div></div>`
+ }).join("");
 }
 function quoteCard(q,r){
- const awarded=String(q.status||"").toLowerCase()==="awarded";
- return `<article class="quote-card"><div class="row"><div><div class="panel-title">${esc(q.supplier_company||q.supplier_name||"Supplier")}</div><div class="small">${esc(r?.code||"")}</div></div><div class="price">${money(q.price)}</div></div><div class="quote-meta"><div><span>Delivery</span><strong>${esc(q.delivery||q.delivery_period||"As stated")}</strong></div><div><span>Payment Terms</span><strong>${esc(q.payment_terms||"As agreed")}</strong></div><div><span>Validity</span><strong>${esc(q.quote_validity||"As stated")}</strong></div><div><span>Availability</span><strong>${esc(q.availability||"As stated")}</strong></div></div><div class="small">${esc(q.notes||"No additional supplier notes.")}</div><div class="card-actions"><button class="btn btn-light" onclick="openQuote('${q.id}')">View Full Quote</button>${awarded?'<span class="badge awarded">Awarded</span>':`<button class="btn btn-primary" onclick="awardQuote('${q.id}')">Award Quote</button>`}</div></article>`
+ const awarded=String(q.status||"").toLowerCase()==="awarded";
+ return `<article class="quote-card"><div class="row"><div><div class="panel-title">${esc(q.supplier_company||q.supplier_name||"Supplier")}</div><div class="small">${esc(r?.code||"")}</div></div><div class="price">${money(q.price)}</div></div><div class="quote-meta"><div><span>Delivery</span><strong>${esc(q.delivery||q.delivery_period||"As stated")}</strong></div><div><span>Payment Terms</span><strong>${esc(q.payment_terms||"As agreed")}</strong></div><div><span>Validity</span><strong>${esc(q.quote_validity||"As stated")}</strong></div><div><span>Availability</span><strong>${esc(q.availability||"As stated")}</strong></div></div><div class="small">${esc(q.notes||"No additional supplier notes.")}</div><div class="card-actions"><button class="btn btn-light" onclick="openQuote('${q.id}')">View Full Quote</button>${awarded?'<span class="badge awarded">Awarded</span>':`<button class="btn btn-primary" onclick="awardQuote('${q.id}')">Award Quote</button>`}</div></article>`
 }
 function viewRFQQuotes(id){showSection("quotes");const r=rfqs.find(x=>String(x.id)===String(id)),qs=quotes.filter(q=>String(q.rfq_id)===String(id));document.getElementById("quotesContainer").innerHTML=qs.length?`<div class="panel-title">${esc(r?.title||"RFQ")}</div><div class="panel-sub">${esc(r?.code||"")}</div><div class="quote-list">${qs.map(q=>quoteCard(q,r)).join("")}</div>`:'<div class="empty">No supplier quotations yet.</div>'}
 function openQuote(id){
- const q=quotes.find(x=>String(x.id)===String(id));if(!q)return;const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
- document.getElementById("quoteSub").textContent=`${q.supplier_company||"Supplier"} · ${r?.code||""}`;
- document.getElementById("quoteContent").innerHTML=`<div class="quote-card"><div class="row"><div class="panel-title">${esc(q.supplier_company||"Supplier")}</div><div class="price">${money(q.price)}</div></div><div class="quote-meta"><div><span>Delivery</span><strong>${esc(q.delivery||q.delivery_period||"As stated")}</strong></div><div><span>Payment</span><strong>${esc(q.payment_terms||"As agreed")}</strong></div><div><span>Validity</span><strong>${esc(q.quote_validity||"As stated")}</strong></div><div><span>Availability</span><strong>${esc(q.availability||"As stated")}</strong></div></div><div class="small">Warranty/Guarantee: ${esc(q.warranty||"As stated")}<br><br>${esc(q.notes||"No additional notes.")}</div></div>`;
- document.getElementById("awardBtn").onclick=()=>{closeModal("quoteModal");awardQuote(q.id)};document.getElementById("quoteModal").classList.add("show");
+ const q=quotes.find(x=>String(x.id)===String(id));if(!q)return;const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
+ document.getElementById("quoteSub").textContent=`${q.supplier_company||"Supplier"} · ${r?.code||""}`;
+ document.getElementById("quoteContent").innerHTML=`<div class="quote-card"><div class="row"><div class="panel-title">${esc(q.supplier_company||"Supplier")}</div><div class="price">${money(q.price)}</div></div><div class="quote-meta"><div><span>Delivery</span><strong>${esc(q.delivery||q.delivery_period||"As stated")}</strong></div><div><span>Payment</span><strong>${esc(q.payment_terms||"As agreed")}</strong></div><div><span>Validity</span><strong>${esc(q.quote_validity||"As stated")}</strong></div><div><span>Availability</span><strong>${esc(q.availability||"As stated")}</strong></div></div><div class="small">Warranty/Guarantee: ${esc(q.warranty||"As stated")}<br><br>${esc(q.notes||"No additional notes.")}</div></div>`;
+ document.getElementById("awardBtn").onclick=()=>{closeModal("quoteModal");awardQuote(q.id)};document.getElementById("quoteModal").classList.add("show");
 }
 
 async function awardQuote(id){
- const q=quotes.find(x=>String(x.id)===String(id));if(!q)return;const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
- if(!confirm(`Award ${r?.code||"this RFQ"} to ${q.supplier_company||"this supplier"}?`))return;
- const {error:qe}=await db.from("quotes").update({status:"awarded"}).eq("id",q.id);
- if(qe){alert(qe.message);return}
- const {error:re}=await db.from("rfqs").update({status:"awarded",awarded_supplier_id:q.supplier_user_id}).eq("id",r.id).eq("business_id",currentUser.id);
- if(re)console.warn(re);
- await db.from("supplier_payments").insert({supplier_user_id:q.supplier_user_id,customer_user_id:currentUser.id,customer_name:currentBusiness.company_name,rfq_id:r.id,rfq_code:r.code,amount:Number(q.price||0),status:"awaiting_payment"});
- await refresh();showSection("orders");alert("Quotation awarded. The supplier payment workflow is now ready.");
+ const q=quotes.find(x=>String(x.id)===String(id));if(!q)return;const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
+ if(!confirm(`Award ${r?.code||"this RFQ"} to ${q.supplier_company||"this supplier"}?`))return;
+ const {error:qe}=await db.from("quotes").update({status:"awarded"}).eq("id",q.id);
+ if(qe){alert(qe.message);return}
+ const {error:re}=await db.from("rfqs").update({status:"awarded",awarded_supplier_id:q.supplier_user_id}).eq("id",r.id).eq("business_id",currentUser.id);
+ if(re)console.warn(re);
+ await db.from("supplier_payments").insert({supplier_user_id:q.supplier_user_id,customer_user_id:currentUser.id,customer_name:currentBusiness.company_name,rfq_id:r.id,rfq_code:r.code,amount:Number(q.price||0),status:"awaiting_payment"});
+ await refresh();showSection("orders");alert("Quotation awarded. The supplier payment workflow is now ready.");
 }
 
 function renderOrders(){
- const c=document.getElementById("ordersContainer"),list=rfqs.filter(r=>["awarded","completed"].includes(String(r.status||"").toLowerCase()));
- if(!list.length){c.innerHTML='<div class="panel empty">No awarded orders yet.</div>';return}
- c.innerHTML=list.map(r=>{const q=quotes.find(x=>String(x.rfq_id)===String(r.id)&&String(x.status||"").toLowerCase()==="awarded"),p=payments.find(x=>String(x.rfq_id)===String(r.id));return `<div class="workflow"><div class="row"><div><h3>${esc(r.title||"Order")}</h3><div class="small">${esc(r.code||"")}</div></div><span class="badge awarded">${esc(r.status||"Awarded")}</span></div><div class="details"><div class="detail"><span>Supplier</span><strong>${esc(q?.supplier_company||"Supplier")}</strong></div><div class="detail"><span>Value</span><strong>${money(q?.price)}</strong></div><div class="detail"><span>Delivery</span><strong>${esc(q?.delivery||q?.delivery_period||"As agreed")}</strong></div><div class="detail"><span>Payment</span><strong>${esc(p?.status||"Awaiting payment")}</strong></div></div><div class="small">After payment, the supplier confirms receipt and creates the invoice.</div><div class="card-actions"><button class="btn btn-primary" onclick="${p?`openPayment('${p.id}')`:`showSection('payments')`}">Go to Payment</button><button class="btn btn-light" onclick="showStatus('${r.id}')">Track Status</button></div></div>`}).join("");
+ const c=document.getElementById("ordersContainer"),list=rfqs.filter(r=>["awarded","completed"].includes(String(r.status||"").toLowerCase()));
+ if(!list.length){c.innerHTML='<div class="panel empty">No awarded orders yet.</div>';return}
+ c.innerHTML=list.map(r=>{const q=quotes.find(x=>String(x.rfq_id)===String(r.id)&&String(x.status||"").toLowerCase()==="awarded"),p=payments.find(x=>String(x.rfq_id)===String(r.id));return `<div class="workflow"><div class="row"><div><h3>${esc(r.title||"Order")}</h3><div class="small">${esc(r.code||"")}</div></div><span class="badge awarded">${esc(r.status||"Awarded")}</span></div><div class="details"><div class="detail"><span>Supplier</span><strong>${esc(q?.supplier_company||"Supplier")}</strong></div><div class="detail"><span>Value</span><strong>${money(q?.price)}</strong></div><div class="detail"><span>Delivery</span><strong>${esc(q?.delivery||q?.delivery_period||"As agreed")}</strong></div><div class="detail"><span>Payment</span><strong>${esc(p?.status||"Awaiting payment")}</strong></div></div><div class="small">After payment, the supplier confirms receipt and creates the invoice.</div><div class="card-actions"><button class="btn btn-primary" onclick="${p?`openPayment('${p.id}')`:`showSection('payments')`}">Go to Payment</button><button class="btn btn-light" onclick="showStatus('${r.id}')">Track Status</button></div></div>`}).join("");
 }
 
 async function openPayment(id){
- const p=payments.find(x=>String(x.id)===String(id));if(!p)return;selectedPayment=p;
- const {data:supplier}=await db.from("profiles").select("company_name,bank_name,account_name,account_number,bank_branch,branch_code,swift_code").eq("id",p.supplier_user_id).maybeSingle();
- document.getElementById("paymentSub").textContent=`${p.rfq_code||""} · ${supplier?.company_name||"Supplier"}`;
- document.getElementById("paymentDate").value=p.payment_date||today();
- document.getElementById("paymentReference").value=p.payment_reference||"";
- document.getElementById("bankDetails").innerHTML=supplier?`<div class="bank"><h4>${esc(supplier.company_name||"Awarded Supplier")}</h4><div class="small" style="margin-bottom:12px">Bank details are displayed here because this supplier was awarded the selected RFQ.</div><div class="bank-grid">${[["Bank Name",supplier.bank_name],["Account Name",supplier.account_name],["Account Number",supplier.account_number],["Bank Branch",supplier.bank_branch],["Branch Code",supplier.branch_code],["SWIFT Code",supplier.swift_code]].map(x=>`<div class="bank-detail"><span>${x[0]}</span><strong>${esc(x[1]||"Not provided")}</strong></div>`).join("")}</div></div>`:'<div class="notice warning">Supplier bank details are not available yet.</div>';
- document.getElementById("paymentNotice").innerHTML="";document.getElementById("paymentModal").classList.add("show");
+ const p=payments.find(x=>String(x.id)===String(id));if(!p)return;selectedPayment=p;
+ const {data:supplier}=await db.from("profiles").select("company_name,bank_name,account_name,account_number,bank_branch,branch_code,swift_code").eq("id",p.supplier_user_id).maybeSingle();
+ document.getElementById("paymentSub").textContent=`${p.rfq_code||""} · ${supplier?.company_name||"Supplier"}`;
+ document.getElementById("paymentDate").value=p.payment_date||today();
+ document.getElementById("paymentReference").value=p.payment_reference||"";
+ document.getElementById("bankDetails").innerHTML=supplier?`<div class="bank"><h4>${esc(supplier.company_name||"Awarded Supplier")}</h4><div class="small" style="margin-bottom:12px">Bank details are displayed here because this supplier was awarded the selected RFQ.</div><div class="bank-grid">${[["Bank Name",supplier.bank_name],["Account Name",supplier.account_name],["Account Number",supplier.account_number],["Bank Branch",supplier.bank_branch],["Branch Code",supplier.branch_code],["SWIFT Code",supplier.swift_code]].map(x=>`<div class="bank-detail"><span>${x[0]}</span><strong>${esc(x[1]||"Not provided")}</strong></div>`).join("")}</div></div>`:'<div class="notice warning">Supplier bank details are not available yet.</div>';
+ document.getElementById("paymentNotice").innerHTML="";document.getElementById("paymentModal").classList.add("show");
 }
 
 async function submitPayment(){
- if(!selectedPayment)return;const ref=document.getElementById("paymentReference").value.trim(),pd=document.getElementById("paymentDate").value,file=document.getElementById("paymentProof").files[0],n=document.getElementById("paymentNotice");
- if(!ref||!pd||!file){n.innerHTML='<div class="notice error">Enter payment reference, date and proof of payment.</div>';return}
- if(file.size>10*1024*1024){n.innerHTML='<div class="notice error">Proof of payment must not exceed 10MB.</div>';return}
- n.innerHTML='<div class="notice info">Uploading proof of payment...</div>';
- const path=`${currentUser.id}/${selectedPayment.id}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`;
- const {error:ue}=await db.storage.from("payment-proofs").upload(path,file,{upsert:true});
- if(ue){n.innerHTML=`<div class="notice error">${esc(ue.message)}</div>`;return}
- const {error:e}=await db.from("supplier_payments").update({payment_reference:ref,payment_date:pd,proof_path:path,status:"proof_uploaded"}).eq("id",selectedPayment.id).eq("customer_user_id",currentUser.id);
- if(e){n.innerHTML=`<div class="notice error">${esc(e.message)}</div>`;return}
- closeModal("paymentModal");await refresh();showSection("payments");alert("Proof of payment submitted. The supplier can now confirm receipt.");
+ if(!selectedPayment)return;const ref=document.getElementById("paymentReference").value.trim(),pd=document.getElementById("paymentDate").value,file=document.getElementById("paymentProof").files[0],n=document.getElementById("paymentNotice");
+ if(!ref||!pd||!file){n.innerHTML='<div class="notice error">Enter payment reference, date and proof of payment.</div>';return}
+ if(file.size>10*1024*1024){n.innerHTML='<div class="notice error">Proof of payment must not exceed 10MB.</div>';return}
+ n.innerHTML='<div class="notice info">Uploading proof of payment...</div>';
+ const path=`${currentUser.id}/${selectedPayment.id}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`;
+ const {error:ue}=await db.storage.from("payment-proofs").upload(path,file,{upsert:true});
+ if(ue){n.innerHTML=`<div class="notice error">${esc(ue.message)}</div>`;return}
+ const {error:e}=await db.from("supplier_payments").update({payment_reference:ref,payment_date:pd,proof_path:path,status:"proof_uploaded"}).eq("id",selectedPayment.id).eq("customer_user_id",currentUser.id);
+ if(e){n.innerHTML=`<div class="notice error">${esc(e.message)}</div>`;return}
+ closeModal("paymentModal");await refresh();showSection("payments");alert("Proof of payment submitted. The supplier can now confirm receipt.");
 }
 
 function renderPayments(){
- const c=document.getElementById("paymentsContainer");if(!payments.length){c.innerHTML='<div class="panel empty">No payments yet. Award a supplier quotation to begin payment.</div>';return}
- c.innerHTML=payments.map(p=>{const q=quotes.find(x=>String(x.rfq_id)===String(p.rfq_id)&&String(x.status||"").toLowerCase()==="awarded");const cls=p.status==="confirmed"?"completed":p.status==="proof_uploaded"?"awarded":"pending";return `<div class="workflow"><div class="row"><div><h3>${esc(p.rfq_code||"Payment")}</h3><div class="small">${esc(q?.supplier_company||"Supplier")}</div></div><span class="badge ${cls}">${esc(p.status||"Awaiting payment")}</span></div><div class="details"><div class="detail"><span>Amount</span><strong>${money(p.amount)}</strong></div><div class="detail"><span>Reference</span><strong>${esc(p.payment_reference||"Not submitted")}</strong></div><div class="detail"><span>Payment Date</span><strong>${date(p.payment_date)}</strong></div><div class="detail"><span>Supplier</span><strong>${esc(q?.supplier_company||"Supplier")}</strong></div></div><div class="card-actions">${p.status==="awaiting_payment"?`<button class="btn btn-primary" onclick="openPayment('${p.id}')">Make Payment</button>`:""}${p.proof_path?`<button class="btn btn-light" onclick="viewProof('${p.id}')">View Proof</button>`:""}</div></div>`}).join("");
+ const c=document.getElementById("paymentsContainer");if(!payments.length){c.innerHTML='<div class="panel empty">No payments yet. Award a supplier quotation to begin payment.</div>';return}
+ c.innerHTML=payments.map(p=>{const q=quotes.find(x=>String(x.rfq_id)===String(p.rfq_id)&&String(x.status||"").toLowerCase()==="awarded");const cls=p.status==="confirmed"?"completed":p.status==="proof_uploaded"?"awarded":"pending";return `<div class="workflow"><div class="row"><div><h3>${esc(p.rfq_code||"Payment")}</h3><div class="small">${esc(q?.supplier_company||"Supplier")}</div></div><span class="badge ${cls}">${esc(p.status||"Awaiting payment")}</span></div><div class="details"><div class="detail"><span>Amount</span><strong>${money(p.amount)}</strong></div><div class="detail"><span>Reference</span><strong>${esc(p.payment_reference||"Not submitted")}</strong></div><div class="detail"><span>Payment Date</span><strong>${date(p.payment_date)}</strong></div><div class="detail"><span>Supplier</span><strong>${esc(q?.supplier_company||"Supplier")}</strong></div></div><div class="card-actions">${p.status==="awaiting_payment"?`<button class="btn btn-primary" onclick="openPayment('${p.id}')">Make Payment</button>`:""}${p.proof_path?`<button class="btn btn-light" onclick="viewProof('${p.id}')">View Proof</button>`:""}</div></div>`}).join("");
 }
 
 async function viewProof(id){
- const p=payments.find(x=>String(x.id)===String(id));if(!p?.proof_path)return;
- const {data,error}=await db.storage.from("payment-proofs").createSignedUrl(p.proof_path,3600);if(error||!data?.signedUrl){alert("Proof could not be opened.");return}window.open(data.signedUrl,"_blank");
+ const p=payments.find(x=>String(x.id)===String(id));if(!p?.proof_path)return;
+ const {data,error}=await db.storage.from("payment-proofs").createSignedUrl(p.proof_path,3600);if(error||!data?.signedUrl){alert("Proof could not be opened.");return}window.open(data.signedUrl,"_blank");
 }
 
 function renderInvoices(){
- const c=document.getElementById("invoicesContainer");if(!invoices.length){c.innerHTML='<div class="panel empty">No invoices yet. They become available after supplier payment confirmation.</div>';return}
- c.innerHTML=invoices.map(i=>`<div class="workflow"><div class="row"><div><h3>${esc(i.invoice_number||"Invoice")}</h3><div class="small">${esc(i.description||"Supply against procurement request")}</div></div><span class="badge completed">${esc(i.status||"Submitted")}</span></div><div class="details"><div class="detail"><span>Amount</span><strong>${money(i.amount)}</strong></div><div class="detail"><span>Invoice Date</span><strong>${date(i.invoice_date)}</strong></div><div class="detail"><span>RFQ</span><strong>${esc(paymentCode(i.payment_id))}</strong></div><div class="detail"><span>Customer</span><strong>${esc(currentBusiness.company_name)}</strong></div></div></div>`).join("");
+ const c=document.getElementById("invoicesContainer");if(!invoices.length){c.innerHTML='<div class="panel empty">No invoices yet. They become available after supplier payment confirmation.</div>';return}
+ c.innerHTML=invoices.map(i=>`<div class="workflow"><div class="row"><div><h3>${esc(i.invoice_number||"Invoice")}</h3><div class="small">${esc(i.description||"Supply against procurement request")}</div></div><span class="badge completed">${esc(i.status||"Submitted")}</span></div><div class="details"><div class="detail"><span>Amount</span><strong>${money(i.amount)}</strong></div><div class="detail"><span>Invoice Date</span><strong>${date(i.invoice_date)}</strong></div><div class="detail"><span>RFQ</span><strong>${esc(paymentCode(i.payment_id))}</strong></div><div class="detail"><span>Customer</span><strong>${esc(currentBusiness.company_name)}</strong></div></div></div>`).join("");
 }
 
 function paymentCode(id){return payments.find(p=>String(p.id)===String(id))?.rfq_code||"—"}
 
 function renderStatus(){
- const c=document.getElementById("statusContainer"),awarded=rfqs.filter(r=>["awarded","completed"].includes(String(r.status||"").toLowerCase()));
- if(!awarded.length){c.innerHTML='<div class="empty">No awarded procurement yet.</div>';return}
- const r=awarded[0],q=quotes.find(x=>String(x.rfq_id)===String(r.id)&&String(x.status||"").toLowerCase()==="awarded"),p=payments.find(x=>String(x.rfq_id)===String(r.id)),hasInvoice=invoices.some(i=>String(i.payment_id)===String(p?.id)),ps=p?.status||"";
- const steps=[["RFQ Created",true,"Your procurement request was published."],["Quote Received",!!q,q?"Supplier quotation received.":"Waiting for supplier quotation."],["Supplier Awarded",!!q,q?"Awarded to "+(q.supplier_company||"supplier")+".":"Waiting for award."],["Payment",ps==="confirmed",ps==="confirmed"?"Supplier confirmed payment.":ps==="proof_uploaded"?"Proof uploaded; awaiting supplier confirmation.":"Awaiting payment."],["Invoice",hasInvoice,hasInvoice?"Supplier invoice is available.":"Invoice follows payment confirmation."],["Completed",String(r.status).toLowerCase()==="completed",String(r.status).toLowerCase()==="completed"?"Transaction processed.":"Transaction in progress."]];
- c.innerHTML=`<div class="panel-title">${esc(r.title||"Procurement")}</div><div class="panel-sub">${esc(r.code||"")}</div><div class="steps">${steps.map((s,i)=>`<div class="step ${s[1]?"done":i===steps.findIndex(x=>!x[1])?"current":""}"><div class="dot">${s[1]?"✓":i+1}</div><div><h4>${s[0]}</h4><p>${esc(s[2])}</p></div></div>`).join("")}</div>`;
+ const c=document.getElementById("statusContainer"),awarded=rfqs.filter(r=>["awarded","completed"].includes(String(r.status||"").toLowerCase()));
+ if(!awarded.length){c.innerHTML='<div class="empty">No awarded procurement yet.</div>';return}
+ const r=awarded[0],q=quotes.find(x=>String(x.rfq_id)===String(r.id)&&String(x.status||"").toLowerCase()==="awarded"),p=payments.find(x=>String(x.rfq_id)===String(r.id)),hasInvoice=invoices.some(i=>String(i.payment_id)===String(p?.id)),ps=p?.status||"";
+ const steps=[["RFQ Created",true,"Your procurement request was published."],["Quote Received",!!q,q?"Supplier quotation received.":"Waiting for supplier quotation."],["Supplier Awarded",!!q,q?"Awarded to "+(q.supplier_company||"supplier")+".":"Waiting for award."],["Payment",ps==="confirmed",ps==="confirmed"?"Supplier confirmed payment.":ps==="proof_uploaded"?"Proof uploaded; awaiting supplier confirmation.":"Awaiting payment."],["Invoice",hasInvoice,hasInvoice?"Supplier invoice is available.":"Invoice follows payment confirmation."],["Completed",String(r.status).toLowerCase()==="completed",String(r.status).toLowerCase()==="completed"?"Transaction processed.":"Transaction in progress."]];
+ c.innerHTML=`<div class="panel-title">${esc(r.title||"Procurement")}</div><div class="panel-sub">${esc(r.code||"")}</div><div class="steps">${steps.map((s,i)=>`<div class="step ${s[1]?"done":i===steps.findIndex(x=>!x[1])?"current":""}"><div class="dot">${s[1]?"✓":i+1}</div><div><h4>${s[0]}</h4><p>${esc(s[2])}</p></div></div>`).join("")}</div>`;
 }
 
 function showStatus(id){const r=rfqs.find(x=>String(x.id)===String(id));if(r){window.selectedStatusRFQ=r}showSection("status");renderStatus()}
 
 function openCreateRFQ(){document.getElementById("rfqModal").classList.add("show")}
 async function createRFQ(){
- const title=v("rfqTitle"),category=v("rfqCategory"),quantity=v("rfqQuantity"),budget=v("rfqBudget"),delivery=v("rfqDelivery"),deadline=v("rfqDeadline"),notes=v("rfqNotes"),n=document.getElementById("rfqNotice");
- n.innerHTML="";
- if(!title||!category||!quantity||!deadline){
-   n.innerHTML='<div class="notice error">Complete title, category, quantity and required date.</div>';
-   return;
- }
- if(!currentUser||!currentBusiness){
-   n.innerHTML='<div class="notice error">Your business profile could not be loaded. Please log in again.</div>';
-   return;
- }
+ const title=v("rfqTitle"),category=v("rfqCategory"),quantity=v("rfqQuantity"),budget=v("rfqBudget"),delivery=v("rfqDelivery"),deadline=v("rfqDeadline"),notes=v("rfqNotes"),n=document.getElementById("rfqNotice");
+ n.innerHTML="";
+ if(!title||!category||!quantity||!deadline){
+   n.innerHTML='<div class="notice error">Complete title, category, quantity and required date.</div>';
+   return;
+ }
+ if(!currentUser||!currentBusiness){
+   n.innerHTML='<div class="notice error">Your business profile could not be loaded. Please log in again.</div>';
+   return;
+ }
 
- const companyName=String(
-   currentBusiness.company_name ||
-   currentBusiness.business_name ||
-   currentUser.email ||
-   ""
- ).trim();
+ const companyName=String(
+   currentBusiness.company_name ||
+   currentBusiness.business_name ||
+   currentUser.email ||
+   ""
+ ).trim();
 
- if(!companyName){
-   n.innerHTML='<div class="notice error">Please complete your Business Name in your Company Profile before creating an RFQ.</div>';
-   return;
- }
+ if(!companyName){
+   n.innerHTML='<div class="notice error">Please complete your Business Name in your Company Profile before creating an RFQ.</div>';
+   return;
+ }
 
- const publishButton=document.querySelector('#rfqModal .modal-actions .btn-primary');
- if(publishButton){
-   publishButton.disabled=true;
-   publishButton.textContent="Publishing...";
- }
+ const publishButton=document.querySelector('#rfqModal .modal-actions .btn-primary');
+ if(publishButton){
+   publishButton.disabled=true;
+   publishButton.textContent="Publishing...";
+ }
 
- const rfqData={
-   code:"RFQ-"+Date.now().toString().slice(-7),
-   title:title,
-   category:category,
-   quantity:quantity,
-   deadline:deadline,
-   delivery_location:delivery || null,
-   estimated_budget:budget ? Number(budget) : null,
-   notes:notes || null,
-   business_id:currentUser.id,
-   business_name:companyName,
-   created_by_company:companyName,
-   created_by:currentUser.id,
-   status:"open"
- };
+ const rfqData={
+   code:"RFQ-"+Date.now().toString().slice(-7),
+   title:title,
+   category:category,
+   quantity:quantity,
+   deadline:deadline,
+   delivery_location:delivery || null,
+   estimated_budget:budget ? Number(budget) : null,
+   notes:notes || null,
+   business_id:currentUser.id,
+   business_name:companyName,
+   created_by_company:companyName,
+   created_by:currentUser.id,
+   status:"open"
+ };
 
- try{
-   /*
-    * IMPORTANT:
-    * Do not use .select().single() after INSERT here.
-    * The INSERT can succeed while SELECT RLS is restricted,
-    * which previously made a successful RFQ look like a failure.
-    */
-   const {error}=await db.from("rfqs").insert(rfqData);
+ try{
+   /*
+    * IMPORTANT:
+    * Do not use .select().single() after INSERT here.
+    * The INSERT can succeed while SELECT RLS is restricted,
+    * which previously made a successful RFQ look like a failure.
+    */
+   const {error}=await db.from("rfqs").insert(rfqData);
 
-   if(error){
-     console.error("RFQ creation error:",error);
-     n.innerHTML=`<div class="notice error"><strong>RFQ was not created.</strong><br>${esc(error.message)}</div>`;
-     return;
-   }
+   if(error){
+     console.error("RFQ creation error:",error);
+     n.innerHTML=`<div class="notice error"><strong>RFQ was not created.</strong><br>${esc(error.message)}</div>`;
+     return;
+   }
 
-   ["rfqTitle","rfqCategory","rfqQuantity","rfqBudget","rfqDelivery","rfqDeadline","rfqNotes"].forEach(x=>{
-     const field=document.getElementById(x);
-     if(field)field.value="";
-   });
+   ["rfqTitle","rfqCategory","rfqQuantity","rfqBudget","rfqDelivery","rfqDeadline","rfqNotes"].forEach(x=>{
+     const field=document.getElementById(x);
+     if(field)field.value="";
+   });
 
-   n.innerHTML='<div class="notice success">RFQ published successfully.</div>';
+   n.innerHTML='<div class="notice success">RFQ published successfully.</div>';
 
-   await refresh();
+   await refresh();
 
-   setTimeout(()=>{
-     closeModal("rfqModal");
-     showSection("rfqs");
-   },600);
+   setTimeout(()=>{
+     closeModal("rfqModal");
+     showSection("rfqs");
+   },600);
 
- }catch(err){
-   console.error("Unexpected RFQ creation error:",err);
-   n.innerHTML=`<div class="notice error"><strong>Something went wrong.</strong><br>${esc(err?.message||String(err))}</div>`;
- }finally{
-   if(publishButton){
-     publishButton.disabled=false;
-     publishButton.textContent="Publish RFQ";
-   }
- }
+ }catch(err){
+   console.error("Unexpected RFQ creation error:",err);
+   n.innerHTML=`<div class="notice error"><strong>Something went wrong.</strong><br>${esc(err?.message||String(err))}</div>`;
+ }finally{
+   if(publishButton){
+     publishButton.disabled=false;
+     publishButton.textContent="Publish RFQ";
+   }
+ }
 }
 function details(id){const r=rfqs.find(x=>String(x.id)===String(id));if(r)alert([`RFQ: ${r.code||""}`,`Title: ${r.title||""}`,`Category: ${r.category||""}`,`Quantity: ${r.quantity||""}`,`Required: ${date(r.deadline)}`,`Delivery: ${r.delivery_location||""}`,`Budget: ${money(r.estimated_budget)}`,`Notes: ${r.notes||"None"}`].join("\n"))}
 
 function populateProfile(){if(!currentBusiness)return;setv("companyName",currentBusiness.company_name);setv("contactPerson",currentBusiness.contact_person);setv("businessEmail",currentBusiness.email||currentUser.email);setv("contactPhone",currentBusiness.contact_phone||currentBusiness.phone);setv("businessCity",currentBusiness.city);setv("businessCountry",currentBusiness.country);setv("businessAddress",currentBusiness.business_address);setv("businessDescription",currentBusiness.business_description)}
 async function saveProfile(){
- const updates={company_name:v("companyName"),contact_person:v("contactPerson"),contact_phone:v("contactPhone"),city:v("businessCity"),country:v("businessCountry"),business_address:v("businessAddress"),business_description:v("businessDescription")},n=document.getElementById("profileNotice");
- const {data,error}=await db.from("profiles").update(updates).eq("id",currentUser.id).select().single();if(error){n.innerHTML=`<div class="notice error">${esc(error.message)}</div>`;return}currentBusiness=data;updateIdentity();n.innerHTML='<div class="notice success">Company profile saved.</div>';
+ const updates={company_name:v("companyName"),contact_person:v("contactPerson"),contact_phone:v("contactPhone"),city:v("businessCity"),country:v("businessCountry"),business_address:v("businessAddress"),business_description:v("businessDescription")},n=document.getElementById("profileNotice");
+ const {data,error}=await db.from("profiles").update(updates).eq("id",currentUser.id).select().single();if(error){n.innerHTML=`<div class="notice error">${esc(error.message)}</div>`;return}currentBusiness=data;updateIdentity();n.innerHTML='<div class="notice success">Company profile saved.</div>';
 }
 
 function updateRFQFilterCounts(){
- const counts={
-  all:rfqs.length,
-  open:rfqs.filter(isOpenRFQ).length,
-  quoted:rfqs.filter(isQuotesReceivedRFQ).length,
-  awarded:rfqs.filter(isAwardedRFQ).length,
-  processed:rfqs.filter(isProcessedRFQ).length
- };
- Object.entries(counts).forEach(([k,v])=>{
-  const el=document.getElementById("count-"+k);
-  if(el)el.textContent=v;
- });
+ const counts={
+  all:rfqs.length,
+  open:rfqs.filter(isOpenRFQ).length,
+  quoted:rfqs.filter(isQuotesReceivedRFQ).length,
+  awarded:rfqs.filter(isAwardedRFQ).length,
+  processed:rfqs.filter(isProcessedRFQ).length
+ };
+ Object.entries(counts).forEach(([k,v])=>{
+  const el=document.getElementById("count-"+k);
+  if(el)el.textContent=v;
+ });
 }
 
 function updateStats(){
- updateRFQFilterCounts();
- document.getElementById("statRFQs").textContent=rfqs.filter(isOpenRFQ).length;
- document.getElementById("statQuotes").textContent=quotes.length;
- document.getElementById("statAwards").textContent=rfqs.filter(isAwardedRFQ).length;
- document.getElementById("statPayments").textContent=payments.length;
- const el=document.getElementById("statProcessed");
- if(el)el.textContent=rfqs.filter(isProcessedRFQ).length;
+ updateRFQFilterCounts();
+ document.getElementById("statRFQs").textContent=rfqs.filter(isOpenRFQ).length;
+ document.getElementById("statQuotes").textContent=quotes.length;
+ document.getElementById("statAwards").textContent=rfqs.filter(isAwardedRFQ).length;
+ document.getElementById("statPayments").textContent=payments.length;
+ const el=document.getElementById("statProcessed");
+ if(el)el.textContent=rfqs.filter(isProcessedRFQ).length;
 }
 function renderActivity(){const c=document.getElementById("activity"),items=[...rfqs.slice(0,3).map(r=>`<div class="notice info"><strong>RFQ</strong> ${esc(r.code||r.title||"")} created<br><span>${dateTime(r.created_at)}</span></div>`),...quotes.slice(0,3).map(q=>`<div class="notice info"><strong>Quote</strong> ${esc(q.supplier_company||"Supplier")} submitted a quotation<br><span>${dateTime(q.created_at)}</span></div>`)];c.innerHTML=items.length?items.join(""):'<div class="empty">No activity yet.</div>'}
 async function logoutBusiness(){await db.auth.signOut();location.href="customer-signin.html"}
@@ -1192,177 +1194,177 @@ function esc(x){return String(x??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").
 
 <script id="elsati-procurement-v2">
 /* ELSATI CONNECT PROCUREMENT WORKFLOW V2
-   This layer preserves the original dashboard functions and only extends them.
+   This layer preserves the original dashboard functions and only extends them.
 */
 
 let selectedReportRFQId = null;
 
 function v2esc(v){
-  return esc(v == null ? "" : String(v));
+  return esc(v == null ? "" : String(v));
 }
 
 function v2quoteName(q){
-  return q?.supplier_company || q?.supplier_name || "Supplier";
+  return q?.supplier_company || q?.supplier_name || "Supplier";
 }
 
 function v2isAwarded(q){
-  return ["awarded","accepted"].includes(String(q?.status||"").toLowerCase());
+  return ["awarded","accepted"].includes(String(q?.status||"").toLowerCase());
 }
 
 function v2selectedQuote(rfqId){
-  const r = rfqs.find(x=>String(x.id)===String(rfqId));
-  if(!r) return null;
-  if(r.selected_quote_id){
-    const q=quotes.find(x=>String(x.id)===String(r.selected_quote_id));
-    if(q) return q;
-  }
-  return quotes.find(q=>String(q.rfq_id)===String(rfqId)&&v2isAwarded(q)) || null;
+  const r = rfqs.find(x=>String(x.id)===String(rfqId));
+  if(!r) return null;
+  if(r.selected_quote_id){
+    const q=quotes.find(x=>String(x.id)===String(r.selected_quote_id));
+    if(q) return q;
+  }
+  return quotes.find(q=>String(q.rfq_id)===String(rfqId)&&v2isAwarded(q)) || null;
 }
 
 function v2renderQuoteCard(q,r){
-  const awarded=v2isAwarded(q);
-  const selected=v2selectedQuote(r?.id);
-  const isSelected=String(selected?.id)===String(q.id);
-  return `<article class="quote-card ${isSelected?'procurement-selected':''}">
-    <div class="row">
-      <div>
-        <div class="panel-title">${v2esc(v2quoteName(q))}</div>
-        <div class="small">${v2esc(r?.code||"")}</div>
-      </div>
-      <div class="price">${money(q.price)}</div>
-    </div>
-    <div class="quote-meta">
-      <div><span>Delivery</span><strong>${v2esc(q.delivery||q.delivery_period||"As stated")}</strong></div>
-      <div><span>Payment Terms</span><strong>${v2esc(q.payment_terms||"As agreed")}</strong></div>
-      <div><span>Validity</span><strong>${v2esc(q.quote_validity||"As stated")}</strong></div>
-      <div><span>Availability</span><strong>${v2esc(q.availability||"As stated")}</strong></div>
-    </div>
-    <div class="small">${v2esc(q.notes||"No additional supplier notes.")}</div>
-    <div class="quote-actions-v2">
-      ${isSelected?'<span class="procurement-selected-label">✓ Selected for report</span>':''}
-      ${awarded?'<span class="badge awarded">Awarded</span>':''}
-      <button class="btn btn-light" onclick="openQuoteV2('${q.id}')">View Full Quote</button>
-      <button class="btn btn-light" onclick="selectQuoteForReport('${q.id}')">${isSelected?'Selected':'Select for Report'}</button>
-      ${awarded?'<button class="btn btn-secondary" onclick="changeAwardToQuote(\''+q.id+'\')">Award Instead</button>':`<button class="btn btn-primary" onclick="awardQuoteV2('${q.id}')">Award Quote</button>`}
-      <button class="btn btn-light" onclick="downloadSupplierQuote('${q.id}')">Download Quote</button>
-    </div>
-  </article>`;
+  const awarded=v2isAwarded(q);
+  const selected=v2selectedQuote(r?.id);
+  const isSelected=String(selected?.id)===String(q.id);
+  return `<article class="quote-card ${isSelected?'procurement-selected':''}">
+    <div class="row">
+      <div>
+        <div class="panel-title">${v2esc(v2quoteName(q))}</div>
+        <div class="small">${v2esc(r?.code||"")}</div>
+      </div>
+      <div class="price">${money(q.price)}</div>
+    </div>
+    <div class="quote-meta">
+      <div><span>Delivery</span><strong>${v2esc(q.delivery||q.delivery_period||"As stated")}</strong></div>
+      <div><span>Payment Terms</span><strong>${v2esc(q.payment_terms||"As agreed")}</strong></div>
+      <div><span>Validity</span><strong>${v2esc(q.quote_validity||"As stated")}</strong></div>
+      <div><span>Availability</span><strong>${v2esc(q.availability||"As stated")}</strong></div>
+    </div>
+    <div class="small">${v2esc(q.notes||"No additional supplier notes.")}</div>
+    <div class="quote-actions-v2">
+      ${isSelected?'<span class="procurement-selected-label">✓ Selected for report</span>':''}
+      ${awarded?'<span class="badge awarded">Awarded</span>':''}
+      <button class="btn btn-light" onclick="openQuoteV2('${q.id}')">View Full Quote</button>
+      <button class="btn btn-light" onclick="selectQuoteForReport('${q.id}')">${isSelected?'Selected':'Select for Report'}</button>
+      ${awarded?'<button class="btn btn-secondary" onclick="changeAwardToQuote(\''+q.id+'\')">Award Instead</button>':`<button class="btn btn-primary" onclick="awardQuoteV2('${q.id}')">Award Quote</button>`}
+      <button class="btn btn-light" onclick="downloadSupplierQuote('${q.id}')">Download Quote</button>
+    </div>
+  </article>`;
 }
 
 function renderQuotesV2(){
-  const c=document.getElementById("quotesContainer");
-  if(!quotes.length){c.innerHTML='<div class="empty">No supplier quotations yet.</div>';return}
-  const groups={};quotes.forEach(q=>(groups[q.rfq_id]??=[]).push(q));
-  c.innerHTML=Object.entries(groups).map(([id,qs])=>{
-    const r=rfqs.find(x=>String(x.id)===String(id));
-    return `<div style="margin-bottom:28px">
-      <div class="panel-title">${v2esc(r?.title||"RFQ")}</div>
-      <div class="panel-sub">${v2esc(r?.code||"")} · ${qs.length} supplier quote(s)</div>
-      <div class="quote-list">${qs.map(q=>v2renderQuoteCard(q,r)).join("")}</div>
-      <div class="procurement-tools">
-        <button class="btn btn-secondary" onclick="openProcurementReport('${id}')">View Procurement Report</button>
-      </div>
-    </div>`;
-  }).join("");
+  const c=document.getElementById("quotesContainer");
+  if(!quotes.length){c.innerHTML='<div class="empty">No supplier quotations yet.</div>';return}
+  const groups={};quotes.forEach(q=>(groups[q.rfq_id]??=[]).push(q));
+  c.innerHTML=Object.entries(groups).map(([id,qs])=>{
+    const r=rfqs.find(x=>String(x.id)===String(id));
+    return `<div style="margin-bottom:28px">
+      <div class="panel-title">${v2esc(r?.title||"RFQ")}</div>
+      <div class="panel-sub">${v2esc(r?.code||"")} · ${qs.length} supplier quote(s)</div>
+      <div class="quote-list">${qs.map(q=>v2renderQuoteCard(q,r)).join("")}</div>
+      <div class="procurement-tools">
+        <button class="btn btn-secondary" onclick="openProcurementReport('${id}')">View Procurement Report</button>
+      </div>
+    </div>`;
+  }).join("");
 }
 
 function openQuoteV2(id){
-  const q=quotes.find(x=>String(x.id)===String(id)); if(!q)return;
-  const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
-  document.getElementById("quoteSub").textContent=`${v2quoteName(q)} · ${r?.code||""}`;
-  document.getElementById("quoteContent").innerHTML=`
-    <div class="quote-document">
-      <div class="qhead">
-        <div><h1>QUOTATION</h1><div class="green"><strong>${v2esc(v2quoteName(q))}</strong></div></div>
-        <div style="text-align:right"><strong>RFQ:</strong> ${v2esc(r?.code||"")}<br><strong>Date:</strong> ${v2esc(q.created_at?new Date(q.created_at).toLocaleDateString():"")}</div>
-      </div>
-      <div><strong>Customer:</strong> ${v2esc(r?.business_name||currentBusiness?.company_name||"Business")}</div>
-      <div><strong>Request:</strong> ${v2esc(r?.title||"")}</div>
-      <table><thead><tr><th>Description</th><th>Quantity</th><th>Delivery</th><th>Total</th></tr></thead>
-      <tbody><tr><td>${v2esc(r?.title||"Supplier quotation")}</td><td>${v2esc(r?.quantity||"—")}</td><td>${v2esc(q.delivery||q.delivery_period||"As stated")}</td><td>${money(q.price)}</td></tr></tbody></table>
-      <div class="total">Quotation Total: ${money(q.price)}</div>
-      <table>
-        <tr><th>Payment Terms</th><td>${v2esc(q.payment_terms||"As agreed")}</td></tr>
-        <tr><th>Quotation Validity</th><td>${v2esc(q.quote_validity||"As stated")}</td></tr>
-        <tr><th>Availability</th><td>${v2esc(q.availability||"As stated")}</td></tr>
-        <tr><th>Warranty / Guarantee</th><td>${v2esc(q.warranty||"As stated")}</td></tr>
-        <tr><th>Supplier Notes</th><td>${v2esc(q.notes||"No additional notes.")}</td></tr>
-      </table>
-    </div>`;
-  document.getElementById("awardBtn").textContent=v2isAwarded(q)?"Awarded":"Award Quote";
-  document.getElementById("awardBtn").disabled=false;
-  document.getElementById("awardBtn").onclick=()=>{closeModal("quoteModal");awardQuoteV2(q.id)};
-  document.getElementById("quoteModal").classList.add("show");
+  const q=quotes.find(x=>String(x.id)===String(id)); if(!q)return;
+  const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
+  document.getElementById("quoteSub").textContent=`${v2quoteName(q)} · ${r?.code||""}`;
+  document.getElementById("quoteContent").innerHTML=`
+    <div class="quote-document">
+      <div class="qhead">
+        <div><h1>QUOTATION</h1><div class="green"><strong>${v2esc(v2quoteName(q))}</strong></div></div>
+        <div style="text-align:right"><strong>RFQ:</strong> ${v2esc(r?.code||"")}<br><strong>Date:</strong> ${v2esc(q.created_at?new Date(q.created_at).toLocaleDateString():"")}</div>
+      </div>
+      <div><strong>Customer:</strong> ${v2esc(r?.business_name||currentBusiness?.company_name||"Business")}</div>
+      <div><strong>Request:</strong> ${v2esc(r?.title||"")}</div>
+      <table><thead><tr><th>Description</th><th>Quantity</th><th>Delivery</th><th>Total</th></tr></thead>
+      <tbody><tr><td>${v2esc(r?.title||"Supplier quotation")}</td><td>${v2esc(r?.quantity||"—")}</td><td>${v2esc(q.delivery||q.delivery_period||"As stated")}</td><td>${money(q.price)}</td></tr></tbody></table>
+      <div class="total">Quotation Total: ${money(q.price)}</div>
+      <table>
+        <tr><th>Payment Terms</th><td>${v2esc(q.payment_terms||"As agreed")}</td></tr>
+        <tr><th>Quotation Validity</th><td>${v2esc(q.quote_validity||"As stated")}</td></tr>
+        <tr><th>Availability</th><td>${v2esc(q.availability||"As stated")}</td></tr>
+        <tr><th>Warranty / Guarantee</th><td>${v2esc(q.warranty||"As stated")}</td></tr>
+        <tr><th>Supplier Notes</th><td>${v2esc(q.notes||"No additional notes.")}</td></tr>
+      </table>
+    </div>`;
+  document.getElementById("awardBtn").textContent=v2isAwarded(q)?"Awarded":"Award Quote";
+  document.getElementById("awardBtn").disabled=false;
+  document.getElementById("awardBtn").onclick=()=>{closeModal("quoteModal");awardQuoteV2(q.id)};
+  document.getElementById("quoteModal").classList.add("show");
 }
 
 async function selectQuoteForReport(id){
-  const q=quotes.find(x=>String(x.id)===String(id)); if(!q)return;
-  const r=rfqs.find(x=>String(x.id)===String(q.rfq_id)); if(!r)return;
-  const {error}=await db.from("rfqs").update({selected_quote_id:q.id}).eq("id",r.id);
-  if(error){alert("Could not select quote: "+error.message);return}
-  r.selected_quote_id=q.id;
-  selectedReportRFQId=r.id;
-  renderQuotesV2();
-  renderRFQs();
-  alert(`${v2quoteName(q)} has been selected for the procurement report.`);
+  const q=quotes.find(x=>String(x.id)===String(id)); if(!q)return;
+  const r=rfqs.find(x=>String(x.id)===String(q.rfq_id)); if(!r)return;
+  const {error}=await db.from("rfqs").update({selected_quote_id:q.id}).eq("id",r.id);
+  if(error){alert("Could not select quote: "+error.message);return}
+  r.selected_quote_id=q.id;
+  selectedReportRFQId=r.id;
+  renderQuotesV2();
+  renderRFQs();
+  alert(`${v2quoteName(q)} has been selected for the procurement report.`);
 }
 
 async function awardQuoteV2(id){
-  const q=quotes.find(x=>String(x.id)===String(id)); if(!q)return;
-  const r=rfqs.find(x=>String(x.id)===String(q.rfq_id)); if(!r)return;
-  if(!confirm(`Award ${r.code||"this RFQ"} to ${v2quoteName(q)}?`))return;
-  await changeAwardToQuote(id,true);
+  const q=quotes.find(x=>String(x.id)===String(id)); if(!q)return;
+  const r=rfqs.find(x=>String(x.id)===String(q.rfq_id)); if(!r)return;
+  if(!confirm(`Award ${r.code||"this RFQ"} to ${v2quoteName(q)}?`))return;
+  await changeAwardToQuote(id,true);
 }
 
 async function changeAwardToQuote(id,skipConfirm=false){
-  const q=quotes.find(x=>String(x.id)===String(id)); if(!q)return;
-  const r=rfqs.find(x=>String(x.id)===String(q.rfq_id)); if(!r)return;
-  if(!skipConfirm && !confirm(`Change the award to ${v2quoteName(q)}? The previous supplier will no longer be awarded.`))return;
+  const q=quotes.find(x=>String(x.id)===String(id)); if(!q)return;
+  const r=rfqs.find(x=>String(x.id)===String(q.rfq_id)); if(!r)return;
+  if(!skipConfirm && !confirm(`Change the award to ${v2quoteName(q)}? The previous supplier will no longer be awarded.`))return;
 
-  const {error:resetErr}=await db.from("quotes").update({status:"submitted"}).eq("rfq_id",r.id).neq("id",q.id);
-  if(resetErr){alert("Could not reset the previous award: "+resetErr.message);return}
+  const {error:resetErr}=await db.from("quotes").update({status:"submitted"}).eq("rfq_id",r.id).neq("id",q.id);
+  if(resetErr){alert("Could not reset the previous award: "+resetErr.message);return}
 
-  const {error:awardErr}=await db.from("quotes").update({status:"awarded"}).eq("id",q.id);
-  if(awardErr){alert("Could not award this quotation: "+awardErr.message);return}
+  const {error:awardErr}=await db.from("quotes").update({status:"awarded"}).eq("id",q.id);
+  if(awardErr){alert("Could not award this quotation: "+awardErr.message);return}
 
-  const {error:rfqErr}=await db.from("rfqs").update({
-    status:"awarded",
-    awarded_supplier_id:q.supplier_user_id,
-    selected_quote_id:q.id
-  }).eq("id",r.id);
-  if(rfqErr){alert("The quotation was updated, but the RFQ could not be updated: "+rfqErr.message);return}
+  const {error:rfqErr}=await db.from("rfqs").update({
+    status:"awarded",
+    awarded_supplier_id:q.supplier_user_id,
+    selected_quote_id:q.id
+  }).eq("id",r.id);
+  if(rfqErr){alert("The quotation was updated, but the RFQ could not be updated: "+rfqErr.message);return}
 
-  const {data:existingPayment}=await db.from("supplier_payments").select("*")
-    .eq("rfq_id",r.id).eq("customer_user_id",currentUser.id).maybeSingle();
+  const {data:existingPayment}=await db.from("supplier_payments").select("*")
+    .eq("rfq_id",r.id).eq("customer_user_id",currentUser.id).maybeSingle();
 
-  if(existingPayment){
-    const {error:pe}=await db.from("supplier_payments").update({
-      supplier_user_id:q.supplier_user_id,
-      customer_name:currentBusiness.company_name,
-      amount:Number(q.price||0),
-      status:"awaiting_payment",
-      payment_reference:null,
-      proof_path:null
-    }).eq("id",existingPayment.id);
-    if(pe) console.warn("Payment record update:",pe.message);
-  }else{
-    const {error:pe}=await db.from("supplier_payments").insert({
-      supplier_user_id:q.supplier_user_id,
-      customer_user_id:currentUser.id,
-      customer_name:currentBusiness.company_name,
-      rfq_id:r.id,
-      rfq_code:r.code,
-      amount:Number(q.price||0),
-      status:"awaiting_payment"
-    });
-    if(pe) console.warn("Payment record creation:",pe.message);
-  }
+  if(existingPayment){
+    const {error:pe}=await db.from("supplier_payments").update({
+      supplier_user_id:q.supplier_user_id,
+      customer_name:currentBusiness.company_name,
+      amount:Number(q.price||0),
+      status:"awaiting_payment",
+      payment_reference:null,
+      proof_path:null
+    }).eq("id",existingPayment.id);
+    if(pe) console.warn("Payment record update:",pe.message);
+  }else{
+    const {error:pe}=await db.from("supplier_payments").insert({
+      supplier_user_id:q.supplier_user_id,
+      customer_user_id:currentUser.id,
+      customer_name:currentBusiness.company_name,
+      rfq_id:r.id,
+      rfq_code:r.code,
+      amount:Number(q.price||0),
+      status:"awaiting_payment"
+    });
+    if(pe) console.warn("Payment record creation:",pe.message);
+  }
 
-  r.status="awarded"; r.awarded_supplier_id=q.supplier_user_id; r.selected_quote_id=q.id;
-  quotes.forEach(x=>{if(String(x.rfq_id)===String(r.id))x.status=String(x.id)===String(q.id)?"awarded":"submitted"});
-  await refresh();
-  showSection("quotes");
-  alert(`Award updated to ${v2quoteName(q)}.`);
+  r.status="awarded"; r.awarded_supplier_id=q.supplier_user_id; r.selected_quote_id=q.id;
+  quotes.forEach(x=>{if(String(x.rfq_id)===String(r.id))x.status=String(x.id)===String(q.id)?"awarded":"submitted"});
+  await refresh();
+  showSection("quotes");
+  alert(`Award updated to ${v2quoteName(q)}.`);
 }
 
 function openProcurementReport(rfqId){
@@ -1951,56 +1953,56 @@ function openProcurementReport(rfqId){
 
 
 async function saveProcurementComments(rfqId){
-  const officer=document.getElementById("procurementOfficerComment")?.value.trim()||null;
-  const approval=document.getElementById("approvalCustomerComment")?.value.trim()||null;
-  const {error}=await db.from("rfqs").update({
-    procurement_comment:officer,
-    approval_comment:approval
-  }).eq("id",rfqId);
-  if(error){alert("Could not save comments: "+error.message);return}
-  const r=rfqs.find(x=>String(x.id)===String(rfqId));
-  if(r){r.procurement_comment=officer;r.approval_comment=approval}
-  alert("Comments saved.");
+  const officer=document.getElementById("procurementOfficerComment")?.value.trim()||null;
+  const approval=document.getElementById("approvalCustomerComment")?.value.trim()||null;
+  const {error}=await db.from("rfqs").update({
+    procurement_comment:officer,
+    approval_comment:approval
+  }).eq("id",rfqId);
+  if(error){alert("Could not save comments: "+error.message);return}
+  const r=rfqs.find(x=>String(x.id)===String(rfqId));
+  if(r){r.procurement_comment=officer;r.approval_comment=approval}
+  alert("Comments saved.");
 }
 
 function buildQuoteDocument(q){
-  const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
-  const supplier=v2quoteName(q);
-  const dateText=q.created_at?new Date(q.created_at).toLocaleDateString():"";
-  return `<!doctype html><html><head><meta charset="utf-8"><title>Quotation ${v2esc(r?.code||"")}</title>
-  <style>
-  body{font-family:Arial,sans-serif;margin:0;background:#f3f6f8;color:#172033}
-  .page{max-width:850px;margin:30px auto;background:white;padding:45px;box-sizing:border-box}
-  .head{display:flex;justify-content:space-between;border-bottom:3px solid #16a34a;padding-bottom:20px}
-  h1{margin:0;font-size:32px}.green{color:#15803d}
-  table{width:100%;border-collapse:collapse;margin-top:25px}th,td{border:1px solid #dbe2ea;padding:11px;text-align:left}th{background:#f0fdf4}
-  .total{text-align:right;font-size:22px;font-weight:bold;margin-top:20px}
-  .foot{margin-top:35px;border-top:1px solid #ddd;padding-top:15px;color:#64748b}
-  </style></head><body><div class="page">
-  <div class="head"><div><h1>QUOTATION</h1><div class="green"><strong>${v2esc(supplier)}</strong></div></div>
-  <div style="text-align:right"><strong>Quotation Date:</strong> ${v2esc(dateText)}<br><strong>RFQ:</strong> ${v2esc(r?.code||"")}</div></div>
-  <p><strong>Customer:</strong> ${v2esc(r?.business_name||currentBusiness?.company_name||"Business")}</p>
-  <p><strong>Request:</strong> ${v2esc(r?.title||"")}</p>
-  <table><tr><th>Description</th><th>Quantity</th><th>Delivery</th><th>Amount</th></tr>
-  <tr><td>${v2esc(r?.title||"Supplier quotation")}</td><td>${v2esc(r?.quantity||"—")}</td><td>${v2esc(q.delivery||q.delivery_period||"As stated")}</td><td>${money(q.price)}</td></tr></table>
-  <div class="total">TOTAL: ${money(q.price)}</div>
-  <table>
-  <tr><th>Payment Terms</th><td>${v2esc(q.payment_terms||"As agreed")}</td></tr>
-  <tr><th>Validity</th><td>${v2esc(q.quote_validity||"As stated")}</td></tr>
-  <tr><th>Availability</th><td>${v2esc(q.availability||"As stated")}</td></tr>
-  <tr><th>Warranty / Guarantee</th><td>${v2esc(q.warranty||"As stated")}</td></tr>
-  <tr><th>Notes</th><td>${v2esc(q.notes||"No additional notes.")}</td></tr></table>
-  <div class="foot">Quotation generated from Elsati Connect procurement records.</div>
-  </div></body></html>`;
+  const r=rfqs.find(x=>String(x.id)===String(q.rfq_id));
+  const supplier=v2quoteName(q);
+  const dateText=q.created_at?new Date(q.created_at).toLocaleDateString():"";
+  return `<!doctype html><html><head><meta charset="utf-8"><title>Quotation ${v2esc(r?.code||"")}</title>
+  <style>
+  body{font-family:Arial,sans-serif;margin:0;background:#f3f6f8;color:#172033}
+  .page{max-width:850px;margin:30px auto;background:white;padding:45px;box-sizing:border-box}
+  .head{display:flex;justify-content:space-between;border-bottom:3px solid #16a34a;padding-bottom:20px}
+  h1{margin:0;font-size:32px}.green{color:#15803d}
+  table{width:100%;border-collapse:collapse;margin-top:25px}th,td{border:1px solid #dbe2ea;padding:11px;text-align:left}th{background:#f0fdf4}
+  .total{text-align:right;font-size:22px;font-weight:bold;margin-top:20px}
+  .foot{margin-top:35px;border-top:1px solid #ddd;padding-top:15px;color:#64748b}
+  </style></head><body><div class="page">
+  <div class="head"><div><h1>QUOTATION</h1><div class="green"><strong>${v2esc(supplier)}</strong></div></div>
+  <div style="text-align:right"><strong>Quotation Date:</strong> ${v2esc(dateText)}<br><strong>RFQ:</strong> ${v2esc(r?.code||"")}</div></div>
+  <p><strong>Customer:</strong> ${v2esc(r?.business_name||currentBusiness?.company_name||"Business")}</p>
+  <p><strong>Request:</strong> ${v2esc(r?.title||"")}</p>
+  <table><tr><th>Description</th><th>Quantity</th><th>Delivery</th><th>Amount</th></tr>
+  <tr><td>${v2esc(r?.title||"Supplier quotation")}</td><td>${v2esc(r?.quantity||"—")}</td><td>${v2esc(q.delivery||q.delivery_period||"As stated")}</td><td>${money(q.price)}</td></tr></table>
+  <div class="total">TOTAL: ${money(q.price)}</div>
+  <table>
+  <tr><th>Payment Terms</th><td>${v2esc(q.payment_terms||"As agreed")}</td></tr>
+  <tr><th>Validity</th><td>${v2esc(q.quote_validity||"As stated")}</td></tr>
+  <tr><th>Availability</th><td>${v2esc(q.availability||"As stated")}</td></tr>
+  <tr><th>Warranty / Guarantee</th><td>${v2esc(q.warranty||"As stated")}</td></tr>
+  <tr><th>Notes</th><td>${v2esc(q.notes||"No additional notes.")}</td></tr></table>
+  <div class="foot">Quotation generated from Elsati Connect procurement records.</div>
+  </div></body></html>`;
 }
 
 function downloadSupplierQuote(id){
-  const q=quotes.find(x=>String(x.id)===String(id)); if(!q){alert("Select a quotation first.");return}
-  const html=buildQuoteDocument(q);
-  const blob=new Blob([html],{type:"text/html;charset=utf-8"});
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
-  a.download=`Quotation-${(rfqs.find(r=>String(r.id)===String(q.rfq_id))?.code||q.id)}-${v2quoteName(q).replace(/[^a-z0-9]+/gi,"-")}.html`;
-  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  const q=quotes.find(x=>String(x.id)===String(id)); if(!q){alert("Select a quotation first.");return}
+  const html=buildQuoteDocument(q);
+  const blob=new Blob([html],{type:"text/html;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=`Quotation-${(rfqs.find(r=>String(r.id)===String(q.rfq_id))?.code||q.id)}-${v2quoteName(q).replace(/[^a-z0-9]+/gi,"-")}.html`;
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 
 function procurementReportPrintStyles(){
@@ -2283,6 +2285,162 @@ window.changeAwardToQuote=async function(id,skipConfirm=false){
   const p=payments.find(x=>String(x.rfq_id)===String(r.id));
   if(p&&["confirmed","paid"].includes(String(p.status||"").toLowerCase())){alert("The award cannot be changed because payment has already been verified by the supplier.");return;}
   return _originalChangeAward(id,skipConfirm);
+};
+</script>
+
+
+<!-- Tender and Bidding creation modal: follows the existing RFQ modal layout. -->
+<div class="modal-overlay" id="opportunityModal"><div class="modal" style="width:min(900px,100%)">
+  <div class="modal-head"><div><h2 id="opportunityModalTitle">Create Tender</h2><p class="small" id="opportunityModalSubtitle">Publish an opportunity for verified suppliers.</p></div><button class="close" type="button" onclick="closeModal('opportunityModal')">×</button></div>
+  <div id="opportunityNotice"></div>
+  <input type="hidden" id="opportunityType" value="tender">
+  <div class="form-grid">
+    <div class="field"><label id="opportunityTitleLabel">Tender Title</label><input id="opportunityTitle" placeholder="e.g. Supply of Office Furniture"></div>
+    <div class="field"><label>Category</label><input id="opportunityCategory" placeholder="e.g. IT Equipment, Construction, Catering"></div>
+    <div class="field"><label>Reference Number</label><input id="opportunityReference" placeholder="Optional internal reference"></div>
+    <div class="field"><label>Estimated Budget / Contract Value (ZMW)</label><input id="opportunityBudget" type="number" min="0" step="0.01" placeholder="Optional"></div>
+    <div class="field"><label>Delivery / Project Location</label><input id="opportunityLocation" placeholder="e.g. Lusaka"></div>
+    <div class="field"><label>Publication Date</label><input id="opportunityStartDate" type="date"></div>
+    <div class="field"><label>Submission Deadline</label><input id="opportunityDeadline" type="date"></div>
+    <div class="field"><label>Site Visit / Briefing Date</label><input id="opportunitySiteVisit" type="date"></div>
+    <div class="field"><label>Bid / Tender Security</label><input id="opportunitySecurity" placeholder="e.g. 2% bid security or Not Required"></div>
+    <div class="field"><label>Submission Method</label><select id="opportunitySubmissionMethod"><option value="Online through Elsati Connect">Online through Elsati Connect</option><option value="Email">Email</option><option value="Physical submission">Physical submission</option><option value="Other">Other (explain in instructions)</option></select></div>
+    <div class="field"><label>Evaluation Method</label><select id="opportunityEvaluation"><option value="Best evaluated / quality and price">Best evaluated / quality and price</option><option value="Lowest evaluated responsive bid">Lowest evaluated responsive bid</option><option value="Quality-based evaluation">Quality-based evaluation</option><option value="Other">Other (explain in requirements)</option></select></div>
+    <div class="field"><label>Who can apply?</label><select id="opportunityVisibility" onchange="toggleOpportunityInvitees()"><option value="public">All verified suppliers</option><option value="invited">Only suppliers I invite</option></select></div>
+    <div class="field full"><label>Scope / Description of Work</label><textarea id="opportunityDescription" rows="3" placeholder="Describe the goods, works or services required."></textarea></div>
+    <div class="field full"><label>Items / Lots / Services Required</label><div id="opportunityItems"></div><button class="btn btn-light" type="button" onclick="addOpportunityItem()" style="width:max-content;margin-top:8px">+ Add Another Item / Lot</button></div>
+    <div class="field full"><label>Submission Instructions / Requirements</label><textarea id="opportunityInstructions" rows="3" placeholder="Explain how suppliers should prepare and submit their proposals or bids."></textarea></div>
+    <div class="field full"><label>Required Supporting Documents</label><div class="form-grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+      <label><input type="checkbox" class="opportunity-required-doc" value="Certificate of Incorporation / PACRA"> Certificate of Incorporation / PACRA</label>
+      <label><input type="checkbox" class="opportunity-required-doc" value="Valid TPIN Certificate"> Valid TPIN Certificate</label>
+      <label><input type="checkbox" class="opportunity-required-doc" value="Valid Tax Clearance Certificate"> Valid Tax Clearance Certificate</label>
+      <label><input type="checkbox" class="opportunity-required-doc" value="NAPSA Compliance Certificate"> NAPSA Compliance Certificate</label>
+      <label><input type="checkbox" class="opportunity-required-doc" value="Workers Compensation Compliance Certificate"> Workers Compensation Compliance Certificate</label>
+      <label><input type="checkbox" class="opportunity-required-doc" value="Relevant Experience / References"> Relevant Experience / References</label>
+      <label><input type="checkbox" class="opportunity-required-doc" value="Trading Licence"> Trading Licence</label>
+      <label><input type="checkbox" class="opportunity-required-doc" value="Relevant Accreditations"> Relevant Accreditations</label>
+    </div></div>
+    <div class="field full"><label>Additional Documents Required (if any)</label><input id="opportunityOtherDocuments" placeholder="Add any other document requirements, separated by commas"></div>
+    <div class="field full"><label>Attach Tender / Bidding Document (PDF, optional)</label><input id="opportunityPdf" type="file" accept="application/pdf,.pdf"><small class="small">Attach the full tender document, specifications, terms of reference or bidding pack. PDF only, maximum 20MB.</small></div>
+    <div class="field full" id="opportunityInviteesWrap" style="display:none"><label>Select Verified Suppliers to Invite</label><div id="opportunityInvitees" class="panel" style="max-height:220px;overflow:auto;padding:12px"><div class="small">Loading verified suppliers…</div></div></div>
+  </div>
+  <div class="modal-actions"><button class="btn btn-secondary" type="button" onclick="closeModal('opportunityModal')">Cancel</button><button class="btn btn-primary" type="button" id="publishOpportunityButton" onclick="publishOpportunity()">Publish Tender</button></div>
+</div></div>
+
+
+<script>
+/* Working Tender and Bidding creation workflow. Uses the existing Supabase opportunity tables. */
+let opportunityItemCounter = 0;
+function opportunityEscape(value){return typeof esc==='function'?esc(value):String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function addOpportunityItem(item={}){
+  const host=document.getElementById('opportunityItems');if(!host)return;
+  const id=++opportunityItemCounter;
+  const row=document.createElement('div');row.className='opportunity-item-row';row.style.cssText='display:grid;grid-template-columns:minmax(0,2fr) minmax(90px,.7fr) minmax(100px,.8fr) 40px;gap:8px;margin:8px 0;align-items:center';
+  row.innerHTML=`<input class="opp-item-description" aria-label="Item description" placeholder="Item / lot / service description" value="${opportunityEscape(item.description||'')}"><input class="opp-item-quantity" aria-label="Quantity" type="number" min="0" step="0.01" placeholder="Quantity" value="${opportunityEscape(item.quantity||'')}"><input class="opp-item-unit" aria-label="Unit" placeholder="Unit" value="${opportunityEscape(item.unit||'')}"><button type="button" class="btn btn-light" aria-label="Remove item" onclick="this.closest('.opportunity-item-row').remove()">×</button>`;
+  host.appendChild(row);
+}
+function collectOpportunityItems(){return [...document.querySelectorAll('#opportunityItems .opportunity-item-row')].map(row=>({description:row.querySelector('.opp-item-description')?.value.trim()||'',quantity:row.querySelector('.opp-item-quantity')?.value||'',unit:row.querySelector('.opp-item-unit')?.value.trim()||''})).filter(x=>x.description||x.quantity||x.unit);}
+function renderOpportunityInvitees(){
+  const host=document.getElementById('opportunityInvitees');if(!host)return;
+  const list=Array.isArray(verifiedSuppliers)?verifiedSuppliers:[];
+  if(!list.length){host.innerHTML='<div class="notice warning">No verified suppliers are currently available to invite. You can still publish an open opportunity to all verified suppliers.</div>';return;}
+  host.innerHTML=list.map(s=>{const name=s.company_name||s.business_name||s.full_name||s.email||'Verified Supplier';return `<label style="display:flex;gap:9px;align-items:center;padding:8px;border-bottom:1px solid #edf1f4"><input type="checkbox" class="opportunity-invitee" value="${opportunityEscape(s.id)}"><span><strong>${opportunityEscape(name)}</strong><span class="small" style="display:block">${opportunityEscape(s.email||'')}</span></span></label>`}).join('');
+}
+function toggleOpportunityInvitees(){
+  const invited=document.getElementById('opportunityVisibility')?.value==='invited';
+  const wrap=document.getElementById('opportunityInviteesWrap');if(wrap)wrap.style.display=invited?'block':'none';
+  if(invited)renderOpportunityInvitees();
+}
+function openOpportunityModal(type){
+  const kind=type==='bidding'?'bidding':'tender';
+  const title=kind==='tender'?'Create Tender':'Create Bidding Opportunity';
+  const subtitle=kind==='tender'?'Invite suppliers to submit formal tender proposals and documents.':'Invite suppliers to compete by submitting bids for this opportunity.';
+  document.getElementById('opportunityType').value=kind;
+  document.getElementById('opportunityModalTitle').textContent=title;
+  document.getElementById('opportunityModalSubtitle').textContent=subtitle;
+  document.getElementById('opportunityTitleLabel').textContent=kind==='tender'?'Tender Title':'Bidding Opportunity Title';
+  document.getElementById('publishOpportunityButton').textContent=kind==='tender'?'Publish Tender':'Publish Bidding Opportunity';
+  document.getElementById('opportunityNotice').innerHTML='';
+  ['opportunityTitle','opportunityCategory','opportunityReference','opportunityBudget','opportunityLocation','opportunityStartDate','opportunityDeadline','opportunitySiteVisit','opportunitySecurity','opportunityDescription','opportunityInstructions','opportunityOtherDocuments'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('opportunitySubmissionMethod').value='Online through Elsati Connect';
+  document.getElementById('opportunityEvaluation').value='Best evaluated / quality and price';
+  document.getElementById('opportunityVisibility').value='public';
+  document.getElementById('opportunityPdf').value='';
+  document.querySelectorAll('.opportunity-required-doc').forEach(x=>x.checked=false);
+  document.getElementById('opportunityItems').innerHTML='';opportunityItemCounter=0;addOpportunityItem();
+  toggleOpportunityInvitees();
+  const modal=document.getElementById('opportunityModal');
+  if(!modal){alert('The Tender/Bidding form could not be found. Please refresh the page.');return;}
+  modal.classList.add('show');
+}
+async function publishOpportunity(){
+  const notice=document.getElementById('opportunityNotice'),button=document.getElementById('publishOpportunityButton');
+  const type=document.getElementById('opportunityType').value;
+  const title=document.getElementById('opportunityTitle').value.trim();
+  const category=document.getElementById('opportunityCategory').value.trim();
+  const deadline=document.getElementById('opportunityDeadline').value;
+  const description=document.getElementById('opportunityDescription').value.trim();
+  const items=collectOpportunityItems();
+  const visibility=document.getElementById('opportunityVisibility').value;
+  const selected=[...document.querySelectorAll('.opportunity-invitee:checked')].map(x=>x.value);
+  const file=document.getElementById('opportunityPdf').files?.[0]||null;
+  notice.innerHTML='';
+  if(!title||!category||!deadline||!description){notice.innerHTML='<div class="notice error">Complete the title, category, submission deadline and scope / description.</div>';return;}
+  if(new Date(deadline+'T23:59:59')<new Date()){notice.innerHTML='<div class="notice error">The submission deadline must be today or a future date.</div>';return;}
+  if(visibility==='invited'&&!selected.length){notice.innerHTML='<div class="notice error">Select at least one verified supplier to invite, or change visibility to All verified suppliers.</div>';return;}
+  if(items.length&&items.some(x=>!x.description)){notice.innerHTML='<div class="notice error">Please complete each item description or remove the empty item row.</div>';return;}
+  if(file&&(file.type!=='application/pdf'&&!file.name.toLowerCase().endsWith('.pdf'))){notice.innerHTML='<div class="notice error">Please upload a PDF document.</div>';return;}
+  if(file&&file.size>20*1024*1024){notice.innerHTML='<div class="notice error">The PDF must not exceed 20MB.</div>';return;}
+  if(!currentUser||!currentBusiness){notice.innerHTML='<div class="notice error">Your business account could not be verified. Please sign in again.</div>';return;}
+  const businessName=String(currentBusiness.company_name||currentBusiness.business_name||currentUser.email||'').trim();
+  if(!businessName){notice.innerHTML='<div class="notice error">Please complete your company name in Company Profile first.</div>';return;}
+  const required=[...document.querySelectorAll('.opportunity-required-doc:checked')].map(x=>x.value);
+  const extra=document.getElementById('opportunityOtherDocuments').value.split(',').map(x=>x.trim()).filter(Boolean);
+  const instructions=document.getElementById('opportunityInstructions').value.trim();
+  const details=[`Submission method: ${document.getElementById('opportunitySubmissionMethod').value}`,`Evaluation method: ${document.getElementById('opportunityEvaluation').value}`,`Bid / tender security: ${document.getElementById('opportunitySecurity').value||'Not specified'}`,`Submission instructions: ${instructions||'As stated in the opportunity'}`].join('\n');
+  const payload={business_id:currentUser.id,business_name:businessName,opportunity_type:type,title,description:description+'\n\n'+details,deadline,visibility,evaluation_method:document.getElementById('opportunityEvaluation').value,required_documents:[...required,...extra],category,reference_number:document.getElementById('opportunityReference').value.trim()||null,estimated_budget:document.getElementById('opportunityBudget').value?Number(document.getElementById('opportunityBudget').value):null,delivery_location:document.getElementById('opportunityLocation').value.trim()||null,start_date:document.getElementById('opportunityStartDate').value||null,site_visit_date:document.getElementById('opportunitySiteVisit').value||null,bid_security:document.getElementById('opportunitySecurity').value.trim()||null,submission_method:document.getElementById('opportunitySubmissionMethod').value,submission_instructions:instructions||null,items,status:'open'};
+  button.disabled=true;button.textContent='Publishing…';notice.innerHTML='<div class="notice info">Saving opportunity…</div>';
+  let uploadedPath=null;
+  try{
+    if(file){
+      const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');uploadedPath=`${currentUser.id}/${Date.now()}-${safeName}`;
+      const {error:uploadError}=await db.storage.from('procurement-opportunity-documents').upload(uploadedPath,file,{upsert:false,contentType:'application/pdf'});
+      if(uploadError)throw new Error('PDF upload failed: '+uploadError.message);
+      payload.document_path=uploadedPath;payload.document_name=file.name;
+    }
+    const {data:created,error}=await db.from('procurement_opportunities').insert(payload).select('id').single();
+    if(error)throw error;
+    if(visibility==='invited'&&selected.length){
+      const rows=selected.map(supplier_user_id=>({opportunity_id:created.id,supplier_user_id}));
+      const {error:inviteError}=await db.from('procurement_opportunity_invitations').insert(rows);
+      if(inviteError)throw new Error('Opportunity was created, but supplier invitations could not be saved: '+inviteError.message);
+    }
+    notice.innerHTML=`<div class="notice success">${type==='tender'?'Tender':'Bidding opportunity'} published successfully. ${visibility==='invited'?selected.length+' supplier(s) invited.':'It is now visible to verified suppliers.'}</div>`;
+    if(typeof refresh==='function')await refresh();
+    setTimeout(()=>{closeModal('opportunityModal');showSection('dashboard');},700);
+  }catch(error){
+    if(uploadedPath){try{await db.storage.from('procurement-opportunity-documents').remove([uploadedPath]);}catch(_){}}
+    notice.innerHTML=`<div class="notice error"><strong>Could not publish the ${type}.</strong><br>${opportunityEscape(error?.message||String(error))}<br><small>Check that the Tender/Bidding Supabase migration has been run and that the business account has permission to create opportunities.</small></div>`;
+  }finally{button.disabled=false;button.textContent=type==='tender'?'Publish Tender':'Publish Bidding Opportunity';}
+}
+window.openOpportunityModal=openOpportunityModal;
+window.publishOpportunity=publishOpportunity;
+window.addOpportunityItem=addOpportunityItem;
+window.toggleOpportunityInvitees=toggleOpportunityInvitees;
+
+/* Ensure the customer can always attach POP until the supplier has approved payment. */
+window.renderPayments=function(){
+  const host=document.getElementById('paymentsContainer');if(!host)return;
+  if(!Array.isArray(payments)||!payments.length){host.innerHTML='<div class="panel empty">No payments yet. Award a supplier quotation to begin payment.</div>';return;}
+  host.innerHTML=payments.map(p=>{
+    const q=quotes.find(x=>String(x.rfq_id)===String(p.rfq_id)&&String(x.status||'').toLowerCase()==='awarded');
+    const status=String(p.status||'').toLowerCase();
+    const approved=['confirmed','paid','verified','approved','payment_approved','payment verified','payment approved'].includes(status);
+    const hasProof=!!p.proof_path;
+    const label=approved?'Payment Approved':status==='proof_uploaded'?'POP Uploaded — Awaiting Supplier':'Awaiting Payment';
+    const badge=approved?'completed':hasProof?'awarded':'pending';
+    return `<div class="workflow"><div class="row"><div><h3>${esc(p.rfq_code||'Payment')}</h3><div class="small">${esc(q?.supplier_company||'Supplier')}</div></div><span class="badge ${badge}">${label}</span></div><div class="details"><div class="detail"><span>Amount</span><strong>${money(p.amount)}</strong></div><div class="detail"><span>Payment Reference</span><strong>${esc(p.payment_reference||'Not submitted')}</strong></div><div class="detail"><span>Payment Date</span><strong>${date(p.payment_date)}</strong></div><div class="detail"><span>Supplier</span><strong>${esc(q?.supplier_company||'Supplier')}</strong></div></div>${hasProof&&!approved?'<div class="payment-proof-status waiting">POP uploaded. The supplier must verify that the funds have reflected.</div>':''}${approved?'<div class="payment-proof-status verified">✓ Supplier has approved the payment and confirmed receipt of funds.</div>':''}<div class="card-actions">${!approved?`<button class="btn btn-primary" onclick="openPayment('${p.id}')">${hasProof?'Replace / Update POP':'Upload POP'}</button>`:''}${hasProof?`<button class="btn btn-light" onclick="viewProof('${p.id}')">View POP</button>`:''}${approved?`<button class="btn btn-primary" onclick="showSection('invoices')">Go to Invoice</button>`:''}</div></div>`;
+  }).join('');
 };
 </script>
 
